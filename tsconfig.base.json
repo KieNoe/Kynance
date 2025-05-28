@@ -1,0 +1,15 @@
+{
+  "compilerOptions": { // 编译器选项
+    "composite": true, // 启用项目编译，允许TypeScript项目引用其他项目
+    "incremental": true, // 启用增量编译，加快后续构建速度
+    "declaration": true, // 生成.d.ts声明文件
+    "declarationMap": true, // 为声明文件生成源映射，便于调试
+    "emitDeclarationOnly": true, // 只输出声明文件，不输出JS文件
+    "noEmitOnError": true, // 发生错误时不输出任何文件
+    "skipLibCheck": true, // 跳过对声明文件的类型检查，加快编译速度
+    "esModuleInterop": true, // 启用CommonJS和ES模块之间的互操作性
+    "allowSyntheticDefaultImports": true, // 允许从没有默认导出的模块中导入默认值
+    "resolveJsonModule": true, // 允许导入.json文件
+    "strict": true // 启用所有严格类型检查选项
+  }
+}

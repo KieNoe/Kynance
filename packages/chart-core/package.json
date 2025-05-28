@@ -1,0 +1,9 @@
+{
+  "name": "@kynance/chart-core",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "private": true,
+  "description": "local chart-core package",
+  "author": "KieNoe",
+  "license": "MIT"
+}

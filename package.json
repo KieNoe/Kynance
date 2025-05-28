@@ -1,0 +1,20 @@
+{
+  "name": "kynance",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "KieNoe",
+  "license": "MIT",
+  "description": "一个专业级股票数据可视化分析平台",
+  "devDependencies": {
+    "@lerna/conventional-commits": "^6.4.1",
+    "@types/node": "^22.15.21",
+    "conventional-changelog-conventionalcommits": "^9.0.0",
+    "lerna": "^8.2.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}

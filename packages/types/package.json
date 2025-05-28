@@ -1,0 +1,9 @@
+{
+  "name": "@kynance/types",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "private": true,
+  "description": "local types package",
+  "author": "KieNoe",
+  "license": "MIT"
+}
