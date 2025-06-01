@@ -1,7 +1,7 @@
 {
   "name": "@kynance/providers",
   "version": "1.0.1",
-  "main": "./src/index.ts",
+  "main": "./index.ts",
   "private": true,
   "description": "local providers package",
   "author": "KieNoe",

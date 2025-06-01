@@ -1,19 +1,73 @@
 {
-  "name": "kynance",
+  "name": "kynance-project",
   "version": "1.0.0",
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "bootstrap": "pnpm install && lerna bootstrap",
+    "clean": "rimraf node_modules dist .turbo && lerna clean -y",
+    "build": "lerna run build --stream",
+    "dev": "pnpm --filter @kynance/main-app dev",
+    "commit": "git-cz",
+    "lint": "eslint . --ext .ts,.tsx,.vue,.js",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,vue}\"",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "prepare": "husky",
+    "ci:lint": "pnpm lint && pnpm format --check",
+    "ci:test": "pnpm test && pnpm typecheck",
+    "ci:build": "pnpm build",
+    "dev:main": "pnpm --filter @kynance/main-app dev",
+    "dev:landing": "pnpm --filter @kynance/landing-page dev",
+    "build:main": "pnpm --filter @kynance/main-app build",
+    "build:landing": "pnpm --filter @kynance/landing-page build",
+    "publish": "lerna publish"
   },
   "author": "KieNoe",
   "license": "MIT",
   "description": "一个专业级股票数据可视化分析平台",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KieNoe/Kynance.git"
+  },
+  "lint-staged": {
+    "**/*.{js,ts,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{json,md,yml,yaml}": [
+      "pnpm prettier --write",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-git",
+      "useEmoji": true
+    }
+  },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@lerna/conventional-commits": "^6.4.1",
     "@types/node": "^22.15.21",
+    "@typescript-eslint/eslint-plugin": "^8.33.0",
+    "@typescript-eslint/parser": "^8.33.0",
+    "commitizen": "^4.3.1",
     "conventional-changelog-conventionalcommits": "^9.0.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "cz-git": "^1.11.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-import-resolver-typescript": "^4.4.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-vue": "^10.1.0",
+    "husky": "^9.1.7",
     "lerna": "^8.2.2",
+    "lint-staged": "^16.1.0",
+    "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }

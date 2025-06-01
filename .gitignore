@@ -1,1 +1,28 @@
-node_modules/
+.env
+node_modules
+.DS_Store
+
+# build files
+es/
+esm/
+cjs/
+lib/
+dist/
+
+_site
+_static_site
+package
+tmp*
+temp*
+coverage
+test-report.html
+.idea/
+
+# lock
+package-lock.json
+pnpm-lock.yaml
+
+*.zip
+*.log
+Dockerfile
+.eslintcache

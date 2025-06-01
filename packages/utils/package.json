@@ -1,0 +1,9 @@
+{
+  "name": "@kynance/utils",
+  "version": "1.0.1",
+  "main": "./main.ts",
+  "private": true,
+  "description": "local utils package",
+  "author": "KieNoe",
+  "license": "MIT"
+}

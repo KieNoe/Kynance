@@ -1,7 +1,7 @@
 {
   "name": "@kynance/strategy-engine",
   "version": "1.0.1",
-  "main": "./src/index.ts",
+  "main": "./index.ts",
   "private": true,
   "description": "local strategy-engine package",
   "author": "KieNoe",

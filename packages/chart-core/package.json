@@ -1,7 +1,7 @@
 {
   "name": "@kynance/chart-core",
   "version": "1.0.1",
-  "main": "./src/index.ts",
+  "main": "./index.ts",
   "private": true,
   "description": "local chart-core package",
   "author": "KieNoe",

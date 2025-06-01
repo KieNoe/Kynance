@@ -1,7 +1,7 @@
 {
   "name": "@kynance/types",
   "version": "1.0.1",
-  "main": "./src/index.ts",
+  "main": "./index.d.ts",
   "private": true,
   "description": "local types package",
   "author": "KieNoe",
