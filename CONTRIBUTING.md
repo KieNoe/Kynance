@@ -59,7 +59,7 @@ $ git rebase <name>/<branch>
 
 对于如何提交 git commit message，我们有非常精确的规则。我们希望所有的 commit message 更具可读性，这样在查看项目历史记录会变得容易，同时我们使用 pnpm lerna version 生成 Changelog.
 
-本项目使用了 `@commitlint` 作为 commit lint 工具，并使用 [`@commitlint/config-conventional`](https://www.npmjs.com/package/@commitlint/config-conventional)作为校验规则.
+本项目使用了 `@commitlint` 作为 commit lint 工具，并使用 [`cz-git`](https://cz-git.qbb.sh/zh/guide/introduction)作为校验规则.
 
 ### 提交格式
 
