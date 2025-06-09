@@ -1,95 +1,98 @@
+English | [简体中文](./README-zh_CN.md)
+
 # Kynance
 
-Kynance 是一个专业级股票数据可视化分析平台，旨在帮助用户进行股票数据的深入分析和可视化。
+Kynance is a professional-grade stock data visualization and analysis platform, designed to help users perform in-depth analysis and visualization of stock market data.
 
-## 背景
+## Background
 
-Kynance 是一个专为量化策略开发与数据可视化分析而设计的 Web 平台。旨在为策略开发者、数据分析师及投资者提供一个高交互、高性能、易扩展的数据展示与策略验证工具。
+Kynance is a Web platform specifically designed for quantitative strategy development and data visualization analysis. It aims to provide strategy developers, data analysts, and investors with a highly interactive, high-performance, and easily extensible tool for data presentation and strategy validation.
 
-项目采用 Monorepo 架构，由多个独立模块协同构建，包括图表渲染核心库、策略引擎、数据提供 SDK、工具库等。整个平台强调模块解耦、性能优化与用户体验，同时支持多语言国际化，便于全球用户使用。
+The project adopts a Monorepo architecture, collaboratively built from multiple independent modules, including a chart rendering core library, strategy engine, data provider SDK, utility libraries, etc. The platform emphasizes modular decoupling, performance optimization, and user experience, and supports multilingual internationalization for global accessibility.
 
-## 功能特性
+## Features
 
-1. 数据展示
+1. Data Visualization
 
-- 多类型图表支持：折线、柱状、饼图、K线等。
+- Multiple chart types supported: line, bar, pie, candlestick (K-line), etc.
 
-- 实时行情刷新与多维度对比分析。
+- Real-time market updates and multi-dimensional comparative analysis.
 
-- 数据筛选、细节查看与导出（PDF）功能。
+- Data filtering, detail inspection, and export (PDF) functionality.
 
-2. 用户交互
+2. User Interaction
 
-- 策略回测与可视化买卖点展示。
+- Strategy backtesting and visualized buy/sell point display.
 
-- 图表与指标组合配置，支持自定义模板。
+- Chart and indicator combination configuration, with custom template support.
 
-- 交互式操作：缩放、拖拽、数据透视分析。
+- Interactive operations: zooming, dragging, data pivot analysis.
 
-- 多语言切换、主题系统与个性化设置。
+- Language switching, theme system, and personalization settings.
 
-- 数据阈值预警与推送提醒。
+- Data threshold alerts and push notifications.
 
-3. 性能优化
+3. Performance Optimization
 
-- IndexedDB 缓存历史数据，支持离线访问。
+- IndexedDB caches historical data, supporting offline access.
 
-- Web Worker 加速计算，提升 UI 响应。
+- Web Worker accelerates computation, enhancing UI responsiveness.
 
-- 虚拟滚动与懒加载，优化大数据渲染性能。
+- Virtual scrolling and lazy loading optimize large data rendering.
 
-- 差量数据更新策略，减少不必要的刷新。
+- Delta data update strategy reduces unnecessary refreshes.
 
-## 项目结构
+## Project Structure
 
-该项目采用了 Monorepo 结构，包含多个子包和应用：
+This project adopts a Monorepo structure, containing multiple packages and apps:
 
-- **packages/**: 包含核心库、策略引擎、类型定义等模块。
-- **apps/**: 包含主应用和宣传页。
+- **packages/**: Includes core libraries, strategy engine, type definitions, etc.
 
-## 安装与启动
+- **apps/**: Contains the main application and landing page.
 
-## 使用
+## Installation & Startup
 
-- 安装依赖
+### Usage
+
+- Install dependencies
 
 ```sh
 pnpm install
 ```
 
-## 开发环境编译与热重载
+- Development compilation & hot reload
 
 ```sh
 pnpm dev
 ```
 
-## 生产环境编译与压缩
+- Production build & compression
 
 ```sh
 pnpm build
 ```
 
-## Vitest测试
+- Vitest testing
 
 ```sh
 pnpm test
 ```
 
-## ESLint检查
+- ESLint check
 
 ```sh
 pnpm lint
 ```
 
-## 贡献指南
+# Contributing
 
-请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 以了解如何为项目做出贡献。
+Kynance welcomes anyone interested in contributing. If you need to run the code locally or want to contribute, please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to get involved.
 
-## 许可证
+# License
 
-本项目采用 MIT 许可证。请参阅 [LICENSE](./LICENSE) 文件以获取更多信息。
+Kynance follows the MIT License. Please see the [LICENSE](./LICENSE) for more information.
 
-## One more thing
+# One more thing
 
-Kynance 出自 KieNoe ,一个脱离了高级趣味的人。
-感谢您的耐心，祝您愉快。
+Kynance is created by KieNoe, a person who has parted ways with sophisticated tastes.
+Thank you for your patience, and have a wonderful day.
