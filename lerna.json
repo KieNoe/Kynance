@@ -6,7 +6,7 @@
   "conventionalCommits": true,
   "command": {
     "version": {
-      "allowBranch": "master"
+      "allowBranch": "main"
     },
     "bootstrap": {
       "npmClientArgs": ["--no-package-lock", "--legacy-peer-deps"]
