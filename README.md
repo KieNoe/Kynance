@@ -63,25 +63,25 @@ pnpm install
 - Development compilation & hot reload
 
 ```sh
-pnpm dev
+pnpm run dev
 ```
 
 - Production build & compression
 
 ```sh
-pnpm build
+pnpm run build
 ```
 
 - Vitest testing
 
 ```sh
-pnpm test
+pnpm run test
 ```
 
 - ESLint check
 
 ```sh
-pnpm lint
+pnpm run lint
 ```
 
 # Contributing

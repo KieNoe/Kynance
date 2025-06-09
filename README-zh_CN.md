@@ -62,25 +62,25 @@ pnpm install
 ### 开发环境编译与热重载
 
 ```sh
-pnpm dev
+pnpm run dev
 ```
 
 ### 生产环境编译与压缩
 
 ```sh
-pnpm build
+pnpm run build
 ```
 
 ### Vitest测试
 
 ```sh
-pnpm test
+pnpm run test
 ```
 
 ### ESLint检查
 
 ```sh
-pnpm lint
+pnpm run lint
 ```
 
 # 参与贡献
