@@ -1,9 +1,0 @@
-{
-  "name": "@kynance/providers",
-  "version": "1.0.1",
-  "main": "./index.ts",
-  "private": true,
-  "description": "local providers package",
-  "author": "KieNoe",
-  "license": "MIT"
-}
