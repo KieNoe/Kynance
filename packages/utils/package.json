@@ -1,0 +1,9 @@
+{
+  "name": "@kynance/utils",
+  "version": "1.0.1",
+  "main": "./main.ts",
+  "private": true,
+  "description": "通用工具库",
+  "author": "KieNoe",
+  "license": "MIT"
+}
