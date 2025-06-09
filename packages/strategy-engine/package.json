@@ -1,0 +1,9 @@
+{
+  "name": "@kynance/strategy-engine",
+  "version": "1.0.1",
+  "main": "./index.ts",
+  "private": true,
+  "description": "策略 DSL 执行引擎",
+  "author": "KieNoe",
+  "license": "MIT"
+}

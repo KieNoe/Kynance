@@ -1,0 +1,9 @@
+{
+  "cSpell.words": ["alova", "kynance"],
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.formatOnSave": true,
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true
+}

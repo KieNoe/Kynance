@@ -1,0 +1,9 @@
+{
+  "name": "@kynance/types",
+  "version": "1.0.1",
+  "main": "./index.d.ts",
+  "private": true,
+  "description": "项目通用类型",
+  "author": "KieNoe",
+  "license": "MIT"
+}

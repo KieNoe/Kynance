@@ -1,0 +1,5 @@
+{
+  "extends": "../../tsconfig.base.json", // 继承主配置文件
+  "include": ["binance-sdk", "mock-data"], // 包含的源文件目录
+  "exclude": ["**/__tests__", "**/*.test.ts"] // 排除的测试文件
+}

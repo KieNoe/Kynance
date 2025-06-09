@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", // 目标 ECMAScript 版本
+    "module": "ESNext", // 使用的模块系统
+    "lib": ["ES2022", "DOM"], // 包含的库
+    "moduleResolution": "Node", // 模块解析策略
+    "baseUrl": ".", // 基础 URL
+    "paths": {
+      "@apps/*": ["apps/*"], // 应用程序路径别名
+      "@packages/*": ["packages/*"] // 包路径别名
+    },
+    "allowSyntheticDefaultImports": true, // 允许合成默认导入
+    "esModuleInterop": true, // 启用 ES 模块互操作性
+    "resolveJsonModule": true, // 允许导入 JSON 模块
+    "isolatedModules": true, // 启用隔离模块
+    "noEmit": true, // 不生成输出文件
+    "strict": true, // 启用所有严格类型检查选项
+    "skipLibCheck": true, // 跳过库文件的类型检查
+    "forceConsistentCasingInFileNames": true, // 强制文件名一致大小写
+    "useDefineForClassFields": true // 使用 define 语法定义类字段
+  },
+  "exclude": ["node_modules", "dist", "**/dist", "**/.vite", "**/coverage"], // 排除的文件和目录
+  "references": [
+    { "path": "./apps/main-app/" }, // 主应用程序
+    { "path": "./apps/landing-page/" }, // 静态站点应用程序
+    { "path": "./packages/chart-core" }, // 图表核心包
+    { "path": "./packages/strategy-engine" }, // 策略引擎包
+    { "path": "./packages/providers" }, // 提供者包
+    { "path": "./packages/types" } // 类型包
+  ]
+}

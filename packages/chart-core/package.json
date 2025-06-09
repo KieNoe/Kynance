@@ -1,0 +1,9 @@
+{
+  "name": "@kynance/chart-core",
+  "version": "1.0.1",
+  "main": "./index.ts",
+  "private": true,
+  "description": "图表核心库",
+  "author": "KieNoe",
+  "license": "MIT"
+}
