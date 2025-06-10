@@ -1,5 +1,17 @@
 {
-  "cSpell.words": ["alova", "kynance"],
+  "cSpell.words": [
+    "alova",
+    "kynance",
+    "llms",
+    "llmstxt",
+    "Vite",
+    "vite",
+    "Vitest",
+    "vitest",
+    "Turborepo",
+    "eslintcache",
+    "styl"
+  ],
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.formatOnSave": true,
