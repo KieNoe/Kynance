@@ -10,7 +10,8 @@
     "vitest",
     "Turborepo",
     "eslintcache",
-    "styl"
+    "styl",
+    "VITEPRESS"
   ],
   "editor.tabSize": 2,
   "editor.insertSpaces": true,

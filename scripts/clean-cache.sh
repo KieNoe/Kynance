@@ -27,6 +27,13 @@ for dir in apps/* packages/*; do
   fi
 done
 
+echo "🧹 清理 landing-page 的 VitePress 缓存"
+VITEPRESS_CACHE="apps/landing-page/.vitepress/cache"
+VITE_CACHE="apps/landing-page/node_modules/.vite"
+
+[ -d "$VITEPRESS_CACHE" ] && rm -rf "$VITEPRESS_CACHE" && echo "✅ 已清理 $VITEPRESS_CACHE"
+[ -d "$VITE_CACHE" ] && rm -rf "$VITE_CACHE" && echo "✅ 已清理 $VITE_CACHE"
+
 echo "🔧 可选：清除 .output、coverage、Vitest 缓存等..."
 rm -rf .output
 rm -rf coverage
