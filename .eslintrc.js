@@ -40,7 +40,7 @@ module.exports = {
     // Vue 相关
     "vue/multi-word-component-names": "off", // 关闭多字组件名检查
     "vue/no-v-html": "off", // 允许使用 v-html
-   
+
     // import 排序
     "import/order": [
       "warn",
