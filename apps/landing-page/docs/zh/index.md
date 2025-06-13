@@ -3,16 +3,16 @@
 layout: home
 
 hero:
-  name: "Kynance"
-  text: "A professional stock data visualization analysis platform"
-  tagline: My great project tagline
+  name: 'Kynance'
+  text: '一个专业的股票数据可视化分析平台'
+  tagline: 专业，易于使用
   actions:
     - theme: brand
       text: Markdown Examples
-      link: /docs/markdown-examples
+      link: /zh/markdown-examples
     - theme: alt
       text: API Examples
-      link: /docs/api-examples
+      link: /zh/api-examples
 
 features:
   - title: Feature A
