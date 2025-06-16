@@ -8,6 +8,8 @@ esm/
 cjs/
 lib/
 dist/
+**/cache/
+**/.cache/
 
 _site
 _static_site
