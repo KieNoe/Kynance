@@ -70,6 +70,12 @@ module.exports = {
       },
     },
     {
+      files: ['apps/main-app/vite.config.ts'],
+      parserOptions: {
+        project: './apps/main-app/tsconfig.vite.json',
+      },
+    },
+    {
       files: ["*.vue"],
       rules: {
         "@typescript-eslint/no-unused-vars": "off", // 避免 `<script setup>` 的误报

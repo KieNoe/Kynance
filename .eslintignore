@@ -9,3 +9,5 @@ dist
 coverage
 
 !.vscode
+
+apps/main-app/env.d.ts

@@ -8,17 +8,17 @@ hero:
   tagline: 专业，易于使用
   actions:
     - theme: brand
-      text: Markdown Examples
+      text: Markdown 示例
       link: /zh/markdown-examples
     - theme: alt
-      text: API Examples
+      text: API 示例
       link: /zh/api-examples
 
 features:
-  - title: Feature A
+  - title: 特征 A
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
+  - title: 特征 B
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
+  - title: 特征 C
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
