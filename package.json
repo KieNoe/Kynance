@@ -13,6 +13,7 @@
     "build": "pnpm --parallel build:main build:landing",
     "commit": "git-cz",
     "lint": "eslint . --ext .ts,.tsx,.vue,.js",
+    "lint:css": "pnpm --filter @kynance/main-app stylelint --fix src/**/*.{vue,css}",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,vue}\"",
     "typecheck": "tsc -b",
     "test": "vitest run",
@@ -41,6 +42,9 @@
     "**/*.{json,md,yml,yaml}": [
       "pnpm prettier --write",
       "git add"
+    ],
+    "src/**/*.{vue,css}": [
+      "pnpm --filter @kynance/main-app stylelint --fix"
     ]
   },
   "config": {
