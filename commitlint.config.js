@@ -1,38 +1,39 @@
+// 引入 Node.js 的内置模块 fs（文件系统）和 path（路径处理）
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * 获取指定目录下的所有子目录名称
+ * @param {string} base - 相对当前文件的基础目录路径
+ * @returns {string[]} 子目录名称数组
+ */
 function getDirNames(base) {
   return fs
-    .readdirSync(path.resolve(__dirname, base), { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => dirent.name);
+    .readdirSync(path.resolve(__dirname, base), { withFileTypes: true }) // 同步读取目录内容，并包含文件类型信息
+    .filter((dirent) => dirent.isDirectory()) // 仅保留目录项
+    .map((dirent) => dirent.name); // 提取目录名称
 }
 
+// 获取 packages 和 apps 目录下的所有子目录名作为 scope
 const packageScopes = getDirNames('packages');
 const appScopes = getDirNames('apps');
 
+// 合并所有可用的 scope（用于 commit message 提示）
 const scopes = [...packageScopes, ...appScopes];
 
-/** @type {import('cz-git').UserConfig} */
+/**
+ * @type {import('cz-git').UserConfig}
+ * cz-git 提交规范配置，用于自定义提交信息交互体验
+ */
 module.exports = {
+  // 使用 commitlint 的标准配置（遵循 conventional commit）
   extends: ['@commitlint/config-conventional'],
+
+  // 提交信息交互提示设置
   prompt: {
-    scopes,
-    customScopesAlign: 'top-bottom',
-    allowEmptyIssuePrefixs: false,
-    allowCustomIssuePrefixs: false,
+    scopes, // 自动生成的 scope 列表
+    customScopesAlign: 'top-bottom', // 自定义 scope 的位置（上/下）
+    allowEmptyIssuePrefixs: false, // 不允许 issue 前缀为空
+    allowCustomIssuePrefixs: false, // 允许自定义 issue 前缀
   },
-  useEmoji: true,
-  emojiAlign: "left",
-  scopes: ["chart-core", "strategy-engine", "providers", "types","utils"],
-  types: [
-    { value: "feat", name: "feat:     新功能", emoji: "✨" },
-    { value: "fix", name: "fix:      修复 bug", emoji: "🐛" },
-    { value: "docs", name: "docs:     文档变更", emoji: "📝" },
-    { value: "style", name: "style:    代码格式（不影响功能）", emoji: "💄" },
-    { value: "refactor", name: "refactor: 代码重构", emoji: "♻️" },
-    { value: "test", name: "test:     添加测试", emoji: "✅" },
-    { value: "chore", name: "chore:    构建/工程配置", emoji: "🔧" },
-    { value: "revert", name: "revert:   回退提交", emoji: "⏪" },
-  ],
 };
