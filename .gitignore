@@ -20,9 +20,6 @@ coverage
 test-report.html
 .idea/
 
-# lock
-package-lock.json
-pnpm-lock.yaml
 
 *.zip
 *.log

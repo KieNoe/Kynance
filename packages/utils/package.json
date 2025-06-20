@@ -1,6 +1,6 @@
 {
   "name": "@kynance/utils",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "main": "./main.ts",
   "private": true,
   "description": "通用工具库",
