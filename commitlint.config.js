@@ -34,6 +34,6 @@ module.exports = {
     scopes, // 自动生成的 scope 列表
     customScopesAlign: 'top-bottom', // 自定义 scope 的位置（上/下）
     allowEmptyIssuePrefixs: false, // 不允许 issue 前缀为空
-    allowCustomIssuePrefixs: false, // 允许自定义 issue 前缀
+    allowCustomIssuePrefixs: false, // 不允许自定义 issue 前缀
   },
 };

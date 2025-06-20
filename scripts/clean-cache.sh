@@ -6,6 +6,8 @@ echo "🚿 开始清理缓存..."
 # 根目录下清理
 echo "🧹 删除 node_modules 和 pnpm 缓存..."
 rm -rf node_modules
+rm -rf apps/landing-page/node_modules
+rm -rf apps/main-app/node_modules
 rm -rf ~/.pnpm-store
 
 echo "🧼 清除 pnpm lock 文件..."
@@ -28,7 +30,7 @@ for dir in apps/* packages/*; do
 done
 
 echo "🧹 清理 landing-page 的 VitePress 缓存"
-VITEPRESS_CACHE="apps/landing-page/.vitepress/cache"
+VITEPRESS_CACHE="apps/landing-page/docs/.vitepress/cache"
 VITE_CACHE="apps/landing-page/node_modules/.vite"
 
 [ -d "$VITEPRESS_CACHE" ] && rm -rf "$VITEPRESS_CACHE" && echo "✅ 已清理 $VITEPRESS_CACHE"
