@@ -6,15 +6,6 @@ module.exports = {
     es2021: true, // 启用 ES2021 语法
   },
   parser: "vue-eslint-parser", // 使用 vue-eslint-parser 解析器
-  parserOptions: {
-    project: './tsconfig.json', // 确保路径正确
-    parser: "@typescript-eslint/parser", // 使用 @typescript-eslint/parser 解析 TypeScript
-    ecmaVersion: "latest", // 使用最新的 ECMAScript 版本
-    sourceType: "module", // 代码使用 ES 模块
-    ecmaFeatures: {
-      jsx: false, // 不启用 JSX
-    },
-  },
   ignorePatterns: [
     "dist/",
     "node_modules/",

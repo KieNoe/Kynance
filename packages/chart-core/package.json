@@ -1,7 +1,7 @@
 {
   "name": "@kynance/chart-core",
   "version": "1.1.0",
-  "main": "./index.ts",
+  "exports": "./index.ts",
   "private": true,
   "description": "图表核心库",
   "author": "KieNoe",

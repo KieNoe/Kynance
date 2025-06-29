@@ -1,21 +1,34 @@
 /// <reference types="vitest" />
-import { fileURLToPath, URL } from 'node:url'
+import path from 'node:path'
 
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import { viteMockServe } from 'vite-plugin-mock'
+import { loadEnv } from 'vite'
+
+const CWD = process.cwd()
+const { VITE_API_URL_PREFIX, VITE_BASE_URL } = loadEnv('development', CWD)
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueDevTools()],
+  base: VITE_BASE_URL,
+  plugins: [
+    vue(),
+    vueDevTools(),
+    viteMockServe({
+      mockPath: 'mock',
+      enable: true,
+    }),
+  ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   build: {
-    sourcemap: import.meta.env.VITE_ENV === 'development', // 开启生产环境的 sourcemap
+    sourcemap: process.env.VITE_ENV === 'development', // 开启生产环境的 sourcemap
     rollupOptions: {
       plugins: [
         visualizer({
@@ -23,6 +36,13 @@ export default defineConfig({
           open: true, //生成后自动打开浏览器查看
         }),
       ],
+    },
+  },
+  server: {
+    port: 3002,
+    host: '0.0.0.0',
+    proxy: {
+      [VITE_API_URL_PREFIX]: 'http://127.0.0.1:3000/',
     },
   },
 })
