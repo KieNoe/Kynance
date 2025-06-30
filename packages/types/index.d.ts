@@ -1,2 +1,3 @@
 import type { UserInfo } from './interface.d.ts';
-export { UserInfo };
+import type { Recordable } from './global.d.ts';
+export { UserInfo, Recordable };

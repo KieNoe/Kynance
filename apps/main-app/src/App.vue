@@ -1,8 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useLocale } from '@/infrastructure/locales/useLocale'
+const { getComponentsLocale, locale } = useLocale()
+</script>
 
 <template>
-  <t-config-provider>
-    <router-view />
+  <t-config-provider :global-config="getComponentsLocale">
+    <router-view :key="locale" />
   </t-config-provider>
 </template>
 
