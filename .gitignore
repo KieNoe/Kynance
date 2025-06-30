@@ -1,5 +1,4 @@
 .env
-.env.development
 node_modules
 .DS_Store
 
@@ -16,7 +15,6 @@ _site
 _static_site
 package
 tmp*
-temp*
 coverage
 test-report.html
 .idea/

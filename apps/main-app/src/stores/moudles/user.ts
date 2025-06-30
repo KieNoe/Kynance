@@ -6,7 +6,7 @@ export const useUserStore = defineStore('user', () => {
     name: 'admin',
     id: '',
     avatar: '',
-    token: '',
+    token: '1',
     permission: 0,
     email: '',
   }

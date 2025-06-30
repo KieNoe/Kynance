@@ -9,7 +9,7 @@ import { MessagePlugin } from 'tdesign-vue-next'
 import type { RouteRecordRaw } from 'vue-router'
 
 // 导入路由实例
-import router from './router/index.ts'
+import router from './router/index'
 // 导入权限存储和用户存储
 import { getPermissionStore, useUserStore } from './stores/index'
 
