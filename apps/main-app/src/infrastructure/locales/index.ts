@@ -5,7 +5,7 @@ import { createI18n } from 'vue-i18n'
 import { Recordable } from '@kynance/types'
 
 // 导入语言文件
-const langModules = import.meta.glob('./lang/*/index.ts', { eager: true })
+const langModules: any = import.meta.glob('./lang/*/index.ts', { eager: true })
 
 const langModuleMap = new Map<string, object>()
 
