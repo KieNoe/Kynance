@@ -16,6 +16,7 @@ export default defineConfig({
   base: VITE_BASE_URL,
   plugins: [
     vue(),
+    vueDevTools(),
     // viteMockServe({
     //   mockPath: 'mock',
     //   enable: true,

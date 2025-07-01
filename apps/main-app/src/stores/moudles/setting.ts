@@ -10,6 +10,27 @@ import STYLE_CONFIG from '@/constants'
 import { store } from '@/stores'
 import { generateColorMap, insertThemeStylesheet } from '@/infrastructure/utils'
 
+// import { getSettingStore } from '@/stores/setting'
+
+// const settingStore = getSettingStore()
+
+// // 切换暗黑模式
+// settingStore.changeMode('dark')
+
+// // 修改品牌色为蓝色
+// settingStore.changeBrandTheme('blue')
+
+// // 批量更新配置
+// settingStore.updateConfig({
+//   layout: 'top',
+//   mode: 'light',
+// })
+// // 当前是否是暗黑模式
+// const isDark = computed(() => settingStore.displayMode === 'dark')
+
+// // 是否显示侧边栏
+// const showSidebar = settingStore.showSidebar
+
 interface IState {
   [key: string]: any
   showSettingPanel: boolean

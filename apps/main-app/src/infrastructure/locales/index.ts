@@ -11,7 +11,7 @@ const langModuleMap = new Map<string, object>()
 
 export const langCode: Array<string> = []
 
-export const localeConfigKey = 'tdesign-starter-locale'
+export const localeConfigKey = 'kynance-locale'
 
 // 获取浏览器默认语言环境
 const languages = usePreferredLanguages()
