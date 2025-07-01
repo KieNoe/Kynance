@@ -6,3 +6,4 @@ export interface UserInfo {
   permission: number;
   email: string;
 }
+export type ModeType = 'dark' | 'light';
