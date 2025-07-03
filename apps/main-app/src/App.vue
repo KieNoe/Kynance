@@ -7,15 +7,22 @@ import { useSettingStore } from '@/stores'
 const store = useSettingStore()
 
 const mode = computed(() => {
-  return store.displayMode
+  return store.mode
 })
 const { getComponentsLocale, locale } = useLocale()
 </script>
 
 <template>
-  <t-config-provider :global-config="getComponentsLocale">
-    <router-view :key="locale" :class="[mode]" />
-  </t-config-provider>
+  <div>
+    <t-config-provider :global-config="getComponentsLocale">
+      <router-view :key="locale" :class="[mode]" />
+    </t-config-provider>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+div {
+  height: 100vh;
+  width: 100vw;
+}
+</style>

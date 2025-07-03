@@ -1,153 +1,95 @@
-import { keys } from 'lodash'
+// stores/settingsStore.ts
 import { defineStore } from 'pinia'
-import { Color } from 'tvision-color'
-import { computed, reactive, toRefs } from 'vue'
-import { KColorSeries } from '@kynance/types'
-import { ModeType } from '@kynance/types'
+import { ref, computed } from 'vue'
 
-import { DARK_CHART_COLORS, LIGHT_CHART_COLORS } from '@/constants'
-import STYLE_CONFIG from '@/constants'
-import { store } from '@/stores'
-import { generateColorMap, insertThemeStylesheet } from '@/infrastructure/utils'
+import { KThemeColor } from '@/constants'
 
-// import { getSettingStore } from '@/stores/setting'
+export const useSettingStore = defineStore('settings', () => {
+  // 状态
+  const mode = ref<'dark' | 'light'>('light')
+  const themeColor = ref<string>('#0052D9')
+  const showSettingPanel = ref<boolean>(false)
+  const showBreadcrumb = ref<boolean>(false)
+  const showFooter = ref<boolean>(true)
 
-// const settingStore = getSettingStore()
+  // 持久化 key
+  const STORAGE_KEY = 'app_settings'
 
-// // 切换暗黑模式
-// settingStore.changeMode('dark')
-
-// // 修改品牌色为蓝色
-// settingStore.changeBrandTheme('blue')
-
-// // 批量更新配置
-// settingStore.updateConfig({
-//   layout: 'top',
-//   mode: 'light',
-// })
-// // 当前是否是暗黑模式
-// const isDark = computed(() => settingStore.displayMode === 'dark')
-
-// // 是否显示侧边栏
-// const showSidebar = settingStore.showSidebar
-
-interface IState {
-  [key: string]: any
-  showSettingPanel: boolean
-  colorList: KColorSeries
-  chartColors: typeof LIGHT_CHART_COLORS
-}
-
-const state: IState = {
-  ...STYLE_CONFIG,
-  showSettingPanel: false,
-  colorList: {} as KColorSeries,
-  chartColors: LIGHT_CHART_COLORS,
-}
-
-export type KState = typeof state
-export type KStateKey = keyof typeof state
-
-export const useSettingStore = defineStore(
-  'setting',
-  () => {
-    const localState = reactive<IState>({ ...state })
-
-    const showSidebar = computed(() => localState.layout !== 'top')
-    const showSidebarLogo = computed(() => localState.layout === 'side')
-    const showHeaderLogo = computed(() => localState.layout !== 'side')
-    const displayMode = computed<ModeType>(() => {
-      if (localState.mode === 'auto') {
-        const media = window.matchMedia('(prefers-color-scheme:dark)')
-        if (media.matches) {
-          return 'dark'
-        }
-        return 'light'
-      }
-      return localState.mode as ModeType
-    })
-    const displaySideMode = computed<ModeType>(() => localState.sideMode as ModeType)
-
-    const changeMode = async (mode: ModeType | 'auto') => {
-      let theme = mode
-
-      if (mode === 'auto') {
-        theme = getMediaColor()
-      }
-      const isDarkMode = theme === 'dark'
-
-      document.documentElement.setAttribute('theme-mode', isDarkMode ? 'dark' : '')
-
-      localState.chartColors = isDarkMode ? DARK_CHART_COLORS : LIGHT_CHART_COLORS
+  // 从本地存储加载设置
+  const loadSettings = () => {
+    const savedSettings = localStorage.getItem(STORAGE_KEY)
+    if (savedSettings) {
+      const settings = JSON.parse(savedSettings)
+      mode.value = settings.mode || 'light'
+      themeColor.value = settings.themeColor || '#0052D9'
+      showBreadcrumb.value = settings.showBreadcrumb === true
+      showFooter.value = settings.showFooter === true
     }
+    loadMode()
+  }
 
-    const changeSideMode = async (mode: ModeType) => {
-      const isDarkMode = mode === 'dark'
-      document.documentElement.setAttribute('side-mode', isDarkMode ? 'dark' : '')
+  // 保存设置到本地存储
+  const saveSettings = () => {
+    const settings = {
+      mode: mode.value,
+      themeColor: themeColor.value,
+      showBreadcrumb: showBreadcrumb.value,
+      showFooter: showFooter.value,
     }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
+  }
 
-    const getMediaColor = () => {
-      const media = window.matchMedia('(prefers-color-scheme:dark)')
-      return media.matches ? 'dark' : 'light'
+  // 切换白天/黑夜模式
+  const toggleMode = () => {
+    mode.value = mode.value === 'dark' ? 'light' : 'dark'
+    loadMode()
+    saveSettings()
+  }
+
+  const toggleBreadcrumb = () => {
+    showBreadcrumb.value = !showBreadcrumb.value
+    saveSettings()
+  }
+
+  const toggleFooter = () => {
+    showFooter.value = !showFooter.value
+    saveSettings()
+  }
+
+  const loadMode = () => {
+    if (mode.value === 'dark') {
+      document.documentElement.setAttribute('theme-mode', 'dark')
+    } else {
+      document.documentElement.removeAttribute('theme-mode')
     }
+  }
 
-    const changeBrandTheme = (brandTheme: string) => {
-      const mode = displayMode.value
-      const colorKey = `${brandTheme}[${mode}]`
-      let colorMap = localState.colorList[colorKey]
+  // 设置主题颜色
+  const setThemeColor = (color: KThemeColor) => {
+    themeColor.value = color
+    saveSettings()
+  }
 
-      if (colorMap === undefined) {
-        const [{ colors: newPalette, primary: brandColorIndex }] = Color.getColorGradations({
-          colors: [brandTheme],
-          step: 10,
-          remainInput: false,
-        })
-        colorMap = generateColorMap(brandTheme, newPalette, mode, brandColorIndex)
-        localState.colorList[colorKey] = colorMap
-      }
+  const toggleSettingPanel = () => {
+    showSettingPanel.value = !showSettingPanel.value
+  }
 
-      insertThemeStylesheet(brandTheme, colorMap, mode)
-      document.documentElement.setAttribute('theme-color', brandTheme)
-    }
+  // 初始化时加载设置
+  loadSettings()
 
-    const updateConfig = (payload: Partial<KState>) => {
-      for (const key in payload) {
-        if (payload[key as KStateKey] !== undefined) {
-          localState[key as KStateKey] = payload[key as KStateKey]
-        }
-        if (key === 'mode') {
-          changeMode(payload[key] as ModeType)
-        }
-        if (key === 'sideMode') {
-          changeSideMode(payload[key] as ModeType)
-        }
-        if (key === 'brandTheme') {
-          changeBrandTheme(payload[key] as string)
-        }
-      }
-    }
-
-    return {
-      ...toRefs(localState),
-      showSidebar,
-      showSidebarLogo,
-      showHeaderLogo,
-      displayMode,
-      displaySideMode,
-      changeMode,
-      changeSideMode,
-      getMediaColor,
-      changeBrandTheme,
-      updateConfig,
-    }
-  },
-  {
-    persist: {
-      paths: [...keys(STYLE_CONFIG), 'colorList', 'chartColors'],
-    } as any,
-  },
-)
-
-export function getSettingStore() {
-  return useSettingStore(store)
-}
+  return {
+    mode,
+    themeColor,
+    showSettingPanel,
+    showBreadcrumb,
+    showFooter,
+    toggleSettingPanel,
+    toggleMode,
+    setThemeColor,
+    toggleBreadcrumb,
+    toggleFooter,
+    loadMode,
+    loadSettings,
+    saveSettings,
+  }
+})

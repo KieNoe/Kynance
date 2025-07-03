@@ -6,6 +6,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { viteMockServe } from 'vite-plugin-mock'
+import svgLoader from 'vite-svg-loader'
 import { loadEnv } from 'vite'
 
 const CWD = process.cwd()
@@ -16,7 +17,8 @@ export default defineConfig({
   base: VITE_BASE_URL,
   plugins: [
     vue(),
-    vueDevTools(),
+    svgLoader(),
+    // vueDevTools(),
     // viteMockServe({
     //   mockPath: 'mock',
     //   enable: true,
@@ -39,7 +41,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3002,
+    port: 3005,
     host: '0.0.0.0',
     proxy: {
       [VITE_API_URL_PREFIX]: 'http://127.0.0.1:3000/',
