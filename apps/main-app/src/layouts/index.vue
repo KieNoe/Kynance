@@ -143,7 +143,6 @@
         </t-menu>
       </t-aside>
       <t-layout>
-        <l-breadcrumb v-if="settingStore.showBreadcrumb" />
         <t-content>
           <div>
             <router-view v-slot="{ Component }">
@@ -171,7 +170,6 @@ import { useSettingStore } from '@/stores'
 import { useUserStore } from '@/stores'
 
 import setting from './setting.vue'
-import LBreadcrumb from './components/Breadcrumb.vue'
 
 const settingStore = useSettingStore()
 const userStore = useUserStore()

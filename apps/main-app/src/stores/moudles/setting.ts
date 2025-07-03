@@ -36,6 +36,7 @@ export const useSettingStore = defineStore('settings', () => {
       showBreadcrumb: showBreadcrumb.value,
       showFooter: showFooter.value,
     }
+    loadMode()
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
   }
 
