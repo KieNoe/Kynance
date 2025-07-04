@@ -1,6 +1,3 @@
-import { DashboardIcon } from 'tdesign-icons-vue-next'
-import { shallowRef } from 'vue'
-
 import Layout from '@/layouts/index.vue'
 
 export default [
@@ -14,7 +11,7 @@ export default [
         zh_CN: '帮助',
         en_US: 'Help',
       },
-      icon: shallowRef(DashboardIcon),
+      icon: 'help-circle',
       orderNo: 0,
     },
     children: [

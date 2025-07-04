@@ -9,7 +9,6 @@ export const useSettingStore = defineStore('settings', () => {
   const mode = ref<'dark' | 'light'>('light')
   const themeColor = ref<string>('#0052D9')
   const showSettingPanel = ref<boolean>(false)
-  const showBreadcrumb = ref<boolean>(false)
   const showFooter = ref<boolean>(true)
 
   // 持久化 key
@@ -22,7 +21,6 @@ export const useSettingStore = defineStore('settings', () => {
       const settings = JSON.parse(savedSettings)
       mode.value = settings.mode || 'light'
       themeColor.value = settings.themeColor || '#0052D9'
-      showBreadcrumb.value = settings.showBreadcrumb === true
       showFooter.value = settings.showFooter === true
     }
     loadMode()
@@ -33,7 +31,6 @@ export const useSettingStore = defineStore('settings', () => {
     const settings = {
       mode: mode.value,
       themeColor: themeColor.value,
-      showBreadcrumb: showBreadcrumb.value,
       showFooter: showFooter.value,
     }
     loadMode()
@@ -44,11 +41,6 @@ export const useSettingStore = defineStore('settings', () => {
   const toggleMode = () => {
     mode.value = mode.value === 'dark' ? 'light' : 'dark'
     loadMode()
-    saveSettings()
-  }
-
-  const toggleBreadcrumb = () => {
-    showBreadcrumb.value = !showBreadcrumb.value
     saveSettings()
   }
 
@@ -82,12 +74,10 @@ export const useSettingStore = defineStore('settings', () => {
     mode,
     themeColor,
     showSettingPanel,
-    showBreadcrumb,
     showFooter,
     toggleSettingPanel,
     toggleMode,
     setThemeColor,
-    toggleBreadcrumb,
     toggleFooter,
     loadMode,
     loadSettings,

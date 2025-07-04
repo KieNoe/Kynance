@@ -1,6 +1,3 @@
-import { DashboardIcon } from 'tdesign-icons-vue-next'
-import { shallowRef } from 'vue'
-
 import Layout from '@/layouts/index.vue'
 
 export default [
@@ -11,10 +8,10 @@ export default [
     name: 'market',
     meta: {
       title: {
-        zh_CN: '市场',
+        zh_CN: '市场行情',
         en_US: 'Market',
       },
-      icon: shallowRef(DashboardIcon),
+      icon: 'earth',
       orderNo: 0,
     },
     children: [

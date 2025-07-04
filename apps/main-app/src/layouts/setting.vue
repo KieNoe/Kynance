@@ -56,9 +56,6 @@
             </div>
           </t-radio-group>
           <div class="setting-group-title">{{ t('layout.setting.LayoutConfig') }}</div>
-          <t-form-item :label="t('layout.setting.element.showBreadcrumb')" name="showBreadcrumb">
-            <t-switch v-model="settingStore.showBreadcrumb" @change="settingStore.saveSettings" />
-          </t-form-item>
           <t-form-item :label="t('layout.setting.element.showFooter')" name="showFooter">
             <t-switch v-model="settingStore.showFooter" @change="settingStore.saveSettings" />
           </t-form-item>

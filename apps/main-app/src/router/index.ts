@@ -22,6 +22,7 @@ export const homepageRouterList: Array<RouteRecordRaw> = mapModuleRouterList(hom
 export const fixedRouterList: Array<RouteRecordRaw> = mapModuleRouterList(fixedModules)
 
 export const allRoutes = [...homepageRouterList, ...fixedRouterList, ...defaultRouterList]
+export const navRoutes = [...homepageRouterList, ...fixedRouterList]
 export function mapModuleRouterList(modules: any): Array<RouteRecordRaw> {
   const routerList: Array<RouteRecordRaw> = []
   Object.keys(modules).forEach((key) => {
