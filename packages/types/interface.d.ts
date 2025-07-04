@@ -6,7 +6,6 @@ export interface UserInfo {
   permission: number;
   email: string;
 }
-export type ModeType = 'dark' | 'light';
 
 export interface RouteMeta {
   title?: string | Record<string, string>;

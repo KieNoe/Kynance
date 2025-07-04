@@ -8,6 +8,9 @@ body::-webkit-scrollbar-thumb {
   background-clip: content-box;
   background-color: var(--td-scrollbar-color);
 }
+body::-webkit-scrollbar-track {
+  background: var(--td-scrollbar-color);
+}
 body {
   overflow-x: hidden;
   margin: 0;
