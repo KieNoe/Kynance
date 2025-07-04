@@ -58,7 +58,7 @@ router.beforeEach(async (to, from, next) => {
         next()
       } else {
         // 路由不存在，重定向到首页
-        next(`/`)
+        next(`/result/404`)
       }
     } catch (error: any) {
       // 捕获错误并显示错误消息
