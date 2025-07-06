@@ -3,7 +3,7 @@
     <LayoutHeader />
     <t-layout class="inner-layout">
       <t-aside style="border-top: 1px solid var(--component-border)">
-        <LSideNav style="height: 100%" />
+        <LayoutSideNav style="height: 100%" />
       </t-aside>
       <t-layout>
         <LayoutContent />
@@ -17,7 +17,7 @@
 import LayoutHeader from './components/LayoutHeader.vue'
 import LayoutContent from './components/LayoutContent.vue'
 import LayoutFooter from './components/LayoutFooter.vue'
-import LSideNav from './components/LayoutSideNav.vue'
+import LayoutSideNav from './components/LayoutSideNav.vue'
 import setting from './setting.vue'
 </script>
 <style scoped lang="less">

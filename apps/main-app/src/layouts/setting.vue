@@ -11,7 +11,7 @@
       <div class="setting-container">
         <t-form ref="form" label-align="left">
           <div class="setting-group-title">{{ t('layout.setting.theme.color') }}</div>
-          <t-radio-group v-model="settingStore.themeColor" @change="settingStore.saveSettings">
+          <t-radio-group v-model="settingStore.themeColor" @change="settingStore.setThemeColor">
             <div
               v-for="(item, index) in DEFAULT_COLOR_OPTIONS"
               :key="index"

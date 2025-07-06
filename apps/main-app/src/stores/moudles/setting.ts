@@ -1,8 +1,10 @@
 // stores/settingsStore.ts
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+import { Color } from 'tvision-color'
 
 import { KThemeColor } from '@/constants'
+import { generateColorMap, insertThemeStylesheet } from '@/infrastructure/utils/color'
 
 export const useSettingStore = defineStore('settings', () => {
   // 状态
@@ -10,6 +12,7 @@ export const useSettingStore = defineStore('settings', () => {
   const themeColor = ref<string>('#0052D9')
   const showSettingPanel = ref<boolean>(false)
   const showFooter = ref<boolean>(true)
+  const colorList = ref<Record<string, Record<string, string>>>({})
 
   // 持久化 key
   const STORAGE_KEY = 'app_settings'
@@ -22,6 +25,7 @@ export const useSettingStore = defineStore('settings', () => {
       mode.value = settings.mode || 'light'
       themeColor.value = settings.themeColor || '#0052D9'
       showFooter.value = settings.showFooter === true
+      colorList.value = settings.colorList || {}
     }
     loadMode()
   }
@@ -32,6 +36,7 @@ export const useSettingStore = defineStore('settings', () => {
       mode: mode.value,
       themeColor: themeColor.value,
       showFooter: showFooter.value,
+      colorList: colorList.value,
     }
     loadMode()
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
@@ -60,7 +65,28 @@ export const useSettingStore = defineStore('settings', () => {
   // 设置主题颜色
   const setThemeColor = (color: KThemeColor) => {
     themeColor.value = color
+    changeBrandTheme(color)
     saveSettings()
+  }
+
+  const changeBrandTheme = (themeColor: string) => {
+    // 以主题色加显示模式作为键
+    const colorKey = `${themeColor}[${mode.value}]`
+    console.log('colorKey', colorKey)
+    let colorMap = colorList[colorKey]
+    // 如果不存在色阶，就需要计算
+    if (colorMap === undefined) {
+      const [{ colors: newPalette, primary: brandColorIndex }] = Color.getColorGradations({
+        colors: [themeColor],
+        step: 10,
+        remainInput: false, // 是否保留输入 不保留会矫正不合适的主题色
+      })
+      colorMap = generateColorMap(themeColor, newPalette, mode.value as any, brandColorIndex)
+      colorList[colorKey] = colorMap
+    }
+    // TODO 需要解决不停切换时有反复插入 style 的问题
+    insertThemeStylesheet(themeColor, colorMap, mode.value as any)
+    document.documentElement.setAttribute('theme-color', themeColor)
   }
 
   const toggleSettingPanel = () => {
@@ -75,6 +101,7 @@ export const useSettingStore = defineStore('settings', () => {
     themeColor,
     showSettingPanel,
     showFooter,
+    colorList,
     toggleSettingPanel,
     toggleMode,
     setThemeColor,
