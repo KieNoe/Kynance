@@ -85,6 +85,8 @@
   </t-header>
 </template>
 <script lang="ts" setup>
+import { MessagePlugin } from 'tdesign-vue-next'
+
 import { langList, t } from '@/infrastructure/locales'
 import { useLocale } from '@/infrastructure/locales/useLocale'
 import { useSettingStore } from '@/stores'
@@ -107,8 +109,13 @@ const navToHelper = () => {
 const navToHome = () => {
   router.push('/')
 }
-const handleLogout = () => {}
-const handleNav = () => {}
+const handleLogout = async () => {
+  await userStore.logout()
+  MessagePlugin.success('退出成功')
+}
+const handleNav = () => {
+  router.push('/user')
+}
 </script>
 <style scoped>
 .header-avatar-icon,

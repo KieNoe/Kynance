@@ -12,8 +12,8 @@
   </t-content>
 </template>
 <style scoped>
-.out-layout {
-  height: 100vh;
+div {
+  padding: var(--td-comp-paddingTB-m) var(--td-comp-paddingLR-m);
 }
 .fade-leave-active,
 .fade-enter-active {

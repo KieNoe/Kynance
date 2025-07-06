@@ -11,12 +11,20 @@ export const useUserStore = defineStore('user', () => {
     return storedUser
       ? JSON.parse(storedUser)
       : {
-          name: 'admin',
-          id: '',
+          name: 'kienoe',
+          id: '927115',
           avatar: '',
           token: '1',
           permission: 0,
-          email: '',
+          email: 'Account@qq.com',
+          telephone: '13923734567',
+          description: 'git push origin life --force',
+          createdData: '2025-01-01',
+          usingTime: 10,
+          activeTime: 10,
+          totalMoney: 10,
+          heldStocks: ['A', 'B', 'C'],
+          yield: 0.0047,
         }
   }
 
@@ -37,12 +45,20 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const logout: () => void = () => {
-    user.token = ''
+    user.token = '1'
     user.permission = 0
-    user.name = ''
-    user.id = ''
+    user.name = 'kienoe'
+    user.id = '927115'
     user.avatar = ''
-    user.email = ''
+    user.email = 'Account@qq.com'
+    user.createdData = '2025-01-01'
+    user.description = 'git push origin life --force'
+    user.usingTime = 10
+    user.activeTime = 10
+    user.totalMoney = 10
+    user.heldStocks = ['A', 'B', 'C']
+    user.telephone = '13923734567'
+    user.yield = 0.0047
     saveToLocalStorage() // 登出时保存状态
   }
 

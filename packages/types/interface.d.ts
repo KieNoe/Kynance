@@ -5,6 +5,14 @@ export interface UserInfo {
   token: string;
   permission: number;
   email: string;
+  telephone: string;
+  description: string;
+  createdData: string;
+  usingTime: number;
+  activeTime: number;
+  totalMoney: number;
+  heldStocks: string[];
+  yield: number;
 }
 
 export interface RouteMeta {

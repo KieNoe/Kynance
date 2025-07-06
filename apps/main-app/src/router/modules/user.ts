@@ -5,20 +5,20 @@ export default [
     path: '/user',
     name: 'user',
     component: Layout,
-    redirect: '/user/data',
+    redirect: '/user/profile',
     meta: { title: { zh_CN: '个人中心', en_US: 'User Center' }, icon: 'user-circle' },
     children: [
-      {
-        path: 'data',
-        name: 'UserData',
-        component: () => import('@/pages/user/data/index.vue'),
-        meta: { title: { zh_CN: '个人数据', en_US: 'User Data' } },
-      },
       {
         path: 'profile',
         name: 'UserProfile',
         component: () => import('@/pages/user/profile/index.vue'),
         meta: { title: { zh_CN: '个人资料', en_US: 'User Profile' } },
+      },
+      {
+        path: 'data',
+        name: 'UserData',
+        component: () => import('@/pages/user/data/index.vue'),
+        meta: { title: { zh_CN: '个人数据', en_US: 'User Data' } },
       },
       {
         path: 'preferences',
