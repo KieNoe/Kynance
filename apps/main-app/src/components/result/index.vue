@@ -75,6 +75,7 @@ const dynamicComponent = computed(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-right: 232px;
   }
 
   &-bg-img {

@@ -4,6 +4,7 @@ export default {
   evening: '晚上好，',
   markDay1: '今天是你来到 Kynance 的第 ',
   markDay2: ' 天',
+  day: '天',
   personalInfo: {
     title: '个人信息',
     description: '时间与智慧，终将开花结果',

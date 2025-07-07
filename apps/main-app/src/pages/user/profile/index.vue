@@ -27,12 +27,7 @@
         </t-descriptions>
       </t-card>
       <t-card class="content-container" :bordered="false">
-        <t-card
-          :bordered="false"
-          class="card-padding-no"
-          :title="t('pages.user.recentProfit')"
-          describe="（次）"
-        >
+        <t-card :bordered="false" class="card-padding-no" :title="t('pages.user.recentProfit')">
           <template #actions>
             <t-date-range-picker
               class="card-date-picker-container"

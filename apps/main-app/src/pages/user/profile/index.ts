@@ -24,11 +24,11 @@ export const USER_INFO_LIST = [
   },
   {
     title: 'pages.user.personalInfo.desc.dayOfUse',
-    content: String(userStore.user.usingTime) + t('pages.user.markDay2'),
+    content: userStore.user.usingTime + t('pages.user.day'),
   },
   {
     title: 'pages.user.personalInfo.desc.activeDay',
-    content: userStore.user.activeTime + t('pages.user.markDay2'),
+    content: userStore.user.activeTime + t('pages.user.day'),
   },
   {
     title: 'pages.user.personalInfo.desc.totalMoney',

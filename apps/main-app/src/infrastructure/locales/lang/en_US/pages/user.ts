@@ -4,6 +4,7 @@ export default {
   evening: 'Good Evening,',
   markDay1: 'today marks your ',
   markDay2: 'th day at Kynance',
+  day: 'day',
   personalInfo: {
     title: 'Personal Info',
     description: 'Time and wisdom, will bloom in the future',
