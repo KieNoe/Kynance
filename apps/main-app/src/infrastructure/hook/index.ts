@@ -7,11 +7,8 @@ import { LIGHT_CHART_COLORS, DARK_CHART_COLORS } from '@/constants'
 import { getChartListColor, changeChartsTheme } from '@/infrastructure/utils'
 
 const settingStore = useSettingStore()
-const chartTheme = computed(() => {
-  return settingStore.mode === 'dark' ? DARK_CHART_COLORS : LIGHT_CHART_COLORS
-})
 const chartThemeOption = computed(() => {
-  return getChartThemeOption(chartTheme.value)
+  return getChartThemeOption(settingStore.mode === 'dark' ? DARK_CHART_COLORS : LIGHT_CHART_COLORS)
 })
 const chartColorOption = computed(() => {
   return getChartColorOption(getChartListColor())
@@ -47,13 +44,20 @@ export const initChart = async (domId: string, chart: echarts.ECharts, option, o
     ...chartColorOption.value,
     ...option,
   })
-  const stopWatch = watch(
+  const stopColorWatch = watch(
     () => settingStore.themeColor,
     () => {
       changeChartsTheme([chart] as any)
     },
   )
+  const stopThemeWatch = watch(
+    () => settingStore.mode,
+    () => {
+      chart.setOption(chartThemeOption.value)
+    },
+  )
   onCleanUp(() => {
-    stopWatch()
+    stopColorWatch()
+    stopThemeWatch()
   })
 }

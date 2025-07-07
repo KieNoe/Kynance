@@ -34,14 +34,6 @@ export const getChartThemeOption = ({ borderColor, containerColor, textColor }) 
       backgroundColor: containerColor, // 提示框背景色
       borderColor: borderColor, // 提示框边框颜色
     },
-    series: [
-      {
-        type: 'bar',
-        itemStyle: {
-          borderColor: borderColor, // 数据项边框颜色
-        },
-      },
-    ],
   };
 };
 export const getChartColorOption = (colorList) => {

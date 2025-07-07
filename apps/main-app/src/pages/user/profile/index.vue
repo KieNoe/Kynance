@@ -69,7 +69,6 @@
 </template>
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
-import * as echarts from 'echarts'
 
 import { useUserStore } from '@/stores'
 import { getDiffDays, getDatePeriod } from '@/infrastructure/utils'

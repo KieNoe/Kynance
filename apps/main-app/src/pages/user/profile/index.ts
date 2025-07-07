@@ -66,7 +66,6 @@ export const WEBSITE_RECOMMEND = [
   },
 ]
 export const PROFIT_OPTION = {
-  title: { text: t('pages.user.recentProfit') },
   xAxis: {
     data: ['A', 'B', 'C', 'D', 'E'],
     type: 'category',
