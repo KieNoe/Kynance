@@ -5,7 +5,7 @@
       <t-aside style="border-top: 1px solid var(--component-border)">
         <LayoutSideNav style="height: 100%" />
       </t-aside>
-      <t-layout>
+      <t-layout class="inner-layout-content">
         <LayoutContent />
         <LayoutFooter />
       </t-layout>
@@ -34,5 +34,8 @@ import setting from './setting.vue'
     background-clip: content-box;
     background-color: var(--td-scrollbar-color);
   }
+}
+.inner-layout-content {
+  margin-left: 232px;
 }
 </style>

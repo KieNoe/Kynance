@@ -92,6 +92,9 @@ importers:
 
   apps/main-app:
     dependencies:
+      '@kynance/chart-core':
+        specifier: workspace:^
+        version: link:../../packages/chart-core
       '@vueuse/core':
         specifier: 13.4.0
         version: 13.4.0(vue@3.5.16(typescript@5.8.3))
@@ -241,7 +244,14 @@ importers:
         specifier: ^2.2.8
         version: 2.2.10(typescript@5.8.3)
 
-  packages/chart-core: {}
+  packages/chart-core:
+    dependencies:
+      echarts:
+        specifier: 5.6.0
+        version: 5.6.0
+      vue:
+        specifier: ^3.5.16
+        version: 3.5.16(typescript@5.8.3)
 
   packages/providers: {}
 

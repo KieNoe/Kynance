@@ -24,6 +24,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@kynance/chart-core": "workspace:^",
     "@vueuse/core": "13.4.0",
     "alova": "^3.3.0",
     "dayjs": "1.11.13",

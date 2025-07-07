@@ -22,8 +22,12 @@ export default {
     normal: '普通用户',
     admin: '管理员',
   },
-  visitData: '首页访问数据',
-  contentList: '内容列表',
-  teamMember: '团队成员',
-  serviceProduction: '服务产品',
+  recentProfit: '近期盈亏',
+  websiteRecommend: '网站推荐',
+  website: {
+    github: '一个面向开发者的代码托管平台',
+    codepen: '一个在线前端开发环境',
+    gitlab: '一个基于 Git 的代码托管平台',
+    figma: '一个基于云的协作式 UI/UX 设计工具',
+  },
 }

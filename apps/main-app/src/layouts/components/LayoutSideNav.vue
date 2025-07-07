@@ -26,6 +26,7 @@ const active = computed(() => getActive())
   padding-left: 0.6vw;
 }
 .side-nav {
+  position: fixed;
   margin-right: 3.9vw;
   height: 100%;
 }

@@ -22,8 +22,12 @@ export default {
     normal: 'Normal user',
     admin: 'Admin',
   },
-  contentList: 'Content List',
-  visitData: 'Visit Data',
-  teamMember: 'Team Member',
-  serviceProduction: 'Service Product',
+  recentProfit: 'Recent Profit',
+  websiteRecommend: 'Website Recommend',
+  website: {
+    github: 'A developer platform for hosting and collaborating',
+    codepen: 'An online front-end development environment',
+    gitlab: 'A Git-based code hosting platform',
+    figma: 'A cloud-based collaborative UI/UX design tool',
+  },
 }
