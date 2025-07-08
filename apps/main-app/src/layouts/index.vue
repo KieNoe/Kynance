@@ -23,6 +23,10 @@ import setting from './setting.vue'
 <style scoped lang="less">
 .inner-layout {
   overflow: auto;
+  display: flex;
+  .inner-layout-content {
+    flex: 1;
+  }
   &::-webkit-scrollbar {
     width: 8px;
     background: transparent;
@@ -34,8 +38,5 @@ import setting from './setting.vue'
     background-clip: content-box;
     background-color: var(--td-scrollbar-color);
   }
-}
-.inner-layout-content {
-  margin-left: 232px;
 }
 </style>

@@ -30,7 +30,6 @@ import { t } from '@/infrastructure/locales'
   justify-content: center;
   align-items: center;
   height: 75vh;
-  margin-right: 232px;
 
   &-icon {
     font-size: var(--td-comp-size-xxxxl);

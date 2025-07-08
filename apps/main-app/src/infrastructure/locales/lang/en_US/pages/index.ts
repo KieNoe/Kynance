@@ -3,7 +3,7 @@ import dashboardDetail from './dashboard-detail'
 import detailBase from './detail-base'
 import detailCard from './detail-card'
 import detailDeploy from './detail-deploy'
-import detailSecondary from './detail-secondary'
+import notice from './notice'
 import formBase from './form-base'
 import formStep from './form-step'
 import listBase from './list-base'
@@ -24,7 +24,7 @@ export default {
   detailBase,
   detailCard,
   detailDeploy,
-  detailSecondary,
+  notice,
   formBase,
   formStep,
   user,

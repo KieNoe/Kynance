@@ -27,7 +27,7 @@ const active = computed(() => getActive())
 }
 .side-nav {
   position: fixed;
-  margin-right: 3.9vw;
   height: 100%;
+  width: 232px;
 }
 </style>

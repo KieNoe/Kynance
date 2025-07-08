@@ -72,7 +72,7 @@
               mode="date"
             />
           </template>
-          <div id="lineContainer" style="width: 100%; height: 328px"></div>
+          <div id="lineContainer" style="width: 75%; height: 328px"></div>
         </t-card>
       </t-card>
     </t-col>
