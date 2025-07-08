@@ -12,13 +12,49 @@
       </div>
       <t-card class="user-info-list" :title="t('pages.user.personalInfo.title')" :bordered="false">
         <template #actions>
-          <t-button theme="default" shape="square" variant="text">
+          <t-button theme="default" shape="square" variant="text" @click="handleEditInfo">
             <t-icon name="ellipsis" />
           </t-button>
+          <t-dialog
+            :visible="dialogVisible"
+            header="编辑个人信息"
+            width="40%"
+            :on-cancel="close"
+            :on-esc-keydown="close"
+            :on-close-btn-click="close"
+            :on-overlay-click="close"
+            :cancel-btn="null"
+            :confirm-btn="null"
+          >
+            <t-form
+              ref="form"
+              :rules="FORM_RULES as any"
+              :data="userInfo"
+              :color="true"
+              @reset="onReset"
+              @submit="onSubmit"
+            >
+              <t-form-item label="昵称" name="name">
+                <t-input v-model="userInfo.name" placeholder="请输入内容"></t-input>
+              </t-form-item>
+              <t-form-item label="手机号码" name="tel">
+                <t-input v-model="userInfo.tel" placeholder="请输入内容"></t-input>
+              </t-form-item>
+              <t-form-item label="个性签名" name="signature">
+                <t-input v-model="userInfo.signature" placeholder="请输入内容"></t-input>
+              </t-form-item>
+              <t-form-item>
+                <t-space size="small">
+                  <t-button theme="primary" type="submit">提交</t-button>
+                  <t-button theme="default" variant="base" type="reset">重置</t-button>
+                </t-space>
+              </t-form-item>
+            </t-form>
+          </t-dialog>
         </template>
         <t-descriptions :column="4" item-layout="vertical">
           <t-descriptions-item
-            v-for="(item, index) in USER_INFO_LIST"
+            v-for="(item, index) in USER_LIST"
             :key="index"
             :label="t(item.title)"
           >
@@ -48,9 +84,20 @@
       </t-card>
       <t-card :title="t('pages.user.websiteRecommend')" class="user-team" :bordered="false">
         <template #actions>
-          <t-button theme="default" shape="square" variant="text">
+          <t-button theme="default" shape="square" variant="text" @click="handleEditRecommend">
             <t-icon name="ellipsis" />
           </t-button>
+          <t-dialog
+            :visible="dialogVisibleRecommend"
+            :on-cancel="closeRecommend"
+            :on-esc-keydown="closeRecommend"
+            :on-close-btn-click="closeRecommend"
+            :on-overlay-click="closeRecommend"
+            :on-confirm="closeRecommend"
+            :header="t('pages.user.mutualEncouragement')"
+          >
+            <p>{{ t('pages.user.encourage') }}</p>
+          </t-dialog>
         </template>
         <t-list :split="false">
           <t-list-item v-for="(item, index) in WEBSITE_RECOMMEND" :key="index">
@@ -63,7 +110,8 @@
   </t-row>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
+import { MessagePlugin } from 'tdesign-vue-next'
 
 import { useUserStore } from '@/stores'
 import { getDiffDays, getDatePeriod } from '@/infrastructure/utils'
@@ -71,12 +119,107 @@ import { LAST_7_DAYS } from '@/infrastructure/utils/date'
 import { t } from '@/infrastructure/locales'
 import { initChart } from '@/infrastructure/hook'
 
-import { USER_INFO_LIST, WEBSITE_RECOMMEND, PROFIT_OPTION } from './index'
+import { USER_INFO_LIST, WEBSITE_RECOMMEND, PROFIT_OPTION, refreshUserInfoList } from './index'
 const userStore = useUserStore()
+const dialogVisible = ref(false)
+const dialogVisibleRecommend = ref(false)
+let USER_LIST = USER_INFO_LIST
+const form = ref(null)
 let lineChart
+
+const userInfo = reactive({
+  name: userStore.user.name,
+  tel: userStore.user.telephone,
+  signature: userStore.user.description,
+})
+
+const FORM_RULES = {
+  name: [
+    {
+      whitespace: true,
+      message: '昵称不能为空',
+    },
+    {
+      min: 3,
+      message: '输入字数应在3到6之间',
+      type: 'error',
+      trigger: 'blur',
+    },
+    {
+      max: 6,
+      message: '输入字数应在3到6之间',
+      type: 'error',
+      trigger: 'blur',
+    },
+  ],
+  tel: [
+    {
+      validator: (n) => !isNaN(n) && !isNaN(parseFloat(n)),
+      message: '必须为数字',
+    },
+    {
+      len: 11,
+      message: '必须为11位',
+    },
+  ],
+  signature: [
+    {
+      whitespace: true,
+      message: '个性签名不能为空',
+    },
+    {
+      min: 3,
+      message: '输入字数应在3到30之间',
+      type: 'error',
+      trigger: 'blur',
+    },
+    {
+      max: 30,
+      message: '输入字数应在3到30之间',
+      type: 'error',
+      trigger: 'blur',
+    },
+  ],
+}
 
 const handleNav = (item) => {
   window.open('https://' + item.title + '.com')
+}
+
+const handleEditInfo = () => {
+  dialogVisible.value = true
+}
+
+const handleEditRecommend = () => {
+  dialogVisibleRecommend.value = true
+}
+
+const closeRecommend = () => {
+  dialogVisibleRecommend.value = false
+}
+
+const close = () => {
+  dialogVisible.value = false
+}
+
+const onReset = () => {
+  userInfo.name = userStore.user.name
+  userInfo.tel = userStore.user.telephone
+  userInfo.signature = userStore.user.description
+}
+
+const onSubmit = ({ validateResult, firstError, e }) => {
+  e.preventDefault()
+  if (validateResult === true) {
+    userStore.setUser('name', userInfo.name)
+    userStore.setUser('telephone', userInfo.tel)
+    userStore.setUser('description', userInfo.signature)
+    USER_LIST = refreshUserInfoList(userStore, t)
+    close()
+    MessagePlugin.success('编辑成功')
+  } else {
+    MessagePlugin.warning(firstError)
+  }
 }
 
 onMounted(() => {

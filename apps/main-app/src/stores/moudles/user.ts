@@ -15,9 +15,10 @@ export const useUserStore = defineStore('user', () => {
           id: '927115',
           avatar: '',
           token: '1',
+          password: '123456',
           permission: 0,
           email: 'Account@qq.com',
-          telephone: '13923734567',
+          telephone: 13923734567,
           description: 'git push origin life --force',
           createdData: '2025-01-01',
           usingTime: 10,
@@ -50,6 +51,7 @@ export const useUserStore = defineStore('user', () => {
     user.name = 'kienoe'
     user.id = '927115'
     user.avatar = ''
+    user.password = '123456'
     user.email = 'Account@qq.com'
     user.createdData = '2025-01-01'
     user.description = 'git push origin life --force'
@@ -57,7 +59,7 @@ export const useUserStore = defineStore('user', () => {
     user.activeTime = 10
     user.totalMoney = 10
     user.heldStocks = ['A', 'B', 'C']
-    user.telephone = '13923734567'
+    user.telephone = 13923734567
     user.yield = 0.0047
     saveToLocalStorage() // 登出时保存状态
   }

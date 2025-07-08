@@ -3,7 +3,7 @@ export default {
   afternoon: 'Good Afternoon,',
   evening: 'Good Evening,',
   markDay1: 'today marks your ',
-  markDay2: 'th day at Kynance',
+  markDay2: 'th day using Kynance since',
   day: 'day',
   personalInfo: {
     title: 'Personal Info',
@@ -25,6 +25,8 @@ export default {
   },
   recentProfit: 'Recent Profit',
   websiteRecommend: 'Website Recommend',
+  mutualEncouragement: 'Mutual encouragement',
+  encourage: 'Learning is a lifelong thing.',
   website: {
     github: 'A developer platform for hosting and collaborating',
     codepen: 'An online front-end development environment',

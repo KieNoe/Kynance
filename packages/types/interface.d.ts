@@ -3,9 +3,10 @@ export interface UserInfo {
   id: string;
   avatar: string;
   token: string;
+  password: string;
   permission: number;
   email: string;
-  telephone: string;
+  telephone: number;
   description: string;
   createdData: string;
   usingTime: number;

@@ -2,7 +2,7 @@ export default {
   morning: '早上好，',
   afternoon: '下午好，',
   evening: '晚上好，',
-  markDay1: '今天是你来到 Kynance 的第 ',
+  markDay1: '今天是你使用 Kynance 以来的第 ',
   markDay2: ' 天',
   day: '天',
   personalInfo: {
@@ -25,6 +25,8 @@ export default {
   },
   recentProfit: '近期盈亏',
   websiteRecommend: '网站推荐',
+  mutualEncouragement: '共勉',
+  encourage: '学习是一件终身的事，共勉',
   website: {
     github: '一个面向开发者的代码托管平台',
     codepen: '一个在线前端开发环境',
