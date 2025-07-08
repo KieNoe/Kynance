@@ -20,7 +20,7 @@ export default {
       yield: '收益率',
       description: '个性签名',
     },
-    normal: '普通用户',
+    normal: '用户',
     admin: '管理员',
   },
   recentProfit: '近期盈亏',
