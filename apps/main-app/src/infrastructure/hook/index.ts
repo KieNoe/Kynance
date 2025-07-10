@@ -1,6 +1,6 @@
 import { getChartThemeOption, getChartColorOption } from '@kynance/chart-core'
 import * as echarts from 'echarts'
-import { computed, watch } from 'vue'
+import { computed, watch, ref, onUnmounted, Ref } from 'vue'
 
 import { useSettingStore } from '@/stores'
 import { LIGHT_CHART_COLORS, DARK_CHART_COLORS } from '@/constants'
@@ -60,4 +60,32 @@ export const initChart = async (domId: string, chart: echarts.ECharts, option, o
     stopColorWatch()
     stopThemeWatch()
   })
+}
+
+/**
+ * counter utils
+ * @param duration
+ * @returns
+ */
+export const useCounter = (duration = 60): [Ref<number>, () => void] => {
+  let intervalTimer: ReturnType<typeof setInterval>
+  onUnmounted(() => {
+    clearInterval(intervalTimer)
+  })
+  const countDown = ref(0)
+
+  return [
+    countDown,
+    () => {
+      countDown.value = duration
+      intervalTimer = setInterval(() => {
+        if (countDown.value > 0) {
+          countDown.value -= 1
+        } else {
+          clearInterval(intervalTimer)
+          countDown.value = 0
+        }
+      }, 1000)
+    },
+  ]
 }

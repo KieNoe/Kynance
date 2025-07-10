@@ -29,7 +29,7 @@ export const useUserStore = defineStore('user', () => {
         }
   }
 
-  const user: UserInfo = initialUser()
+  let user: UserInfo = initialUser()
 
   // 保存用户数据到本地存储
   const saveToLocalStorage = () => {
@@ -64,6 +64,14 @@ export const useUserStore = defineStore('user', () => {
     saveToLocalStorage() // 登出时保存状态
   }
 
+  const login: (userInfo: UserInfo) => void = (userInfo) => {
+    user = {
+      ...user,
+      ...userInfo,
+    }
+    saveToLocalStorage() // 登录时保存状态
+  }
+
   // 添加一个方法来手动清除持久化存储
   const clearStorage = () => {
     localStorage.removeItem(USER_STORAGE_KEY)
@@ -71,6 +79,7 @@ export const useUserStore = defineStore('user', () => {
   return {
     user,
     getUser,
+    login,
     logout,
     clearStorage,
     setUser,

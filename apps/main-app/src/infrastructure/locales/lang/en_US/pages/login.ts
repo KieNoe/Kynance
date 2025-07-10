@@ -1,5 +1,5 @@
 export default {
-  loginTitle: 'Login in',
+  loginTitle: 'Login to',
   noAccount: 'No Account?',
   createAccount: 'Create Account',
   remember: 'Remember Account',

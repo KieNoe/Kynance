@@ -28,7 +28,54 @@
           >
             <t-form
               ref="form"
-              :rules="FORM_RULES as any"
+              :rules="{
+                name: [
+                  {
+                    whitespace: true,
+                    message: '昵称不能为空',
+                  },
+                  {
+                    min: 3,
+                    message: '输入字数应在3到6之间',
+                    type: 'error',
+                    trigger: 'blur',
+                  },
+                  {
+                    max: 6,
+                    message: '输入字数应在3到6之间',
+                    type: 'error',
+                    trigger: 'blur',
+                  },
+                ],
+                tel: [
+                  {
+                    validator: (n) => !isNaN(n) && !isNaN(parseFloat(n)),
+                    message: '必须为数字',
+                  },
+                  {
+                    len: 11,
+                    message: '必须为11位',
+                  },
+                ],
+                signature: [
+                  {
+                    whitespace: true,
+                    message: '个性签名不能为空',
+                  },
+                  {
+                    min: 3,
+                    message: '输入字数应在3到30之间',
+                    type: 'error',
+                    trigger: 'blur',
+                  },
+                  {
+                    max: 30,
+                    message: '输入字数应在3到30之间',
+                    type: 'error',
+                    trigger: 'blur',
+                  },
+                ],
+              }"
               :data="userInfo"
               :color="true"
               @reset="onReset"
@@ -132,55 +179,6 @@ const userInfo = reactive({
   tel: userStore.user.telephone,
   signature: userStore.user.description,
 })
-
-const FORM_RULES = {
-  name: [
-    {
-      whitespace: true,
-      message: '昵称不能为空',
-    },
-    {
-      min: 3,
-      message: '输入字数应在3到6之间',
-      type: 'error',
-      trigger: 'blur',
-    },
-    {
-      max: 6,
-      message: '输入字数应在3到6之间',
-      type: 'error',
-      trigger: 'blur',
-    },
-  ],
-  tel: [
-    {
-      validator: (n) => !isNaN(n) && !isNaN(parseFloat(n)),
-      message: '必须为数字',
-    },
-    {
-      len: 11,
-      message: '必须为11位',
-    },
-  ],
-  signature: [
-    {
-      whitespace: true,
-      message: '个性签名不能为空',
-    },
-    {
-      min: 3,
-      message: '输入字数应在3到30之间',
-      type: 'error',
-      trigger: 'blur',
-    },
-    {
-      max: 30,
-      message: '输入字数应在3到30之间',
-      type: 'error',
-      trigger: 'blur',
-    },
-  ],
-}
 
 const handleNav = (item) => {
   window.open('https://' + item.title + '.com')
