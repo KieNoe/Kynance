@@ -1,22 +1,21 @@
 <script setup lang="ts">
-import { useUserStore, useSettingStore } from '@/stores'
+import { onMounted, ref } from 'vue'
 
-const userStore = useUserStore()
-const settingStore = useSettingStore()
+import { getMarketSummary } from '@/services/client'
 
-function change() {
-  console.log(userStore.user.name)
-  userStore.setUser('name', 'kynance')
-  console.log(userStore.user.name)
-  console.log(settingStore.mode)
-  settingStore.toggleMode()
-}
+const data = ref()
+onMounted(() => {
+  getMarketSummary().then((res) => {
+    console.log('res', res)
+    data.value = res
+  })
+})
 </script>
 <template>
   <div>
-    <p>Home</p>
-    <button @click="change">change</button>
-    <router-link to="/watchlists">跳转到观察列表</router-link>
+    <div v-if="data">
+      {{ data }}
+    </div>
   </div>
 </template>
 <style scoped>

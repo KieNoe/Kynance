@@ -5,10 +5,12 @@ import { MessagePlugin } from 'tdesign-vue-next'
 
 import { useUserStore } from '@/stores'
 
+const isDevelopment = import.meta.env.VITE_ENV === 'development'
+
 const userStore = useUserStore()
 
 export const alovaInstance = createAlova({
-  baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: isDevelopment ? '' : import.meta.env.VITE_BASE_URL,
   timeout: 10 * 1000,
   statesHook: VueHook,
   requestAdapter: adapterFetch(),
@@ -42,10 +44,8 @@ export const alovaInstance = createAlova({
       }
       const json = await response.json()
       if (json.code !== 200) {
-        // 抛出错误或返回reject状态的Promise实例时，此请求将抛出错误
         MessagePlugin.error(json.message, 1500)
       }
-      // 解析的响应数据将传给method实例的transform钩子函数，这些函数将在后续讲解
       return json.data
     },
     onError: (error) => {

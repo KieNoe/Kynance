@@ -96,6 +96,8 @@ const onClick = () => {
 }
 const onClose = () => {
   visible.value = false
+  formData.value.account = 'admin'
+  formData.value.password = 'admin'
 }
 
 const onSubmit = async (ctx) => {
@@ -104,10 +106,10 @@ const onSubmit = async (ctx) => {
       await userStore.login({
         token: '123456',
         permission: 1,
-        name: 'kienoe',
+        name: 'admin',
         id: '927115',
         avatar: '',
-        password: '123456',
+        password: 'admin',
         email: 'Account@qq.com',
         createdData: '2025-01-01',
         description: 'git push origin life --force',

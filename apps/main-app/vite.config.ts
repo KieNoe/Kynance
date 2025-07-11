@@ -19,10 +19,10 @@ export default defineConfig({
     vue(),
     svgLoader(),
     // vueDevTools(),
-    // viteMockServe({
-    //   mockPath: 'mock',
-    //   enable: true,
-    // }),
+    viteMockServe({
+      mockPath: 'mock',
+      enable: true,
+    }),
   ],
   resolve: {
     alias: {
