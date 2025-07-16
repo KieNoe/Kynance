@@ -31,3 +31,7 @@ export const LAST_7_DAYS = [
   dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
   dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
 ]
+export const LAST_3_DAYS = [
+  dayjs().subtract(3, 'day').format('YYYY-MM-DD'),
+  dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+]

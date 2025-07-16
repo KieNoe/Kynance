@@ -15,6 +15,7 @@ onMounted(() => {
   <div>
     <div v-if="data">
       {{ data }}
+      {{ data[0].symbol }}
     </div>
   </div>
 </template>

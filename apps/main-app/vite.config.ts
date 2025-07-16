@@ -15,6 +15,9 @@ const { VITE_API_URL_PREFIX, VITE_BASE_URL } = loadEnv('development', CWD)
 // https://vite.dev/config/
 export default defineConfig({
   base: VITE_BASE_URL,
+  define: {
+    'process.env': {},
+  },
   plugins: [
     vue(),
     svgLoader(),
@@ -44,7 +47,11 @@ export default defineConfig({
     port: 3005,
     host: '0.0.0.0',
     proxy: {
-      [VITE_API_URL_PREFIX]: 'http://127.0.0.1:3000/',
+      '/api': {
+        target: 'https://finance.yahoo.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
     },
   },
 })

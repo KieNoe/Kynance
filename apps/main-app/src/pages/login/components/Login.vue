@@ -123,7 +123,7 @@ const onSubmit = async (ctx) => {
       })
 
       MessagePlugin.success('登录成功')
-      router.push('/')
+      router.push('/dashboard/base')
     } catch (e) {
       console.log(e)
       MessagePlugin.error(e.message)
