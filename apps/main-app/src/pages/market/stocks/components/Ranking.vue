@@ -3,19 +3,11 @@
     <t-space direction="vertical">
       <header>
         <t-dropdown
-          :options="[
-            {
-              content: '涨幅榜',
-              value: 'up',
-            },
-            {
-              content: '跌幅榜',
-              value: 'down',
-            },
-          ]"
+          :options="CONSTANTS.DROPDOWN_OPTIONS"
           trigger="click"
           @click="onRankChange"
           min-column-width="120px"
+          :disabled="disabled"
         >
           <t-space>
             <t-button variant="text" class="button">
@@ -26,148 +18,213 @@
             </t-button>
           </t-space>
         </t-dropdown>
-        <t-select defaultValue="中国大陆" v-on:change="onAreaChange">
-          <t-option key="中国大陆" label="中国大陆" value="中国大陆" />
-          <t-option key="美国" label="美国" value="美国" />
-          <t-option key="香港" label="香港" value="香港" />
-          <t-option key="台湾" label="香港" value="香港" />
-          <t-option key="日本" label="日本" value="日本" />
-          <t-option key="英国" label="英国" value="英国" />
-          <t-option key="德国" label="德国" value="德国" />
-          <t-option key="印度" label="印度" value="印度" />
-          <t-option key="澳大利亚" label="澳大利亚" value="澳大利亚" />
+        <t-select :defaultValue="t('pages.stock.countries.China')" v-on:change="onAreaChange">
+          <t-option
+            v-for="country in CONSTANTS.COUNTRIES"
+            :key="country"
+            :label="country"
+            :value="country"
+          />
         </t-select>
       </header>
-      <!-- v-model:activeRowKeys 父组件控制高亮行 -->
-      <!-- defaultActiveRowKeys 组件内部控制高亮行，父组件无法使用这个属性控制 -->
-      <transition name="fade" mode="out-in">
-        <t-skeleton
-          :loading="loading"
-          animation="gradient"
-          :rowCol="Array(22).fill({ width: '918px' })"
-        >
-          <t-table
-            row-key="key"
-            :data="tableData"
-            :columns="columns"
-            :hover="true"
-            :onRowClick="onRowClick"
-            v-if="tableData.length > 0"
-          ></t-table>
-        </t-skeleton>
-      </transition> </t-space
+      <t-skeleton
+        :loading="loading"
+        animation="gradient"
+        :rowCol="Array(22).fill({ width: '918px' })"
+      >
+        <t-table
+          row-key="key"
+          :data="tableData"
+          :columns="CONSTANTS.COLUMNS"
+          :hover="true"
+          :onRowClick="onRowClick"
+          v-if="tableData.length > 0"
+        ></t-table> </t-skeleton></t-space
   ></t-card>
 </template>
 
-<script lang="tsx">
-export default {
-  name: 'HighlightTable',
-}
-</script>
-
 <script lang="tsx" setup>
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, shallowRef } from 'vue'
 import { MessagePlugin, TableProps } from 'tdesign-vue-next'
 
 import { getDailyGainer, getDailyLoser } from '@/services/client'
 import { t } from '@/infrastructure/locales'
 
-const tab = ref('涨幅榜')
+const tab = ref(t('pages.stock.dropdown.up'))
 const loading = ref(true)
-const tableData = reactive<TableProps['data']>([])
-
-const columns = [
-  {
-    colKey: 'name',
-    title: '股票名称',
-    ellipsis: true,
-    width: 130,
-  },
-  {
-    colKey: 'price',
-    title: '现价',
-    ellipsis: true,
-    width: 80,
-  },
-  {
-    colKey: 'change',
-    title: '涨跌幅',
-    ellipsis: true,
-    width: 80,
-  },
-  {
-    colKey: 'changeAmount',
-    title: '涨跌额',
-    ellipsis: true,
-    width: 100,
-  },
-  {
-    colKey: 'volume',
-    title: '交易量',
-    width: 100,
-  },
-  {
-    colKey: 'highPrice',
-    title: '最高价',
-    ellipsis: true,
-    width: 80,
-  },
-  {
-    colKey: 'lowPrice',
-    title: '最低价',
-    ellipsis: true,
-    width: 80,
-  },
-  {
-    colKey: 'closePrice',
-    title: '前收盘价',
-    width: 80,
-    ellipsis: true,
-  },
-]
-const onRankChange = (data) => {
-  MessagePlugin.success(`选中【${data.content}】`)
-  tab.value = data.content
+const disabled = ref(false)
+const tableData = shallowRef<TableProps['data']>([])
+const CONSTANTS = {
+  COUNTRIES: [
+    t('pages.stock.countries.China'),
+    t('pages.stock.countries.America'),
+    t('pages.stock.countries.HongKong'),
+    t('pages.stock.countries.Taiwan'),
+    t('pages.stock.countries.Japan'),
+    t('pages.stock.countries.UK'),
+    t('pages.stock.countries.Germany'),
+    t('pages.stock.countries.India'),
+    t('pages.stock.countries.Australia'),
+  ],
+  DROPDOWN_OPTIONS: [
+    {
+      content: t('pages.stock.dropdown.up'),
+      value: 'up',
+    },
+    {
+      content: t('pages.stock.dropdown.down'),
+      value: 'down',
+    },
+  ],
+  COLUMNS: [
+    {
+      colKey: 'name',
+      title: t('pages.stock.columns.name'),
+      ellipsis: true,
+      width: 130,
+    },
+    {
+      colKey: 'price',
+      title: t('pages.stock.columns.price'),
+      ellipsis: true,
+      width: 60,
+    },
+    {
+      colKey: 'change',
+      title: t('pages.stock.columns.change'),
+      ellipsis: true,
+      width: 80,
+      cell: (h, { row }) => {
+        return (
+          <div class="t-statistic">
+            <div>
+              <div
+                class="t-statistic-content"
+                style={
+                  row.changeAmount > 0
+                    ? { color: 'var(--td-error-color)' }
+                    : { color: 'var(--td-success-color)' }
+                }
+              >
+                <span class="t-statistic-content-value" style="font-size: 1.3em !important">
+                  {row.changeAmount > 0 ? '+' + row.change : row.change}
+                </span>
+                <span class="t-statistic-content-unit">%</span>
+              </div>
+            </div>
+          </div>
+        )
+      },
+    },
+    {
+      colKey: 'changeAmount',
+      title: t('pages.stock.columns.changeAmount'),
+      ellipsis: true,
+      width: 80,
+      cell: (h, { row }) => {
+        return (
+          <div class="t-statistic">
+            <div>
+              <div
+                class="t-statistic-content"
+                style={
+                  row.changeAmount > 0
+                    ? { color: 'var(--td-error-color)' }
+                    : { color: 'var(--td-success-color)' }
+                }
+              >
+                <span class="t-statistic-content-value" style="font-size: 1.3em !important">
+                  {row.changeAmount > 0 ? '+' + row.changeAmount : row.changeAmount}
+                </span>
+              </div>
+            </div>
+          </div>
+        )
+      },
+    },
+    {
+      colKey: 'volume',
+      title: t('pages.stock.columns.volume'),
+      width: 90,
+    },
+    {
+      colKey: 'highPrice',
+      title: t('pages.stock.columns.highPrice'),
+      ellipsis: true,
+      width: 80,
+    },
+    {
+      colKey: 'lowPrice',
+      title: t('pages.stock.columns.lowPrice'),
+      ellipsis: true,
+      width: 80,
+    },
+    {
+      colKey: 'closePrice',
+      title: t('pages.stock.columns.closePrice'),
+      width: 80,
+      ellipsis: true,
+    },
+  ],
 }
-const onRowClick = () => {
-  MessagePlugin.success('点击行')
+const onRankChange = (data) => {
+  if (tab.value != data.content) {
+    tab.value = data.content
+    getDailyList(tab.value == t('pages.stock.dropdown.up') ? getDailyGainer : getDailyLoser)
+  }
+}
+const onRowClick = (data) => {
+  MessagePlugin.success('股票代码' + data.row.key)
 }
 const onAreaChange = () => {
   MessagePlugin.success('切换地区')
 }
-onMounted(() => {
+function getDailyList(get) {
+  loading.value = true
+  disabled.value = true
   const result = []
-  getDailyGainer().then((res) => {
-    if (typeof res === 'object' && res !== null && 'quotes' in res && Array.isArray(res.quotes)) {
-      const quotes = res.quotes
-      for (let i of quotes) {
-        result.push(
-          {
-            name: i.displayName,
-            volume: i.regularMarketVolume,
-            change: i.regularMarketChange,
-            changeAmount: i.regularMarketChangePercent,
-            price: i.regularMarketPrice,
-            highPrice: i.regularMarketDayHigh,
-            lowPrice: i.regularMarketDayLow,
-            closePrice: i.regularMarketPreviousClose,
-          },
-          {
-            name: i.displayName,
-            volume: i.regularMarketVolume,
-            change: i.regularMarketChange,
-            changeAmount: i.regularMarketChangePercent,
-            price: i.regularMarketPrice,
-            highPrice: i.regularMarketDayHigh,
-            lowPrice: i.regularMarketDayLow,
-            closePrice: i.regularMarketPreviousClose,
-          },
-        )
+  try {
+    get().then((res) => {
+      if (typeof res === 'object' && res !== null && 'quotes' in res && Array.isArray(res.quotes)) {
+        const quotes = res.quotes
+        for (let i of quotes) {
+          result.push(
+            {
+              key: i.symbol,
+              name: i.shortName,
+              volume: i.regularMarketVolume,
+              change: i.regularMarketChange.toPrecision(4),
+              changeAmount: i.regularMarketChangePercent.toPrecision(4),
+              price: i.regularMarketPrice,
+              highPrice: i.regularMarketDayHigh.toPrecision(4),
+              lowPrice: i.regularMarketDayLow.toPrecision(4),
+              closePrice: i.regularMarketPreviousClose,
+            },
+            {
+              key: i.symbol,
+              name: i.shortName,
+              volume: i.regularMarketVolume,
+              change: i.regularMarketChange.toPrecision(4),
+              changeAmount: i.regularMarketChangePercent.toPrecision(4),
+              price: i.regularMarketPrice,
+              highPrice: i.regularMarketDayHigh.toPrecision(4),
+              lowPrice: i.regularMarketDayLow.toPrecision(4),
+              closePrice: i.regularMarketPreviousClose,
+            },
+          )
+        }
+        tableData.value.splice(0, tableData.value.length)
+        tableData.value.push(...result)
+        loading.value = false
+        disabled.value = false
       }
-      tableData.push(...result)
-      loading.value = false
-    }
-  })
+    })
+  } catch {
+    MessagePlugin.error(t('pages.stock.error'))
+  }
+}
+onMounted(() => {
+  getDailyList(getDailyGainer)
 })
 </script>
 <style lang="less" scoped>

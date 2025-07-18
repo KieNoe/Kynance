@@ -16,17 +16,6 @@ export default [
     },
     children: [
       {
-        path: 'futures',
-        name: 'MarketFutures',
-        component: () => import('@/pages/market/futures/index.vue'),
-        meta: {
-          title: {
-            zh_CN: '期货',
-            en_US: 'Futures',
-          },
-        },
-      },
-      {
         path: 'stocks',
         name: 'MarketStocks',
         component: () => import('@/pages/market/stocks/index.vue'),
@@ -34,17 +23,6 @@ export default [
           title: {
             zh_CN: '股票',
             en_US: 'Stocks',
-          },
-        },
-      },
-      {
-        path: 'indices',
-        name: 'MarketIndices',
-        component: () => import('@/pages/market/indices/index.vue'),
-        meta: {
-          title: {
-            zh_CN: '指数',
-            en_US: 'Indices',
           },
         },
       },

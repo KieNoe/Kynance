@@ -4,13 +4,13 @@ import path from 'node:path'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import { viteMockServe } from 'vite-plugin-mock'
 import svgLoader from 'vite-svg-loader'
 import { loadEnv } from 'vite'
 
 const CWD = process.cwd()
-const { VITE_API_URL_PREFIX, VITE_BASE_URL } = loadEnv('development', CWD)
+const { VITE_BASE_URL } = loadEnv('development', CWD)
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -21,11 +21,11 @@ export default defineConfig({
   plugins: [
     vue(),
     svgLoader(),
-    // vueDevTools(),
     viteMockServe({
       mockPath: 'mock',
       enable: true,
     }),
+    vueJsx(),
   ],
   resolve: {
     alias: {

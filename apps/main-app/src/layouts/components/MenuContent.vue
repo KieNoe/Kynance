@@ -26,21 +26,45 @@
 
 <script setup lang="ts">
 import router from '@/router'
+import { MessagePlugin } from 'tdesign-vue-next'
 import { useLocale } from '@/infrastructure/locales/useLocale'
 import { navRoutes } from '@/router'
 
 const handleMenuItemClick = (route) => {
-  if (route.redirect) {
-    router.push(route.redirect)
-  } else if (getFullPath(route)) {
-    router.push(getFullPath(route))
-  } else {
+  const targetPath = getFullPath(route)
+  console.log(targetPath)
+  router.push(targetPath).catch(err => {
+    MessagePlugin.error('导航失败:', err)
     router.push('/404')
-  }
+  })
 }
 
 const getFullPath = (route) => {
-  return router.resolve(route).href
+  try {
+    // 处理重定向路由
+    if (route.redirect) {
+      return typeof route.redirect === 'string'
+        ? route.redirect
+        : router.resolve(route.redirect).href
+    }
+
+    // 优先使用完整路径
+    if (route.path && !route.path.startsWith('/')) {
+      // 如果是相对路径，尝试拼接
+      const parentRoute = navRoutes.find(r =>
+        r.children?.some(child => child === route)
+      )
+      return parentRoute
+        ? `${parentRoute.path}/${route.path}`.replace(/\/+/g, '/')
+        : `/${route.path}`
+    }
+
+    // 标准解析
+    return router.resolve(route).href || route.path
+  } catch (e) {
+    MessagePlugin.error('路由解析失败:', route)
+    return '/404'
+  }
 }
 
 const { locale } = useLocale()
