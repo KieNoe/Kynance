@@ -18,14 +18,28 @@
             </t-button>
           </t-space>
         </t-dropdown>
-        <t-select :defaultValue="t('pages.stock.countries.China')" v-on:change="onAreaChange">
+        <t-select :defaultValue="t('pages.stock.countries.China.title')" v-on:change="onAreaChange">
           <t-option
             v-for="country in CONSTANTS.COUNTRIES"
-            :key="country"
-            :label="country"
-            :value="country"
+            :key="country.value"
+            :label="country.title"
+            :value="country.value"
           />
         </t-select>
+        <t-dialog
+          :visible="visible"
+          header="(°ー°〃)"
+          :on-close="onClose"
+          :on-overlay-click="onClose"
+          :on-confirm="onClose"
+          :on-esc-keydown="onClose"
+          :on-cancel="onClose"
+          top="5vh"
+        >
+          <p>额，其实事情是这个样子的,"老大！我们的经费不够了(。•́︿•̀。)"</p>
+          <p>所以，数据就只有中国大陆和漂亮国的了</p>
+          <img ref="img" alt="(°ー°〃)" width="100%" />
+        </t-dialog>
       </header>
       <t-skeleton
         :loading="loading"
@@ -44,6 +58,11 @@
 </template>
 
 <script lang="tsx" setup>
+import colaImg from '@/assets/assets-cola.png'
+import ideaImg from '@/assets/assets-idea.png'
+import xiaoyanImg from '@/assets/assets-xiaoyan.png'
+import moneyImg from '@/assets/assets-money.png'
+import redImg from '@/assets/assets-red.png'
 import { ref, onMounted, shallowRef } from 'vue'
 import { MessagePlugin, TableProps } from 'tdesign-vue-next'
 
@@ -51,20 +70,47 @@ import { getDailyGainer, getDailyLoser } from '@/services/client'
 import { t } from '@/infrastructure/locales'
 
 const tab = ref(t('pages.stock.dropdown.up'))
+const img = ref(null)
 const loading = ref(true)
 const disabled = ref(false)
+const visible = ref(false)
+const region = ref('CN')
 const tableData = shallowRef<TableProps['data']>([])
 const CONSTANTS = {
   COUNTRIES: [
-    t('pages.stock.countries.China'),
-    t('pages.stock.countries.America'),
-    t('pages.stock.countries.HongKong'),
-    t('pages.stock.countries.Taiwan'),
-    t('pages.stock.countries.Japan'),
-    t('pages.stock.countries.UK'),
-    t('pages.stock.countries.Germany'),
-    t('pages.stock.countries.India'),
-    t('pages.stock.countries.Australia'),
+    {
+      title: t('pages.stock.countries.China.title'),
+      value: t('pages.stock.countries.China.value'),
+    },
+    {
+      title: t('pages.stock.countries.America.title'),
+      value: t('pages.stock.countries.America.value'),
+    },
+    {
+      title: t('pages.stock.countries.HongKong.title'),
+      value: t('pages.stock.countries.HongKong.value'),
+    },
+    {
+      title: t('pages.stock.countries.Taiwan.title'),
+      value: t('pages.stock.countries.Taiwan.value'),
+    },
+    {
+      title: t('pages.stock.countries.Japan.title'),
+      value: t('pages.stock.countries.Japan.value'),
+    },
+    { title: t('pages.stock.countries.UK.title'), value: t('pages.stock.countries.UK.value') },
+    {
+      title: t('pages.stock.countries.Germany.title'),
+      value: t('pages.stock.countries.Germany.value'),
+    },
+    {
+      title: t('pages.stock.countries.India.title'),
+      value: t('pages.stock.countries.India.value'),
+    },
+    {
+      title: t('pages.stock.countries.Australia.title'),
+      value: t('pages.stock.countries.Australia.value'),
+    },
   ],
   DROPDOWN_OPTIONS: [
     {
@@ -81,7 +127,7 @@ const CONSTANTS = {
       colKey: 'name',
       title: t('pages.stock.columns.name'),
       ellipsis: true,
-      width: 130,
+      width: 150,
     },
     {
       colKey: 'price',
@@ -151,13 +197,13 @@ const CONSTANTS = {
       colKey: 'highPrice',
       title: t('pages.stock.columns.highPrice'),
       ellipsis: true,
-      width: 80,
+      width: 60,
     },
     {
       colKey: 'lowPrice',
       title: t('pages.stock.columns.lowPrice'),
       ellipsis: true,
-      width: 80,
+      width: 60,
     },
     {
       colKey: 'closePrice',
@@ -170,48 +216,56 @@ const CONSTANTS = {
 const onRankChange = (data) => {
   if (tab.value != data.content) {
     tab.value = data.content
-    getDailyList(tab.value == t('pages.stock.dropdown.up') ? getDailyGainer : getDailyLoser)
+    getDailyList(
+      tab.value == t('pages.stock.dropdown.up') ? getDailyGainer : getDailyLoser,
+      region.value,
+    )
   }
 }
 const onRowClick = (data) => {
   MessagePlugin.success('股票代码' + data.row.key)
 }
-const onAreaChange = () => {
-  MessagePlugin.success('切换地区')
+const onClose = () => {
+  visible.value = false
 }
-function getDailyList(get) {
+const getImg = () => {
+  const images = [colaImg, ideaImg, xiaoyanImg, moneyImg, redImg]
+  return images[Math.floor(Math.random() * images.length)]
+}
+const onAreaChange = (data) => {
+  region.value = data
+  if (region.value == 'CN' || region.value === 'US') {
+    MessagePlugin.success('切换到地区' + region.value)
+    getDailyList(
+      tab.value == t('pages.stock.dropdown.up') ? getDailyGainer : getDailyLoser,
+      region.value,
+    )
+  } else {
+    visible.value = true
+    img.value.src = getImg()
+    getDailyList(getDailyGainer, 'CN')
+  }
+}
+function getDailyList(get, region) {
   loading.value = true
   disabled.value = true
   const result = []
   try {
-    get().then((res) => {
+    get(region).then((res) => {
       if (typeof res === 'object' && res !== null && 'quotes' in res && Array.isArray(res.quotes)) {
         const quotes = res.quotes
         for (let i of quotes) {
-          result.push(
-            {
-              key: i.symbol,
-              name: i.shortName,
-              volume: i.regularMarketVolume,
-              change: i.regularMarketChange.toPrecision(4),
-              changeAmount: i.regularMarketChangePercent.toPrecision(4),
-              price: i.regularMarketPrice,
-              highPrice: i.regularMarketDayHigh.toPrecision(4),
-              lowPrice: i.regularMarketDayLow.toPrecision(4),
-              closePrice: i.regularMarketPreviousClose,
-            },
-            {
-              key: i.symbol,
-              name: i.shortName,
-              volume: i.regularMarketVolume,
-              change: i.regularMarketChange.toPrecision(4),
-              changeAmount: i.regularMarketChangePercent.toPrecision(4),
-              price: i.regularMarketPrice,
-              highPrice: i.regularMarketDayHigh.toPrecision(4),
-              lowPrice: i.regularMarketDayLow.toPrecision(4),
-              closePrice: i.regularMarketPreviousClose,
-            },
-          )
+          result.push({
+            key: i.symbol,
+            name: i.shortName,
+            volume: i.regularMarketVolume,
+            change: i.regularMarketChange.toPrecision(4),
+            changeAmount: i.regularMarketChangePercent.toPrecision(4),
+            price: i.regularMarketPrice,
+            highPrice: i.regularMarketDayHigh.toPrecision(4),
+            lowPrice: i.regularMarketDayLow.toPrecision(4),
+            closePrice: i.regularMarketPreviousClose,
+          })
         }
         tableData.value.splice(0, tableData.value.length)
         tableData.value.push(...result)
@@ -224,7 +278,7 @@ function getDailyList(get) {
   }
 }
 onMounted(() => {
-  getDailyList(getDailyGainer)
+  getDailyList(getDailyGainer, region.value)
 })
 </script>
 <style lang="less" scoped>

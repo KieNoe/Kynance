@@ -1,16 +1,14 @@
-import { Dropdown } from 'tdesign-vue-next'
-
 export default {
   countries: {
-    China: '中国大陆',
-    America: '美国',
-    HongKong: '香港',
-    Taiwan: '台湾',
-    Japan: '日本',
-    UK: '英国',
-    Germany: '德国',
-    India: '印度',
-    Australia: '澳大利亚',
+    China: { title: '中国大陆', value: 'CN' },
+    America: { title: '美国', value: 'US' },
+    HongKong: { title: '香港', value: 'HK' },
+    Taiwan: { title: '台湾', value: 'TW' },
+    Japan: { title: '日本', value: 'JP' },
+    UK: { title: '英国', value: 'GB' },
+    Germany: { title: '德国', value: 'DE' },
+    India: { title: '印度', value: 'IN' },
+    Australia: { title: '澳大利亚', value: 'AU' },
   },
   dropdown: {
     up: '涨幅榜',

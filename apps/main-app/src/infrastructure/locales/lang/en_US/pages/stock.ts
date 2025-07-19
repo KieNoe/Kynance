@@ -2,15 +2,15 @@ import Recommend from '@/pages/market/stocks/components/Recommend.vue'
 
 export default {
   countries: {
-    China: 'Chinese Mainland',
-    America: 'America',
-    HongKong: 'HongKong',
-    Taiwan: 'Taiwan',
-    Japan: 'Japan',
-    UK: 'UK',
-    Germany: 'Germany',
-    India: 'India',
-    Australia: 'Australia',
+    China: { title: 'Chinese Mainland', value: 'CN' },
+    America: { title: 'America', value: 'US' },
+    HongKong: { title: 'HongKong', value: 'HK' },
+    Taiwan: { title: 'Taiwan', value: 'TW' },
+    Japan: { title: 'Japan', value: 'JP' },
+    UK: { title: 'UK', value: 'GB' },
+    Germany: { title: 'Germany', value: 'DE' },
+    India: { title: 'India', value: 'IN' },
+    Australia: { title: 'Australia', value: 'AU' },
   },
   dropdown: {
     up: 'Gainer list',

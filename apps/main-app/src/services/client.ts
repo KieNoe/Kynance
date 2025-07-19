@@ -5,19 +5,15 @@ const Api = {
   quote: '/api/stock/quote',
   search: '/api/stock/search',
   marketSummary: '/api/stock/marketSummary',
-  dailyGainer: './api/stock/dailyGainer',
-  dailyLoser: './api/stock/dailyLoser',
+  dailyGainer: './api/stock/dailyGainer/:region',
+  dailyLoser: './api/stock/dailyLoser/:region',
   trendingSymbols: './api/stock/trendingSymbols',
   screener_aggressive_small_caps: './api/stock/screener/aggressive_small_caps',
   insights_AYX: './api/stock/insights/AYX',
 }
 
 export function getHistory(symbol) {
-  return alovaInstance.Post(Api.history, {
-    params: {
-      symbol,
-    },
-  })
+  return alovaInstance.Post(Api.history)
 }
 
 export function getQuote(symbol) {
@@ -40,8 +36,9 @@ export function getMarketSummary() {
   return alovaInstance.Get(Api.marketSummary)
 }
 
-export function getDailyLoser() {
-  return alovaInstance.Get(Api.dailyLoser)
+export function getDailyLoser(region) {
+  const url = Api.dailyLoser.replace(':region', region)
+  return alovaInstance.Get(url)
 }
 export function getTrendingSymbols() {
   return alovaInstance.Get(Api.trendingSymbols)
@@ -49,8 +46,9 @@ export function getTrendingSymbols() {
 export function getScreenerAggressiveSmallCaps() {
   return alovaInstance.Get(Api.screener_aggressive_small_caps)
 }
-export function getDailyGainer() {
-  return alovaInstance.Get(Api.dailyGainer)
+export function getDailyGainer(region) {
+  const url = Api.dailyGainer.replace(':region', region)
+  return alovaInstance.Get(url)
 }
 export function getInsightsAYX() {
   return alovaInstance.Get(Api.insights_AYX)

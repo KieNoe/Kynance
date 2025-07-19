@@ -10,7 +10,7 @@ const isDevelopment = import.meta.env.VITE_ENV === 'development'
 const userStore = useUserStore()
 
 export const alovaInstance = createAlova({
-  baseURL: isDevelopment ? '' : import.meta.env.VITE_BASE_URL,
+  baseURL: isDevelopment ? import.meta.env.VITE_BASE_URL : import.meta.env.VITE_BACKEND_URL,
   timeout: 10 * 1000,
   statesHook: VueHook,
   requestAdapter: adapterFetch(),

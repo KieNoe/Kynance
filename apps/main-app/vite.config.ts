@@ -46,12 +46,5 @@ export default defineConfig({
   server: {
     port: 3005,
     host: '0.0.0.0',
-    proxy: {
-      '/api': {
-        target: 'https://finance.yahoo.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
   },
 })
