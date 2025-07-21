@@ -11,7 +11,7 @@ export default [
         zh_CN: '自选股管理',
         en_US: 'Watchlists',
       },
-      icon: 'star-filled',
+      icon: 'star',
       orderNo: 0,
     },
     children: [

@@ -235,7 +235,7 @@ const getImg = () => {
 const onAreaChange = (data) => {
   region.value = data
   if (region.value == 'CN' || region.value === 'US') {
-    MessagePlugin.success('切换到地区' + region.value)
+    MessagePlugin.success('切换成功')
     getDailyList(
       tab.value == t('pages.stock.dropdown.up') ? getDailyGainer : getDailyLoser,
       region.value,
