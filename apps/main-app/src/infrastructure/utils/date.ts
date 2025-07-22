@@ -27,11 +27,19 @@ export const LAST_30_DAYS = [
   dayjs().subtract(30, 'day').format('YYYY-MM-DD'),
   dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
 ]
+export const LAST_5_DAYS = [
+  dayjs().subtract(5, 'day').format('YYYY-MM-DD'),
+  dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+]
 export const LAST_7_DAYS = [
   dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
   dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
 ]
-export const LAST_3_DAYS = [
-  dayjs().subtract(3, 'day').format('YYYY-MM-DD'),
+export const LAST_180_DAYS = [
+  dayjs().subtract(180, 'day').format('YYYY-MM-DD'),
+  dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+]
+export const LAST_365_DAYS = [
+  dayjs().subtract(365, 'day').format('YYYY-MM-DD'),
   dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
 ]

@@ -5,7 +5,7 @@
   color: var(--td-font-color-text);
   transition: 0.2s cubic-bezier(0.38, 0, 0.24, 1);
 }
-header {
+header.card {
   height: 12vh;
   margin: 0 0 2vh 0;
   display: flex;
@@ -54,10 +54,15 @@ header {
   }
 }
 #chartContainer {
-  height: 70vh;
+  min-height: 70vh;
+  header {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 2vh;
+  }
 }
 footer {
-  height: 18vh;
+  min-height: 18vh;
   margin: 2vh 0;
 }
 .basicInfo {
@@ -79,5 +84,19 @@ footer {
   }
 }
 .introduction {
-  height: 50vh;
+  min-height: 50vh;
+  header {
+    margin-bottom: 2vh;
+  }
+  .content {
+    display: flex;
+    justify-content: space-between;
+    p {
+      margin: 0;
+      font-size: 1vw;
+    }
+    .value {
+      font-weight: 600;
+    }
+  }
 }

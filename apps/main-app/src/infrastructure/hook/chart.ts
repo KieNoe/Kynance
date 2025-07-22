@@ -1,6 +1,6 @@
 import { getChartThemeOption, getChartColorOption } from '@kynance/chart-core'
 import * as echarts from 'echarts'
-import { computed, watch, ref, onUnmounted, Ref } from 'vue'
+import { computed, watch } from 'vue'
 
 import { useSettingStore } from '@/stores'
 import { LIGHT_CHART_COLORS, DARK_CHART_COLORS } from '@/constants'

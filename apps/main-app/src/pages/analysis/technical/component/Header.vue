@@ -2,23 +2,24 @@
   <header class="card">
     <div class="header-title">
       <t-tooltip content="腾讯 - HKG: 0700" show-arrow
-        ><t-button variant="text" class="button"> 腾讯 </t-button></t-tooltip
+        ><t-button variant="text" class="button"> {{ companyInfo.name }} </t-button></t-tooltip
       >
     </div>
     <div class="header-info">
       <div class="base">
         <div class="left">
-          <p>$518.50</p>
+          <p>{{ companyInfo.price }}</p>
         </div>
         <div class="right">
           <t-tag color="green" variant="light" size="large" class="tag">
             <t-icon name="arrow-up" style="margin: 0"></t-icon>
-            0.25%
+            {{ companyInfo.changePercent }}
           </t-tag>
         </div>
       </div>
       <div class="comment">
-        7.21, UTC+8 14:08:45 · HKD · HKG · <t-link @click="visible = true"> 免责声明 </t-link>
+        7.22, UTC+8 18:00:00 · {{ companyInfo.currency }} · {{ companyInfo.market }} ·
+        <t-link @click="visible = true"> 免责声明 </t-link>
       </div>
       <t-dialog
         destroyOnClose
@@ -37,6 +38,12 @@
 import { ref } from 'vue'
 
 import Disclaimer from './Disclaimer.vue'
+defineProps({
+  companyInfo: {
+    type: Object,
+    required: true,
+  },
+})
 const visible = ref(false)
 </script>
 <style scoped lang="less">
