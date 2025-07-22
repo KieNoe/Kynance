@@ -7,11 +7,15 @@
     </div>
     <div class="header-info">
       <div class="base">
-        <p>$518.50</p>
-        <t-tag color="green" variant="light" size="large" class="tag">
-          <t-icon name="arrow-up" style="margin: 0"></t-icon>
-          0.25%
-        </t-tag>
+        <div class="left">
+          <p>$518.50</p>
+        </div>
+        <div class="right">
+          <t-tag color="green" variant="light" size="large" class="tag">
+            <t-icon name="arrow-up" style="margin: 0"></t-icon>
+            0.25%
+          </t-tag>
+        </div>
       </div>
       <div class="comment">
         7.21, UTC+8 14:08:45 · HKD · HKG · <t-link @click="visible = true"> 免责声明 </t-link>
