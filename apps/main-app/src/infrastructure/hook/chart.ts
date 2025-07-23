@@ -1,10 +1,14 @@
-import { getChartThemeOption, getChartColorOption } from '@kynance/chart-core'
+import {
+  getChartThemeOption,
+  getChartColorOption,
+  getChartListColor,
+  changeChartsTheme,
+} from '@kynance/chart-core'
 import * as echarts from 'echarts'
 import { computed, watch } from 'vue'
 
 import { useSettingStore } from '@/stores'
 import { LIGHT_CHART_COLORS, DARK_CHART_COLORS } from '@/constants'
-import { getChartListColor, changeChartsTheme } from '@/infrastructure/utils'
 
 const settingStore = useSettingStore()
 const chartThemeOption = computed(() => {
@@ -45,6 +49,7 @@ export const initChart = async (domId: string, chart: echarts.ECharts, option, o
     ...chartColorOption.value,
     ...option,
   })
+  changeChartsTheme([chart] as any)
   const stopColorWatch = watch(
     () => settingStore.themeColor,
     () => {

@@ -2,9 +2,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { Color } from 'tvision-color'
+import { generateColorMap, insertThemeStylesheet } from '@kynance/chart-core'
 
 import { KThemeColor } from '@/constants'
-import { generateColorMap, insertThemeStylesheet } from '@/infrastructure/utils/color'
 
 export const useSettingStore = defineStore('settings', () => {
   // 状态
@@ -28,6 +28,7 @@ export const useSettingStore = defineStore('settings', () => {
       colorList.value = settings.colorList || {}
     }
     loadMode()
+    setThemeColor(themeColor.value)
   }
 
   // 保存设置到本地存储

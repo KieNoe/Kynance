@@ -1,6 +1,3 @@
-export type KColorToken = Record<string, string>
-export type KColorSeries = Record<string, KColorToken>
-
 // TODO: 中性色暂时固定 待生成带色彩倾向的中性色
 export const LIGHT_CHART_COLORS = {
   textColor: 'rgba(0, 0, 0, 0.9)',

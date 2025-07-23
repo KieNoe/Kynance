@@ -1,10 +1,9 @@
-import * as echarts from 'echarts/core'
-import trim from 'lodash/trim'
-import { Color } from 'tvision-color'
-import { ModeType } from '@kynance/types'
-import { getChartColorOption } from '@kynance/chart-core'
+import * as echarts from 'echarts/core';
+import trim from 'lodash/trim';
+import { Color } from 'tvision-color';
+import { ModeType, KColorToken } from '@kynance/types';
 
-import { KColorToken } from '@/constants'
+import { getChartColorOption } from './option';
 
 /**
  * 依据主题类型获取颜色
@@ -15,38 +14,35 @@ import { KColorToken } from '@/constants'
  */
 export function getColorFromTheme(): Array<string> {
   try {
-    const theme = trim(
-      getComputedStyle(document.documentElement).getPropertyValue('--td-brand-color'),
-    )
+    const theme = trim(getComputedStyle(document.documentElement).getPropertyValue('--td-brand-color'));
     const themeColorList = Color.getRandomPalette({
       color: theme,
       colorGamut: 'bright',
       number: 8,
-    })
-    console.log(themeColorList)
+    });
 
-    return themeColorList
+    return themeColorList;
   } catch {
-    return ['#0052d9', '#78bdd5', '#ef84ce', '#57c2b8', '#ef9f79', '#4fc241', '#73a4e1', '#f59e78']
+    return ['#0052d9', '#78bdd5', '#ef84ce', '#57c2b8', '#ef9f79', '#4fc241', '#73a4e1', '#f59e78'];
   }
 }
 
 /** 图表颜色 */
 export function getChartListColor(): Array<string> {
-  const res = getColorFromTheme()
+  const res = getColorFromTheme();
 
-  return res
+  return res;
 }
 
 function deepMerge(target, source) {
   for (const key in source) {
     if (source[key] instanceof Object && key in target) {
-      deepMerge(target[key], source[key])
+      deepMerge(target[key], source[key]);
     } else {
-      target[key] = source[key]
+      target[key] = source[key];
     }
   }
-  return target
+  return target;
 }
 
 /**
@@ -58,19 +54,19 @@ function deepMerge(target, source) {
  */
 export function changeChartsTheme(chartsList: echarts.EChartsType[]): void {
   if (chartsList && chartsList.length) {
-    const chartChangeColor = getChartListColor()
-    const colorOption = getChartColorOption(chartChangeColor)
+    const chartChangeColor = getChartListColor();
+    const colorOption = getChartColorOption(chartChangeColor);
 
     for (let index = 0; index < chartsList.length; index++) {
-      const elementChart = chartsList[index]
+      const elementChart = chartsList[index];
 
       if (elementChart) {
-        const optionVal = elementChart.getOption()
+        const optionVal = elementChart.getOption();
 
         // 更改主题颜色
-        deepMerge(optionVal, colorOption)
+        deepMerge(optionVal, colorOption);
 
-        elementChart.setOption(optionVal, true)
+        elementChart.setOption(optionVal, true);
       }
     }
   }
@@ -79,22 +75,17 @@ export function changeChartsTheme(chartsList: echarts.EChartsType[]): void {
 /**
  * 根据当前主题色、模式等情景 计算最后生成的色阶
  */
-export function generateColorMap(
-  theme: string,
-  colorPalette: Array<string>,
-  mode: ModeType,
-  brandColorIdx: number,
-) {
-  const isDarkMode = mode === 'dark'
+export function generateColorMap(theme: string, colorPalette: Array<string>, mode: ModeType, brandColorIdx: number) {
+  const isDarkMode = mode === 'dark';
 
   if (isDarkMode) {
     // eslint-disable-next-line no-use-before-define
     colorPalette.reverse().map((color) => {
-      const [h, s, l] = Color.colorTransform(color, 'hex', 'hsl')
-      return Color.colorTransform([h, Number(s) - 4, l], 'hsl', 'hex')
-    })
-    brandColorIdx = 5
-    colorPalette[0] = `${colorPalette[brandColorIdx]}20`
+      const [h, s, l] = Color.colorTransform(color, 'hex', 'hsl');
+      return Color.colorTransform([h, Number(s) - 4, l], 'hsl', 'hex');
+    });
+    brandColorIdx = 5;
+    colorPalette[0] = `${colorPalette[brandColorIdx]}20`;
   }
 
   const colorMap: KColorToken = {
@@ -109,21 +100,19 @@ export function generateColorMap(
     '--td-brand-color-8': colorPalette[brandColorIdx], // 主题色
     '--td-brand-color-9': brandColorIdx > 8 ? theme : colorPalette[brandColorIdx + 1], // click
     '--td-brand-color-10': colorPalette[9],
-  }
-  return colorMap
+  };
+  return colorMap;
 }
 
 /**
  * 将生成的样式嵌入头部
  */
 export function insertThemeStylesheet(theme: string, colorMap: KColorToken, mode: ModeType) {
-  const isDarkMode = mode === 'dark'
-  const root = !isDarkMode
-    ? `:root[theme-color='${theme}']`
-    : `:root[theme-color='${theme}'][theme-mode='dark']`
+  const isDarkMode = mode === 'dark';
+  const root = !isDarkMode ? `:root[theme-color='${theme}']` : `:root[theme-color='${theme}'][theme-mode='dark']`;
 
-  const styleSheet = document.createElement('style')
-  styleSheet.type = 'text/css'
+  const styleSheet = document.createElement('style');
+  styleSheet.type = 'text/css';
   styleSheet.innerText = `${root}{
     --td-brand-color: ${colorMap['--td-brand-color']};
     --td-brand-color-1: ${colorMap['--td-brand-color-1']};
@@ -136,7 +125,7 @@ export function insertThemeStylesheet(theme: string, colorMap: KColorToken, mode
     --td-brand-color-8: ${colorMap['--td-brand-color-8']};
     --td-brand-color-9: ${colorMap['--td-brand-color-9']};
     --td-brand-color-10: ${colorMap['--td-brand-color-10']};
-  }`
+  }`;
 
-  document.head.appendChild(styleSheet)
+  document.head.appendChild(styleSheet);
 }

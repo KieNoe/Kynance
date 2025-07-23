@@ -7,7 +7,9 @@
   "author": "KieNoe",
   "license": "MIT",
   "dependencies": {
+    "@kynance/types": "workspace:^",
     "echarts": "5.6.0",
-    "vue": "^3.5.16"
+    "lodash": "4.17.21",
+    "tvision-color": "1.6.0"
   }
 }
