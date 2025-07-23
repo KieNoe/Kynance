@@ -37,6 +37,7 @@ const useChart = (domId: string, onCleanUp): echarts.ECharts => {
 
   return selfChart
 }
+
 export const initChart = async (domId: string, chart: echarts.ECharts, option, onCleanUp) => {
   chart = await useChart(domId, onCleanUp)
   chart.setOption({

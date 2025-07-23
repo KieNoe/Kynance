@@ -37,8 +37,73 @@ export const getChartThemeOption = ({ borderColor, containerColor, textColor }) 
   };
 };
 export const getChartColorOption = (colorList) => {
+  if (!colorList || colorList.length === 0) {
+    // 默认颜色配置
+    return {
+      color: ['#0052d9', '#78bdd5', '#ef84ce', '#57c2b8', '#ef9f79', '#4fc241', '#73a4e1', '#f59e78'],
+      series: [
+        {
+          lineStyle: {
+            color: '#5470C6',
+          },
+          areaStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [
+                {
+                  offset: 0,
+                  color: 'rgba(84, 112, 198, 0.5)',
+                },
+                {
+                  offset: 1,
+                  color: 'rgba(84, 112, 198, 0.1)',
+                },
+              ],
+            },
+          },
+        },
+      ],
+    };
+  }
+
+  function hexToRgba(hex, alpha = 1) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
   return {
     color: colorList,
+    series: [
+      {
+        lineStyle: {
+          color: colorList[0],
+        },
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: hexToRgba(colorList[0], 0.5),
+              },
+              {
+                offset: 1,
+                color: hexToRgba(colorList[0], 0.1),
+              },
+            ],
+          },
+        },
+      },
+    ],
   };
 };
 export const getLineChartOption = (option) => {

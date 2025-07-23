@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
-import { getMarketSummary, getHistory } from '@/services/client'
+import { getDailyGainer } from '@/services/client'
 
 const data = ref()
 onMounted(() => {
-  getMarketSummary().then((res) => {
+  getDailyGainer('US').then((res) => {
     console.log('res', res)
     data.value = res
-  })
-  getHistory('AAPL').then((res) => {
-    console.log('history', res)
   })
 })
 </script>

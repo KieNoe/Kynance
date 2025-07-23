@@ -2,6 +2,7 @@ import * as echarts from 'echarts/core'
 import trim from 'lodash/trim'
 import { Color } from 'tvision-color'
 import { ModeType } from '@kynance/types'
+import { getChartColorOption } from '@kynance/chart-core'
 
 import { KColorToken } from '@/constants'
 
@@ -13,16 +14,21 @@ import { KColorToken } from '@/constants'
  * @returns {}
  */
 export function getColorFromTheme(): Array<string> {
-  const theme = trim(
-    getComputedStyle(document.documentElement).getPropertyValue('--td-brand-color'),
-  )
-  const themeColorList = Color.getRandomPalette({
-    color: theme,
-    colorGamut: 'bright',
-    number: 8,
-  })
+  try {
+    const theme = trim(
+      getComputedStyle(document.documentElement).getPropertyValue('--td-brand-color'),
+    )
+    const themeColorList = Color.getRandomPalette({
+      color: theme,
+      colorGamut: 'bright',
+      number: 8,
+    })
+    console.log(themeColorList)
 
-  return themeColorList
+    return themeColorList
+  } catch {
+    return ['#0052d9', '#78bdd5', '#ef84ce', '#57c2b8', '#ef9f79', '#4fc241', '#73a4e1', '#f59e78']
+  }
 }
 
 /** 图表颜色 */
@@ -30,6 +36,17 @@ export function getChartListColor(): Array<string> {
   const res = getColorFromTheme()
 
   return res
+}
+
+function deepMerge(target, source) {
+  for (const key in source) {
+    if (source[key] instanceof Object && key in target) {
+      deepMerge(target[key], source[key])
+    } else {
+      target[key] = source[key]
+    }
+  }
+  return target
 }
 
 /**
@@ -42,6 +59,7 @@ export function getChartListColor(): Array<string> {
 export function changeChartsTheme(chartsList: echarts.EChartsType[]): void {
   if (chartsList && chartsList.length) {
     const chartChangeColor = getChartListColor()
+    const colorOption = getChartColorOption(chartChangeColor)
 
     for (let index = 0; index < chartsList.length; index++) {
       const elementChart = chartsList[index]
@@ -50,7 +68,7 @@ export function changeChartsTheme(chartsList: echarts.EChartsType[]): void {
         const optionVal = elementChart.getOption()
 
         // 更改主题颜色
-        optionVal.color = chartChangeColor
+        deepMerge(optionVal, colorOption)
 
         elementChart.setOption(optionVal, true)
       }
