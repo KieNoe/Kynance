@@ -66,4 +66,5 @@ export const initChart = async (domId: string, chart: echarts.ECharts, option, o
     stopColorWatch()
     stopThemeWatch()
   })
+  return chart
 }

@@ -7,11 +7,31 @@
         class="dropdown"
         :options="OPTIONS[key]"
         trigger="click"
+        :disabled="disabled"
         :min-column-width="65"
         @click="
-          (data) => {
-            MessagePlugin.success('已选择' + data.content)
+          async (data) => {
+            disabled = true
+            MessagePlugin.success('已选择' + data.content + '技术曲线')
             ;(value as Record<string, any>)[key as string] = data.content
+            switch (key) {
+              case 'date':
+                try {
+                  const res = await getDayData('0700', data.value)
+                  changeCharts([mainChart], getStockChartOptions(res))
+                } catch (err) {
+                  MessagePlugin.error('获取数据失败')
+                  console.log(err)
+                }
+                break
+              case 'shock':
+                break
+              case 'volume':
+                break
+              case 'trending':
+                break
+            }
+            disabled = false
           }
         "
       >
@@ -44,10 +64,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, reactive, ref } from 'vue'
+import { onMounted, onUnmounted, shallowReactive, shallowRef } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
+import { getStockChartOptions, changeCharts } from '@kynance/chart-core'
 
 import { initChart } from '@/infrastructure/hook'
+import { getDayData } from '@/services/client'
 
 const props = defineProps({
   companyInfo: {
@@ -57,19 +79,11 @@ const props = defineProps({
 })
 
 let mainChart
-const search = ref('')
-const stock = ref('腾讯控股(Tencent)')
+const disabled = shallowRef(false)
+const search = shallowRef('')
+const stock = shallowRef('腾讯控股(Tencent)')
 
-function formatNumberToWan(num) {
-  if (num >= 10000) {
-    const intPart = Math.floor(num).toLocaleString('en-US')
-    return num % 10000 === 0 ? `${(num / 10000).toLocaleString('en-US')}万` : `${intPart}万`
-  } else {
-    return num.toLocaleString('en-US')
-  }
-}
-
-const value = reactive({
+const value = shallowReactive({
   date: '1天',
   trending: 'MA(5)',
   shock: 'RSI',
@@ -84,11 +98,11 @@ const OPTIONS = {
     volume: '成交量',
   },
   date: [
-    { content: '1天', value: 1 },
-    { content: '5天', value: 2 },
-    { content: '1个月', value: 3 },
-    { content: '6个月', value: 4 },
-    { content: '1年', value: 5 },
+    { content: '1天', value: '1d' },
+    { content: '5天', value: '5d' },
+    { content: '1个月', value: '1m' },
+    { content: '6个月', value: '6m' },
+    { content: '1年', value: '1y' },
   ],
   trending: [
     { content: 'MA(5)', value: 'MA' },
@@ -327,85 +341,17 @@ const stockData = {
   ],
 }
 
-const STOCK_DATA = {
-  xAxis: {
-    data: stockData.data.map((item) => item.date),
-    type: 'category',
-    axisLabel: {
-      interval: Math.floor(stockData.data.length / 4), // 计算间隔使只显示4-5个标签
-    },
-  },
-  tooltip: {
-    trigger: 'axis',
-    formatter: function (params) {
-      const data = params[0].data
-      return `
-        <div><strong>${props.companyInfo.currency} $${data.close}</strong></div>
-        <div>${params[0].axisValueLabel}</div>
-        <div>成交量：${formatNumberToWan(data.volume)}</div>
-      `
-    },
-  },
-  yAxis: {
-    scale: true,
-    axisLabel: {
-      formatter: '{value}',
-    },
-  },
-  series: [
-    {
-      name: '0700 股价',
-      data: stockData.data.map((item) => ({
-        value: item.close,
-        open: item.open,
-        high: item.high,
-        low: item.low,
-        close: item.close,
-        volume: item.volume,
-      })),
-      type: 'line',
-      smooth: true,
-      showSymbol: false,
-      lineStyle: {
-        width: 2,
-        color: '#5470C6',
-      },
-      areaStyle: {
-        color: {
-          type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: 'rgba(84, 112, 198, 0.5)',
-            },
-            {
-              offset: 1,
-              color: 'rgba(84, 112, 198, 0.1)',
-            },
-          ],
-        },
-      },
-    },
-  ],
-  grid: {
-    left: '3%',
-    right: '4%',
-    bottom: '15%',
-    top: '10%',
-    containLabel: true,
-  },
-}
-
-const stockOptions = ref(OPTIONS.stock)
+const stockOptions = shallowRef(OPTIONS.stock)
 const onSearch = () => {
   stockOptions.value = OPTIONS.stock.filter((item) => item.title.indexOf(search.value) !== -1)
 }
-onMounted(() => {
-  initChart('mainChart', mainChart, STOCK_DATA, onUnmounted)
+onMounted(async () => {
+  mainChart = await initChart(
+    'mainChart',
+    mainChart,
+    getStockChartOptions(stockData, props.companyInfo.currency),
+    onUnmounted,
+  )
 })
 </script>
 

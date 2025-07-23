@@ -72,6 +72,18 @@ export function changeChartsTheme(chartsList: echarts.EChartsType[]): void {
   }
 }
 
+export function changeCharts(chartsList: echarts.EChartsType[], options): void {
+  if (chartsList && chartsList.length) {
+    const chart = chartsList[0];
+    let optionVal = chart.getOption();
+    optionVal = Object.assign(optionVal, options);
+    const chartChangeColor = getChartListColor();
+    const colorOption = getChartColorOption(chartChangeColor);
+    deepMerge(optionVal, colorOption);
+    chart.setOption(optionVal);
+  }
+}
+
 /**
  * 根据当前主题色、模式等情景 计算最后生成的色阶
  */
@@ -112,7 +124,6 @@ export function insertThemeStylesheet(theme: string, colorMap: KColorToken, mode
   const root = !isDarkMode ? `:root[theme-color='${theme}']` : `:root[theme-color='${theme}'][theme-mode='dark']`;
 
   const styleSheet = document.createElement('style');
-  styleSheet.type = 'text/css';
   styleSheet.innerText = `${root}{
     --td-brand-color: ${colorMap['--td-brand-color']};
     --td-brand-color-1: ${colorMap['--td-brand-color-1']};

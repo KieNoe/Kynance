@@ -106,126 +106,84 @@ export const getChartColorOption = (colorList) => {
     ],
   };
 };
-export const getLineChartOption = (option) => {
+function formatNumberToWan(num) {
+  if (num >= 10000) {
+    const intPart = Math.floor(num).toLocaleString('en-US');
+    return num % 10000 === 0 ? `${(num / 10000).toLocaleString('en-US')}万` : `${intPart}万`;
+  } else {
+    return num.toLocaleString('en-US');
+  }
+}
+export const getStockChartOptions = (stockData, currency = '') => {
   return {
-    ...option,
+    xAxis: {
+      data: stockData.data.map((item) => item.date),
+      type: 'category',
+      axisLabel: {
+        interval: Math.floor(stockData.data.length / 4),
+      },
+    },
     tooltip: {
       trigger: 'axis',
-    },
-    legend: {
-      data: [],
-    },
-    xAxis: {
-      type: 'category',
-      data: [],
+      formatter: function (params) {
+        const data = params[0].data;
+        return `
+        <div><strong>${currency} $${data.close}</strong></div>
+        <div>${params[0].axisValueLabel}</div>
+        <div>成交量：${formatNumberToWan(data.volume)}</div>
+      `;
+      },
     },
     yAxis: {
-      type: 'value',
+      scale: true,
+      axisLabel: {
+        formatter: '{value}',
+      },
     },
     series: [
       {
-        name: '',
+        data: stockData.data.map((item) => ({
+          value: item.close,
+          open: item.open,
+          high: item.high,
+          low: item.low,
+          close: item.close,
+          volume: item.volume,
+        })),
         type: 'line',
-        data: [],
         smooth: true,
+        showSymbol: false,
+        lineStyle: {
+          width: 2,
+        },
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+              },
+              {
+                offset: 1,
+              },
+            ],
+          },
+        },
       },
     ],
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '15%',
+      top: '10%',
+      containLabel: true,
+    },
   };
 };
-export const getBarChartOption = (option) => {
-  return {
-    ...option,
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow',
-      },
-    },
-    legend: {
-      data: [],
-    },
-    xAxis: {
-      type: 'category',
-      data: [],
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: [
-      {
-        name: '',
-        type: 'bar',
-        data: [],
-      },
-    ],
-  };
-};
-export const getPieChartOption = (option) => {
-  return {
-    ...option,
-    tooltip: {
-      trigger: 'item',
-      formatter: '{a} <br/>{b} : {c} ({d}%)',
-    },
-    legend: {
-      orient: 'vertical',
-      left: 'left',
-      data: [],
-    },
-    series: [
-      {
-        name: '',
-        type: 'pie',
-        radius: '55%',
-        center: ['50%', '60%'],
-        data: [],
-      },
-    ],
-  };
-};
-export const getScatterChartOption = (option) => {
-  return {
-    ...option,
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'cross',
-      },
-    },
-    xAxis: {
-      type: 'value',
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: [
-      {
-        name: '',
-        type: 'scatter',
-        symbolSize: 10,
-        data: [],
-      },
-    ],
-  };
-};
-export const getRadarChartOption = (option) => {
-  return {
-    ...option,
-    tooltip: {
-      trigger: 'item',
-    },
-    legend: {
-      data: [],
-    },
-    radar: {
-      indicator: [],
-    },
-    series: [
-      {
-        name: '',
-        type: 'radar',
-        data: [],
-      },
-    ],
-  };
-};
+export const getTrendingChartOptions = () => {};
+export const getShockChartOptions = () => {};
+export const getVolumeChartOptions = () => {};
