@@ -107,13 +107,35 @@ export const getChartColorOption = (colorList) => {
   };
 };
 function formatNumberToWan(num) {
-  if (num >= 10000) {
-    const intPart = Math.floor(num).toLocaleString('en-US');
-    return num % 10000 === 0 ? `${(num / 10000).toLocaleString('en-US')}万` : `${intPart}万`;
-  } else {
-    return num.toLocaleString('en-US');
+  // 处理非数字或无效输入
+  if (typeof num !== 'number' || isNaN(num)) {
+    return '0';
   }
+
+  // 处理负数
+  const isNegative = num < 0;
+  const absoluteNum = Math.abs(num);
+
+  // 处理亿级数字（>=1亿）
+  if (absoluteNum >= 100000000) {
+    const yiValue = absoluteNum / 100000000;
+    const formattedYi = Math.floor(yiValue * 10) / 10; // 保留1位小数
+    const isWholeYi = absoluteNum % 100000000 === 0;
+    const displayValue = isWholeYi ? yiValue.toLocaleString('en-US') : formattedYi.toLocaleString('en-US');
+    return `${isNegative ? '-' : ''}${displayValue}亿`;
+  }
+
+  // 处理万级数字（>=1万）
+  if (absoluteNum >= 10000) {
+    const wanValue = absoluteNum / 10000;
+    const formattedWan = Math.floor(wanValue); // 直接取整，不保留小数
+    return `${isNegative ? '-' : ''}${formattedWan.toLocaleString('en-US')}万`;
+  }
+
+  // 小于1万的情况
+  return `${isNegative ? '-' : ''}${absoluteNum.toLocaleString('en-US')}`;
 }
+
 export const getStockChartOptions = (stockData, currency = '') => {
   return {
     xAxis: {
@@ -126,12 +148,16 @@ export const getStockChartOptions = (stockData, currency = '') => {
     tooltip: {
       trigger: 'axis',
       formatter: function (params) {
-        const data = params[0].data;
-        return `
+        if (params[0].data.close) {
+          const data = params[0].data;
+          return `
         <div><strong>${currency} $${data.close}</strong></div>
         <div>${params[0].axisValueLabel}</div>
         <div>成交量：${formatNumberToWan(data.volume)}</div>
       `;
+        } else {
+          return '午休';
+        }
       },
     },
     yAxis: {

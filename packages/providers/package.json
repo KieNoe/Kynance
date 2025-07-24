@@ -1,0 +1,13 @@
+{
+  "name": "@kynance/providers",
+  "version": "1.1.0",
+  "exports": "./sdk/index.ts",
+  "private": true,
+  "description": "数据提供",
+  "author": "KieNoe",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "dayjs": "1.11.13"
+  }
+}

@@ -18,7 +18,7 @@
               case 'date':
                 try {
                   const res = await getDayData('0700', data.value)
-                  changeCharts([mainChart], getStockChartOptions(res))
+                  changeCharts([mainChart], getStockChartOptions(res, props.companyInfo.currency))
                 } catch (err) {
                   MessagePlugin.error('获取数据失败')
                   console.log(err)
@@ -70,14 +70,12 @@ import { getStockChartOptions, changeCharts } from '@kynance/chart-core'
 
 import { initChart } from '@/infrastructure/hook'
 import { getDayData } from '@/services/client'
-
 const props = defineProps({
   companyInfo: {
     type: Object,
     required: true,
   },
 })
-
 let mainChart
 const disabled = shallowRef(false)
 const search = shallowRef('')
@@ -99,7 +97,7 @@ const OPTIONS = {
   },
   date: [
     { content: '1天', value: '1d' },
-    { content: '5天', value: '5d' },
+    { content: '10天', value: '10d' },
     { content: '1个月', value: '1m' },
     { content: '6个月', value: '6m' },
     { content: '1年', value: '1y' },
@@ -119,7 +117,6 @@ const OPTIONS = {
     { content: 'OBV', value: 'OBV' },
     { content: 'VWAP', value: 'VWAP' },
     { content: '量比', value: '量比' },
-    { content: '委比', value: '委比' },
   ],
   momentum: [
     { content: 'DMI', value: 'DMI' },
@@ -305,51 +302,16 @@ const OPTIONS = {
   ],
 }
 
-const stockData = {
-  symbol: '0700',
-  data: [
-    { date: '2025-06-23', open: 480.2, high: 485.8, low: 478.5, close: 484.1, volume: 18200000 },
-    { date: '2025-06-24', open: 484.3, high: 490.5, low: 483.0, close: 489.2, volume: 19500000 },
-    { date: '2025-06-25', open: 489.5, high: 492.0, low: 487.8, close: 490.1, volume: 17800000 },
-    { date: '2025-06-26', open: 490.3, high: 493.2, low: 488.5, close: 491.5, volume: 16500000 },
-    { date: '2025-06-27', open: 491.8, high: 494.0, low: 490.0, close: 492.2, volume: 15800000 },
-    { date: '2025-06-28', open: 492.0, high: 492.5, low: 485.0, close: 487.3, volume: 20100000 },
-    { date: '2025-06-29', open: 487.0, high: 488.2, low: 480.5, close: 482.1, volume: 21400000 },
-    { date: '2025-06-30', open: 481.8, high: 484.0, low: 479.2, close: 480.5, volume: 19800000 },
-    { date: '2025-07-01', open: 480.3, high: 482.5, low: 477.0, close: 478.8, volume: 18500000 },
-    { date: '2025-07-02', open: 478.5, high: 479.0, low: 473.2, close: 475.1, volume: 22300000 },
-    { date: '2025-07-03', open: 475.0, high: 476.8, low: 471.5, close: 473.2, volume: 20900000 },
-    { date: '2025-07-04', open: 473.0, high: 478.5, low: 472.8, close: 476.5, volume: 17600000 },
-    { date: '2025-07-05', open: 476.8, high: 482.0, low: 476.0, close: 480.2, volume: 19100000 },
-    { date: '2025-07-06', open: 480.5, high: 485.3, low: 479.8, close: 483.8, volume: 21000000 },
-    { date: '2025-07-07', open: 484.0, high: 484.5, low: 478.0, close: 480.1, volume: 23500000 },
-    { date: '2025-07-08', open: 480.0, high: 481.2, low: 475.5, close: 477.3, volume: 22800000 },
-    { date: '2025-07-09', open: 477.0, high: 477.8, low: 473.0, close: 474.5, volume: 20500000 },
-    { date: '2025-07-10', open: 474.3, high: 475.0, low: 470.2, close: 472.1, volume: 18800000 },
-    { date: '2025-07-11', open: 472.0, high: 473.5, low: 469.8, close: 471.0, volume: 17200000 },
-    { date: '2025-07-12', open: 470.8, high: 471.5, low: 468.0, close: 469.5, volume: 16500000 },
-    { date: '2025-07-13', open: 469.3, high: 475.0, low: 469.0, close: 473.8, volume: 19400000 },
-    { date: '2025-07-14', open: 474.0, high: 482.6, low: 473.5, close: 480.1, volume: 23800000 },
-    { date: '2025-07-15', open: 480.5, high: 495.0, low: 479.8, close: 492.3, volume: 28500000 },
-    { date: '2025-07-16', open: 492.5, high: 502.8, low: 491.0, close: 498.6, volume: 31200000 },
-    { date: '2025-07-17', open: 498.8, high: 505.0, low: 497.5, close: 503.1, volume: 29700000 },
-    { date: '2025-07-18', open: 503.5, high: 506.2, low: 501.8, close: 504.5, volume: 25400000 },
-    { date: '2025-07-19', open: 504.8, high: 507.0, low: 503.0, close: 505.2, volume: 21800000 },
-    { date: '2025-07-20', open: 505.0, high: 512.5, low: 504.2, close: 510.8, volume: 24600000 },
-    { date: '2025-07-21', open: 511.0, high: 520.3, low: 510.5, close: 518.2, volume: 27300000 },
-    { date: '2025-07-22', open: 521.5, high: 525.5, low: 519.0, close: 521.46, volume: 16414000 },
-  ],
-}
-
 const stockOptions = shallowRef(OPTIONS.stock)
 const onSearch = () => {
   stockOptions.value = OPTIONS.stock.filter((item) => item.title.indexOf(search.value) !== -1)
 }
 onMounted(async () => {
+  const res = await getDayData('0700', '1d')
   mainChart = await initChart(
     'mainChart',
     mainChart,
-    getStockChartOptions(stockData, props.companyInfo.currency),
+    getStockChartOptions(res, props.companyInfo.currency),
     onUnmounted,
   )
 })
