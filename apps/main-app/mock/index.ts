@@ -582,6 +582,30 @@ export default [
     },
   },
   {
+    url: '/api/stocks/0700/1m',
+    method: 'get',
+    timeout: 200,
+    response: () => {
+      return {
+        code: 200,
+        data: {
+          symbol: '0700',
+          data: getWholeData(
+            {
+              basePrice: 480.2,
+              volumeMax: 38200000,
+              volumeMin: 10200000,
+            },
+            [
+              dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
+              dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+            ],
+          ),
+        },
+      }
+    },
+  },
+  {
     url: '/api/stocks/0700/6m',
     method: 'get',
     timeout: 200,

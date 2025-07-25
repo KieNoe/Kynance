@@ -18,6 +18,7 @@
     "env.d.ts",
     "src/**/*.ts",
     "src/**/*.vue",
-    "node_modules/tdesign-vue-next/global.d.ts"
+    "node_modules/tdesign-vue-next/global.d.ts",
+    "../../packages/chart-core/chart-render/calculate.ts"
   ]
 }

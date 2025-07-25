@@ -26,6 +26,10 @@ export function getWholeData(
     const hour = dayjs(date).hour();
     const minute = dayjs(date).minute();
 
+    if (hour > 15 && minute > 0) {
+      break;
+    }
+
     if (hour === 12 && minute > 0) {
       result.push({
         date: date,

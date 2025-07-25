@@ -3,7 +3,9 @@ import trim from 'lodash/trim';
 import { Color } from 'tvision-color';
 import { ModeType, KColorToken } from '@kynance/types';
 
-import { getChartColorOption } from './option';
+import { getChartColorOption, getTrendingChartColorOption, getShockChartColorOption } from './option';
+
+const order = [getChartColorOption, getTrendingChartColorOption, getShockChartColorOption];
 
 /**
  * 依据主题类型获取颜色
@@ -54,9 +56,6 @@ function deepMerge(target, source) {
  */
 export function changeChartsTheme(chartsList: echarts.EChartsType[]): void {
   if (chartsList && chartsList.length) {
-    const chartChangeColor = getChartListColor();
-    const colorOption = getChartColorOption(chartChangeColor);
-
     for (let index = 0; index < chartsList.length; index++) {
       const elementChart = chartsList[index];
 
@@ -64,7 +63,7 @@ export function changeChartsTheme(chartsList: echarts.EChartsType[]): void {
         const optionVal = elementChart.getOption();
 
         // 更改主题颜色
-        deepMerge(optionVal, colorOption);
+        deepMerge(optionVal, order[index](getChartListColor()));
 
         elementChart.setOption(optionVal, true);
       }
@@ -74,13 +73,15 @@ export function changeChartsTheme(chartsList: echarts.EChartsType[]): void {
 
 export function changeCharts(chartsList: echarts.EChartsType[], options): void {
   if (chartsList && chartsList.length) {
-    const chart = chartsList[0];
-    let optionVal = chart.getOption();
-    optionVal = Object.assign(optionVal, options);
-    const chartChangeColor = getChartListColor();
-    const colorOption = getChartColorOption(chartChangeColor);
-    deepMerge(optionVal, colorOption);
-    chart.setOption(optionVal);
+    for (let i = 0; i < chartsList.length; i++) {
+      const chart = chartsList[i];
+      let optionVal = chart.getOption();
+      optionVal = Object.assign(optionVal, options[i]);
+      const chartChangeColor = getChartListColor();
+      const colorOption = order[i](chartChangeColor);
+      deepMerge(optionVal, colorOption);
+      chart.setOption(optionVal);
+    }
   }
 }
 

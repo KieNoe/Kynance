@@ -11,7 +11,7 @@
           <p>{{ companyInfo.price }}</p>
         </div>
         <div class="right">
-          <t-tag color="green" variant="light" size="large" class="tag">
+          <t-tag :color="settingStore.themeColor" variant="light" size="large" class="tag">
             <t-icon name="arrow-up" style="margin: 0"></t-icon>
             {{ companyInfo.changePercent }}
           </t-tag>
@@ -37,6 +37,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import { useSettingStore } from '@/stores'
+
 import Disclaimer from './Disclaimer.vue'
 defineProps({
   companyInfo: {
@@ -44,6 +46,8 @@ defineProps({
     required: true,
   },
 })
+
+const settingStore = useSettingStore()
 const visible = ref(false)
 </script>
 <style scoped lang="less">

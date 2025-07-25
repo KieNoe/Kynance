@@ -42,29 +42,38 @@ const useChart = (domId: string, onCleanUp): echarts.ECharts => {
   return selfChart
 }
 
-export const initChart = async (domId: string, chart: echarts.ECharts, option, onCleanUp) => {
-  chart = await useChart(domId, onCleanUp)
-  chart.setOption({
-    ...chartThemeOption.value,
-    ...chartColorOption.value,
-    ...option,
-  })
-  changeChartsTheme([chart] as any)
+export const initCharts = async (
+  domIds: string | string[],
+  charts: echarts.ECharts | echarts.ECharts[],
+  options: any | any[],
+  onCleanUp,
+) => {
+  for (let i = 0; i < domIds.length; i++) {
+    charts[i] = await useChart(domIds[i], onCleanUp)
+    charts[i].setOption({
+      ...chartThemeOption.value,
+      ...chartColorOption.value,
+      ...options[i],
+    })
+  }
+  changeChartsTheme(charts as any)
   const stopColorWatch = watch(
     () => settingStore.themeColor,
     () => {
-      changeChartsTheme([chart] as any)
+      changeChartsTheme(charts as any)
     },
   )
   const stopThemeWatch = watch(
     () => settingStore.mode,
     () => {
-      chart.setOption(chartThemeOption.value)
+      for (const chart of charts as echarts.ECharts[]) {
+        chart.setOption(chartThemeOption.value)
+      }
     },
   )
   onCleanUp(() => {
     stopColorWatch()
     stopThemeWatch()
   })
-  return chart
+  return charts
 }

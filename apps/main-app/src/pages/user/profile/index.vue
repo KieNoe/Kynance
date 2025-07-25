@@ -164,7 +164,7 @@ import { useUserStore } from '@/stores'
 import { getDiffDays, getDatePeriod } from '@/infrastructure/utils'
 import { LAST_7_DAYS } from '@/infrastructure/utils/date'
 import { t } from '@/infrastructure/locales'
-import { initChart } from '@/infrastructure/hook'
+import { initCharts } from '@/infrastructure/hook'
 
 import { USER_INFO_LIST, WEBSITE_RECOMMEND, PROFIT_OPTION, refreshUserInfoList } from './index'
 const userStore = useUserStore()
@@ -221,7 +221,7 @@ const onSubmit = ({ validateResult, firstError, e }) => {
 }
 
 onMounted(() => {
-  initChart('lineContainer', lineChart, PROFIT_OPTION, onUnmounted)
+  initCharts(['lineContainer'], [lineChart], [PROFIT_OPTION], onUnmounted)
 })
 </script>
 <style scoped>

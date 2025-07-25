@@ -1,3 +1,11 @@
+import {
+  calculateMACD,
+  calculateMA,
+  calculateBollingerBands,
+  calculateRSI,
+  calculateKDJ,
+  calculateCCI,
+} from '../data-transformer/index';
 export const getChartThemeOption = ({ borderColor, containerColor, textColor }) => {
   return {
     backgroundColor: containerColor, // 容器背景色
@@ -66,6 +74,11 @@ export const getChartColorOption = (colorList) => {
             },
           },
         },
+        {
+          lineStyle: {
+            color: '#78bdd5',
+          },
+        },
       ],
     };
   }
@@ -103,9 +116,116 @@ export const getChartColorOption = (colorList) => {
           },
         },
       },
+      {
+        lineStyle: {
+          color: colorList[1],
+        },
+      },
     ],
   };
 };
+export const getTrendingChartColorOption = (colorList) => {
+  if (!colorList || colorList.length === 0) {
+    // 默认颜色配置
+    return {
+      color: ['#0052d9', '#78bdd5', '#ef84ce', '#57c2b8', '#ef9f79', '#4fc241', '#73a4e1', '#f59e78'],
+      series: [
+        {
+          lineStyle: {
+            color: '#5470C6',
+          },
+        },
+        {
+          lineStyle: {
+            color: '#78bdd5',
+          },
+        },
+      ],
+    };
+  }
+
+  return {
+    color: colorList,
+    series: [
+      {
+        lineStyle: {
+          color: colorList[0],
+        },
+      },
+      {
+        lineStyle: {
+          color: colorList[1],
+        },
+      },
+      {
+        lineStyle: {
+          color: colorList[2],
+        },
+        areaStyle: {
+          color: `rgba(${hexToRgb(colorList[2])}, 0.05)`,
+        },
+        symbol: 'none',
+      },
+      {
+        lineStyle: {
+          color: colorList[3],
+        },
+        areaStyle: {
+          color: `rgba(${hexToRgb(colorList[3])}, 0.05)`,
+        },
+        symbol: 'none',
+      },
+    ],
+  };
+};
+export const getShockChartColorOption = (colorList) => {
+  if (!colorList || colorList.length === 0) {
+    // 默认颜色配置
+    return {
+      color: ['#0052d9', '#78bdd5', '#ef84ce', '#57c2b8', '#ef9f79', '#4fc241', '#73a4e1', '#f59e78'],
+      series: [
+        {
+          lineStyle: {
+            color: '#5470C6',
+          },
+        },
+        {
+          lineStyle: {
+            color: '#78bdd5',
+          },
+        },
+      ],
+    };
+  }
+
+  return {
+    color: colorList,
+    series: [
+      {
+        lineStyle: {
+          color: colorList[0],
+        },
+      },
+      {
+        lineStyle: {
+          color: colorList[1],
+        },
+      },
+    ],
+  };
+};
+
+function hexToRgb(hex) {
+  // 移除#字符
+  hex = hex.replace('#', '');
+
+  // 解析RGB值
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  return `${r}, ${g}, ${b}`;
+}
 function formatNumberToWan(num) {
   // 处理非数字或无效输入
   if (typeof num !== 'number' || isNaN(num)) {
@@ -210,6 +330,717 @@ export const getStockChartOptions = (stockData, currency = '') => {
     },
   };
 };
-export const getTrendingChartOptions = () => {};
-export const getShockChartOptions = () => {};
-export const getVolumeChartOptions = () => {};
+export const getTrendingChartOptions = (data, name) => {
+  let stockData;
+  switch (name) {
+    case 'MACD':
+      stockData = calculateMACD(data.data);
+      return {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+          },
+          formatter: function (params) {
+            let result = `<div style="font-weight:bold">${params[0].axisValue}</div>`;
+            params.forEach((item) => {
+              const color = item.color;
+              let value = item.value;
+              const seriesName = item.seriesName;
+
+              if (seriesName === 'MACD') {
+                // MACD值特殊处理，显示正负号
+                value = Number(value).toFixed(2);
+                value = value >= 0 ? '+' + value : value;
+              } else {
+                // DIF和DEA直接显示两位小数
+                value = Number(value).toFixed(2);
+              }
+
+              result += `
+          <div style="display:flex;align-items:center;">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+          </div>
+        `;
+            });
+            return result;
+          },
+        },
+        legend: {
+          data: ['DIF', 'DEA', 'MACD'],
+          bottom: 10,
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '15%',
+          top: '10%',
+          containLabel: true,
+        },
+        xAxis: {
+          data: data.data.map((item) => item.date),
+          type: 'category',
+          axisLabel: {
+            interval: Math.floor(data.data.length / 4),
+          },
+        },
+        yAxis: [
+          {
+            name: 'DIF/DEA',
+            type: 'value',
+            scale: true,
+            splitLine: {
+              show: true,
+            },
+          },
+          {
+            name: 'MACD',
+            type: 'value',
+            scale: true,
+            splitLine: {
+              show: false,
+            },
+          },
+        ],
+        dataZoom: [
+          {
+            type: 'inside',
+            xAxisIndex: 0,
+            start: 0,
+            end: 100,
+          },
+          {
+            type: 'slider',
+            xAxisIndex: 0,
+            start: 0,
+            end: 100,
+          },
+        ],
+        series: [
+          {
+            name: 'DIF',
+            type: 'line',
+            data: stockData.DIF.map((v) => v.toFixed(2)),
+            smooth: true,
+            lineStyle: {
+              width: 2,
+              color: '#0052d9',
+            },
+            symbol: 'none',
+          },
+          {
+            name: 'DEA',
+            type: 'line',
+            data: stockData.DEA.map((v) => v.toFixed(2)),
+            smooth: true,
+            lineStyle: {
+              width: 2,
+              color: '#78bdd5',
+            },
+            symbol: 'none',
+          },
+          {
+            name: 'MACD',
+            type: 'bar',
+            yAxisIndex: 1,
+            data: stockData.MACD.map((v) => v.toFixed(2)),
+            itemStyle: {
+              color: function (params) {
+                // MACD柱状图颜色，正值为红色，负值为绿色
+                return params.value >= 0 ? '#f6685d' : '#56c08d';
+              },
+            },
+            barWidth: '60%',
+          },
+        ],
+      };
+    case 'MA(5)':
+      stockData = calculateMA(data.data, 5);
+      console.log(stockData);
+      return {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross', // 十字准星指示器
+          },
+          formatter: function (params) {
+            const date = params[0].axisValue;
+            const candle = params[0].data;
+            const ma5 = params[1].data;
+            return `
+        <div style="font-weight: bold; margin-bottom: 5px;">${date}</div>
+        <div>开盘: ${candle[0]}</div>
+        <div>收盘: ${candle[1]}</div>
+        <div>最低: ${candle[2]}</div>
+        <div>最高: ${candle[3]}</div>
+        <div style="margin-top: 5px; color: ${params[1].color}">MA5: ${ma5?.toFixed(2) || '—'}</div>
+      `;
+          },
+        },
+        legend: {
+          data: ['K线', 'MA5'],
+          bottom: 10,
+        },
+        dataZoom: [
+          {
+            type: 'inside',
+            xAxisIndex: 0,
+            start: 0,
+            end: 100,
+          },
+        ],
+        xAxis: {
+          type: 'category',
+          data: data.data.map((item) => item.date), // 假设原始数据有date字段
+        },
+        yAxis: { type: 'value' },
+        series: [
+          {
+            name: 'K线',
+            type: 'candlestick',
+            data: data.data.map((item) => [item.open, item.close, item.low, item.high]), // 假设是K线图
+          },
+          {
+            name: 'MA5',
+            type: 'line',
+            data: calculateMA(data.data, 5), // 计算5日均线
+            smooth: true,
+            symbol: 'none',
+            lineStyle: {
+              width: 1,
+            },
+          },
+          {
+            name: 'MA10',
+            type: 'line',
+            data: calculateMA(data.data, 10), // 计算10日均线
+            smooth: true,
+            symbol: 'none',
+            lineStyle: {
+              width: 1,
+            },
+          },
+          // 可以继续添加更多MA线...
+        ],
+      };
+    case 'MA(20)':
+      stockData = calculateMA(data.data, 20);
+      console.log(stockData);
+      return {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross', // 十字准星指示器
+          },
+          formatter: function (params) {
+            // 检查params是否存在且是数组
+            if (!params || !Array.isArray(params) || params.length === 0) {
+              return '';
+            }
+
+            // 安全获取各个参数
+            const date = params[0]?.axisValue || '—';
+            const candle = params[0]?.data || [];
+            const ma20Data = params[1]?.data;
+
+            // 构建HTML字符串
+            let html = `<div style="font-weight: bold; margin-bottom: 5px;">${date}</div>`;
+
+            // 添加蜡烛图数据（开盘、收盘、最低、最高）
+            html += `<div>开盘: ${candle[0] ?? '—'}</div>`;
+            html += `<div>收盘: ${candle[1] ?? '—'}</div>`;
+            html += `<div>最低: ${candle[2] ?? '—'}</div>`;
+            html += `<div>最高: ${candle[3] ?? '—'}</div>`;
+
+            // 添加MA20数据
+            if (params[1]) {
+              const ma20Color = params[1]?.color || '#000';
+              const ma20Value = typeof ma20Data === 'number' ? ma20Data.toFixed(2) : '—';
+              html += `<div style="margin-top: 5px; color: ${ma20Color}">MA20: ${ma20Value}</div>`;
+            }
+
+            return html;
+          },
+        },
+        legend: {
+          data: ['K线', 'MA20'],
+          bottom: 10,
+        },
+        dataZoom: [
+          {
+            type: 'inside',
+            xAxisIndex: 0,
+            start: 0,
+            end: 100,
+          },
+        ],
+        xAxis: {
+          type: 'category',
+          data: data.data.map((item) => item.date),
+        },
+        yAxis: { type: 'value' },
+        series: [
+          {
+            name: 'K线',
+            type: 'candlestick',
+            data: data.data.map((item) => [item.open, item.close, item.low, item.high]),
+          },
+          {
+            name: 'MA20',
+            type: 'line',
+            data: calculateMA(data.data, 20), // 计算20日均线
+            smooth: true,
+            symbol: 'none',
+            lineStyle: {
+              width: 1,
+            },
+          },
+          {
+            name: 'MA10',
+            type: 'line',
+            data: calculateMA(data.data, 10),
+            smooth: true,
+            symbol: 'none',
+            lineStyle: {
+              width: 1,
+            },
+          },
+          // 可以继续添加更多MA线...
+        ],
+      };
+    case '布林带':
+      stockData = calculateBollingerBands(data.data);
+      return {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+          },
+          formatter: function (params) {
+            // 获取当前日期的数据
+            const date = params[0].axisValue;
+            let tooltipContent = `<div style="font-weight:bold;margin-bottom:5px;">${date}</div>`;
+
+            // 遍历每个系列的数据
+            params.forEach((item) => {
+              const color = item.color;
+              const seriesName = item.seriesName;
+              let value = item.value;
+
+              // 格式化数值，保留2位小数
+              if (typeof value === 'number') {
+                value = value.toFixed(2);
+              }
+
+              tooltipContent += `
+          <div style="display:flex;align-items:center;margin:3px 0;">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+          </div>
+        `;
+            });
+
+            return tooltipContent;
+          },
+        },
+        legend: {
+          data: ['收盘价', '中轨(MA)', '上轨', '下轨'],
+          bottom: 10,
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '15%',
+          containLabel: true,
+        },
+        xAxis: {
+          type: 'category',
+          data: data.data.map((item) => item.date), // 假设数据中有date字段
+          boundaryGap: false,
+        },
+        yAxis: {
+          type: 'value',
+          scale: true,
+          axisLabel: {
+            formatter: function (value) {
+              return value.toFixed(2); // 保留2位小数
+            },
+          },
+        },
+        series: [
+          {
+            name: '收盘价',
+            type: 'line',
+            data: data.data.map((item) => item.close),
+            lineStyle: {
+              width: 2,
+            },
+            symbol: 'none',
+          },
+          {
+            name: '中轨(MA)',
+            type: 'line',
+            data: stockData.middleBand,
+            lineStyle: {
+              color: '#FF9800',
+              width: 2,
+            },
+            symbol: 'none',
+          },
+          {
+            name: '上轨',
+            type: 'line',
+            data: stockData.upperBand,
+            lineStyle: {
+              color: '#F44336',
+              width: 2,
+            },
+            areaStyle: {
+              color: 'rgba(244, 67, 54, 0.05)',
+            },
+            symbol: 'none',
+          },
+          {
+            name: '下轨',
+            type: 'line',
+            data: stockData.lowerBand,
+            lineStyle: {
+              color: '#4CAF50',
+              width: 2,
+            },
+            areaStyle: {
+              color: 'rgba(76, 175, 80, 0.05)',
+            },
+            symbol: 'none',
+          },
+        ],
+      };
+  }
+};
+export const getShockChartOptions = (data, name) => {
+  let stockData;
+  switch (name) {
+    case 'RSI':
+      stockData = calculateRSI(data.data);
+      return {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+          },
+          formatter: function (params) {
+            let result = `<div style="font-weight:bold">${params[0].axisValue}</div>`;
+            params.forEach((item) => {
+              const color = item.color;
+              let value = item.value;
+              const seriesName = item.seriesName;
+
+              // RSI值显示两位小数
+              value = Number(value).toFixed(2);
+
+              result += `
+      <div style="display:flex;align-items:center;">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+        ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+      </div>
+    `;
+            });
+            return result;
+          },
+        },
+        legend: {
+          data: ['RSI'],
+          bottom: 10,
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '15%',
+          top: '10%',
+          containLabel: true,
+        },
+        xAxis: {
+          data: data.data.map((item) => item.date),
+          type: 'category',
+          axisLabel: {
+            interval: Math.floor(data.data.length / 4),
+          },
+        },
+        yAxis: {
+          name: 'RSI',
+          type: 'value',
+          scale: true,
+          splitLine: {
+            show: true,
+          },
+          axisLabel: {
+            formatter: '{value}',
+          },
+        },
+        dataZoom: [
+          {
+            type: 'inside',
+            xAxisIndex: 0,
+            start: 0,
+            end: 100,
+          },
+          {
+            type: 'slider',
+            xAxisIndex: 0,
+            start: 0,
+            end: 100,
+          },
+        ],
+        series: [
+          {
+            name: 'RSI',
+            type: 'line',
+            data: stockData.map((v) => (v ? v.toFixed(2) : null)),
+            smooth: true,
+            lineStyle: {
+              width: 2,
+              color: '#0052d9',
+            },
+            symbol: 'none',
+          },
+          {
+            name: '辅助线',
+            type: 'line',
+            data: Array(data.data.length).fill(70),
+            lineStyle: {
+              color: '#f6685d',
+              type: 'dashed',
+              width: 1,
+            },
+            symbol: 'none',
+            silent: true,
+          },
+          {
+            name: '辅助线',
+            type: 'line',
+            data: Array(data.data.length).fill(30),
+            lineStyle: {
+              color: '#56c08d',
+              type: 'dashed',
+              width: 1,
+            },
+            symbol: 'none',
+            silent: true,
+          },
+        ],
+      };
+    case 'KDJ':
+      stockData = calculateKDJ(data.data);
+      return {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+          },
+          formatter: function (params) {
+            let result = `<div style="font-weight:bold">${params[0].axisValue}</div>`;
+            params.forEach((item) => {
+              const color = item.color;
+              let value = item.value;
+              const seriesName = item.seriesName;
+
+              // KDJ值显示两位小数
+              value = Number(value).toFixed(2);
+
+              result += `
+          <div style="display:flex;align-items:center;">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+          </div>
+        `;
+            });
+            return result;
+          },
+        },
+        legend: {
+          data: ['K', 'D', 'J'],
+          bottom: 10,
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '15%',
+          top: '10%',
+          containLabel: true,
+        },
+        xAxis: {
+          data: data.data.map((item) => item.date),
+          type: 'category',
+          axisLabel: {
+            interval: Math.floor(data.data.length / 4),
+          },
+        },
+        yAxis: {
+          name: 'KDJ',
+          type: 'value',
+          scale: true,
+          splitLine: {
+            show: true,
+          },
+          axisLabel: {
+            formatter: '{value}',
+          },
+        },
+        dataZoom: [
+          {
+            type: 'inside',
+            xAxisIndex: 0,
+            start: 0,
+            end: 100,
+          },
+          {
+            type: 'slider',
+            xAxisIndex: 0,
+            start: 0,
+            end: 100,
+          },
+        ],
+        series: [
+          {
+            name: 'K',
+            type: 'line',
+            data: stockData.map((v) => (v ? v.K.toFixed(2) : null)),
+            smooth: true,
+            lineStyle: {
+              width: 2,
+              color: '#0052d9',
+            },
+            symbol: 'none',
+          },
+          {
+            name: 'D',
+            type: 'line',
+            data: stockData.map((v) => (v ? v.D.toFixed(2) : null)),
+            smooth: true,
+            lineStyle: {
+              width: 2,
+              color: '#78bdd5',
+            },
+            symbol: 'none',
+          },
+          {
+            name: 'J',
+            type: 'line',
+            data: stockData.map((v) => (v ? v.J.toFixed(2) : null)),
+            smooth: true,
+            lineStyle: {
+              width: 2,
+              color: '#f6685d',
+            },
+            symbol: 'none',
+          },
+        ],
+      };
+    case 'CCI':
+      stockData = calculateCCI(data.data);
+      return {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+          },
+          formatter: function (params) {
+            let result = `<div style="font-weight:bold">${params[0].axisValue}</div>`;
+            params.forEach((item) => {
+              const color = item.color;
+              let value = item.value;
+              const seriesName = item.seriesName;
+
+              // CCI值显示两位小数
+              value = Number(value).toFixed(2);
+
+              result += `
+          <div style="display:flex;align-items:center;">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+          </div>
+        `;
+            });
+            return result;
+          },
+        },
+        legend: {
+          data: ['CCI'],
+          bottom: 10,
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '15%',
+          top: '10%',
+          containLabel: true,
+        },
+        xAxis: {
+          data: data.data.map((item) => item.date),
+          type: 'category',
+          axisLabel: {
+            interval: Math.floor(data.data.length / 4),
+          },
+        },
+        yAxis: {
+          name: 'CCI',
+          type: 'value',
+          scale: true,
+          splitLine: {
+            show: true,
+          },
+          axisLabel: {
+            formatter: '{value}',
+          },
+        },
+        dataZoom: [
+          {
+            type: 'inside',
+            xAxisIndex: 0,
+          },
+          {
+            type: 'slider',
+            xAxisIndex: 0,
+          },
+        ],
+        series: [
+          {
+            name: 'CCI',
+            type: 'line',
+            data: stockData.map((v) => (v ? v.toFixed(2) : null)),
+            smooth: true,
+            lineStyle: {
+              width: 2,
+              color: '#0052d9',
+            },
+            symbol: 'none',
+          },
+          {
+            name: '辅助线',
+            type: 'line',
+            data: Array(data.data.length).fill(70),
+            lineStyle: {
+              color: '#f6685d',
+              type: 'dashed',
+              width: 1,
+            },
+            symbol: 'none',
+            silent: true,
+          },
+          {
+            name: '辅助线',
+            type: 'line',
+            data: Array(data.data.length).fill(30),
+            lineStyle: {
+              color: '#56c08d',
+              type: 'dashed',
+              width: 1,
+            },
+            symbol: 'none',
+            silent: true,
+          },
+        ],
+      };
+  }
+};
