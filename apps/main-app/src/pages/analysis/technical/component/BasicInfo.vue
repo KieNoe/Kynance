@@ -1,16 +1,16 @@
 <template>
   <t-card class="basicInfo" style="margin-bottom: 2vh">
     <div class="buttons">
-      <t-tooltip content="修改布局">
+      <t-tooltip :content="t('pages.analysis.technical.basicInfo.layout')">
         <t-button shape="circle" variant="outline">
           <template #icon> <t-icon name="module" /></template> </t-button></t-tooltip
-      ><t-tooltip content="生成分析报告">
+      ><t-tooltip :content="t('pages.analysis.technical.basicInfo.analysis')">
         <t-button shape="circle" variant="outline">
           <template #icon> <t-icon name="analytics" /></template> </t-button></t-tooltip
-      ><t-tooltip content="收藏">
+      ><t-tooltip :content="t('pages.analysis.technical.basicInfo.star')">
         <t-button shape="circle" variant="outline">
           <template #icon> <t-icon name="star" /></template> </t-button></t-tooltip
-      ><t-tooltip content="导出为PDF">
+      ><t-tooltip :content="t('pages.analysis.technical.basicInfo.PDF')">
         <t-button shape="circle" variant="outline">
           <template #icon> <t-icon name="download" /></template> </t-button
       ></t-tooltip>
@@ -27,6 +27,8 @@
   </t-card>
 </template>
 <script setup lang="ts">
+import { t } from '@/infrastructure/locales'
+
 defineProps({
   companyInfo: {
     type: Object,

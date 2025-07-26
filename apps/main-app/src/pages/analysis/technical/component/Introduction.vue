@@ -1,6 +1,6 @@
 <template>
   <t-card class="introduction">
-    <header>简介</header>
+    <header>{{ t('pages.analysis.technical.introduction.title') }}</header>
     <div class="contents" v-for="i in companyInfo.introduction" :key="i.title">
       <t-divider style="margin: var(--td-comp-margin-m) 0"></t-divider>
       <div class="content">
@@ -13,6 +13,8 @@
   </t-card>
 </template>
 <script setup lang="ts">
+import { t } from '@/infrastructure/locales'
+
 defineProps({
   companyInfo: {
     type: Object,

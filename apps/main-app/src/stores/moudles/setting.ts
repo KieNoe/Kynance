@@ -73,7 +73,6 @@ export const useSettingStore = defineStore('settings', () => {
   const changeBrandTheme = (themeColor: string) => {
     // 以主题色加显示模式作为键
     const colorKey = `${themeColor}[${mode.value}]`
-    console.log('colorKey', colorKey)
     let colorMap = colorList[colorKey]
     // 如果不存在色阶，就需要计算
     if (colorMap === undefined) {

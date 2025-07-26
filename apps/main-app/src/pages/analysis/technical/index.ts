@@ -1,21 +1,25 @@
+import { t } from '@/infrastructure/locales'
 export const OPTIONS = {
   dropdownItems: {
-    date: '日期',
-    trending: '趋势',
-    shock: '震荡',
+    date: t('pages.analysis.technical.date'),
+    trending: t('pages.analysis.technical.trending'),
+    shock: t('pages.analysis.technical.shock'),
   },
   date: [
-    { content: '1天', value: '1d' },
-    { content: '10天', value: '10d' },
-    { content: '1个月', value: '1m' },
-    { content: '6个月', value: '6m' },
-    { content: '1年', value: '1y' },
+    { content: t('pages.analysis.technical.ondDay'), value: '1d' },
+    { content: t('pages.analysis.technical.tenDays'), value: '10d' },
+    { content: t('pages.analysis.technical.oneMonth'), value: '1m' },
+    { content: t('pages.analysis.technical.sixMonths'), value: '6m' },
+    { content: t('pages.analysis.technical.oneYear'), value: '1y' },
   ],
   trending: [
     { content: 'MA(5)', value: 'MA-5' },
     { content: 'MA(20)', value: 'MA-20' },
     { content: 'MACD', value: 'MACD' },
-    { content: '布林带', value: '布林带' },
+    {
+      content: t('pages.analysis.technical.BollingerBand'),
+      value: t('pages.analysis.technical.BollingerBand'),
+    },
   ],
   shock: [
     { content: 'RSI', value: 'RSI' },
@@ -197,6 +201,134 @@ export const OPTIONS = {
       label: '沙特阿美 (Saudi Aramco)',
       value: '2222',
       title: '沙特阿美 (Saudi Aramco, 沙特, Saudi Arabia, TADAWUL:2222)',
+    },
+  ],
+}
+export const companyInfo = {
+  name: t('pages.analysis.technical.name'),
+  price: '$518.50',
+  description: t('pages.analysis.technical.description'),
+  change: '0.25',
+  changePercent: '0.25%',
+  market: 'HKG',
+  currency: 'HKD',
+  introduction: [
+    {
+      title: t('pages.analysis.technical.introduction.title'),
+      detail: t('pages.analysis.technical.introduction.Tencent'),
+      value: t('pages.analysis.technical.introduction.Tencent'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.companyType'),
+      detail: t('pages.analysis.technical.introduction.companyTypeValue'),
+      value: t('pages.analysis.technical.introduction.companyTypeValue'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.stockCode'),
+      detail: `00700（${t('pages.analysis.technical.introduction.HKStocks')}）`,
+      value: '00700',
+    },
+    {
+      title: t('pages.analysis.technical.introduction.establishmentTime'),
+      detail: '1998.11.11',
+      value: '1998.11.11',
+    },
+    {
+      title: t('pages.analysis.technical.introduction.present'),
+      detail: t('pages.analysis.technical.introduction.MAHUATENG'),
+      value: t('pages.analysis.technical.introduction.MaHuaTeng'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.CEO'),
+      detail: t('pages.analysis.technical.introduction.MaHuaTeng'),
+      value: t('pages.analysis.technical.introduction.MaHuaTeng'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.Headquarters'),
+      detail: t('pages.analysis.technical.introduction.ShenZhen'),
+      value: t('pages.analysis.technical.introduction.China'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.Industry'),
+      detail: t('pages.analysis.technical.introduction.businessScopeValue'),
+      value: t('pages.analysis.technical.introduction.IndustryValue'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.mainProduct'),
+      detail: t('pages.analysis.technical.introduction.product'),
+      value: t('pages.analysis.technical.introduction.mainProductValue'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.employee'),
+      detail: t('pages.analysis.technical.introduction.employeeValue'),
+      value: t('pages.analysis.technical.introduction.employeeSimpleValue'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.turnover'),
+      detail: t('pages.analysis.technical.introduction.turnoverValue'),
+      value: t('pages.analysis.technical.introduction.turnoverSimpleValue'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.marketValue'),
+      detail: t('pages.analysis.technical.introduction.marketValueValue'),
+      value: t('pages.analysis.technical.introduction.marketValueSimpleValue'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.slogan'),
+      detail: t('pages.analysis.technical.introduction.sloganValue'),
+      value: t('pages.analysis.technical.introduction.sloganValue'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.market'),
+      detail: t('pages.analysis.technical.introduction.marketGlobal'),
+      value: t('pages.analysis.technical.introduction.marketGlobal'),
+    },
+    {
+      title: t('pages.analysis.technical.introduction.technology'),
+      detail: t('pages.analysis.technical.introduction.technologyValue'),
+      value: t('pages.analysis.technical.introduction.technologyValue'),
+    },
+  ],
+  basicInfo: [
+    {
+      title: t('pages.analysis.technical.basicInfo.previousClose.title'),
+      detail: t('pages.analysis.technical.basicInfo.previousClose.detail'),
+      value: '$519.00',
+    },
+    {
+      title: t('pages.analysis.technical.basicInfo.dayRange.title'),
+      detail: t('pages.analysis.technical.basicInfo.dayRange.detail'),
+      value: '$514.5 - $522.5',
+    },
+    {
+      title: t('pages.analysis.technical.basicInfo.yearRange.title'),
+      detail: t('pages.analysis.technical.basicInfo.yearRange.detail'),
+      value: '$349.0 - $547.0',
+    },
+    {
+      title: t('pages.analysis.technical.basicInfo.marketCap.title'),
+      detail: t('pages.analysis.technical.basicInfo.marketCap.detail'),
+      value: '4.74万亿 HKD',
+    },
+    {
+      title: t('pages.analysis.technical.basicInfo.avgVolume.title'),
+      detail: t('pages.analysis.technical.basicInfo.avgVolume.detail'),
+      value: '1,640.94万',
+    },
+    {
+      title: t('pages.analysis.technical.basicInfo.peRatio.title'),
+      detail: t('pages.analysis.technical.basicInfo.peRatio.detail'),
+      value: '22.27',
+    },
+    {
+      title: t('pages.analysis.technical.basicInfo.dividendYield.title'),
+      detail: t('pages.analysis.technical.basicInfo.dividendYield.detail'),
+      value: '0.87%',
+    },
+    {
+      title: t('pages.analysis.technical.basicInfo.primaryExchange.title'),
+      detail: t('pages.analysis.technical.basicInfo.primaryExchange.detail'),
+      value: 'HKG',
     },
   ],
 }

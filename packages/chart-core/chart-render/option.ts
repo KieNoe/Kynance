@@ -453,31 +453,75 @@ export const getTrendingChartOptions = (data, name) => {
             },
             barWidth: '60%',
           },
+          {
+            name: '辅助线',
+            type: 'line',
+            data: Array(data.data.length).fill(70),
+            lineStyle: {
+              color: '#f6685d',
+              type: 'dashed',
+              width: 1,
+            },
+            symbol: 'none',
+            silent: true,
+          },
         ],
       };
     case 'MA(5)':
       stockData = calculateMA(data.data, 5);
-      console.log(stockData);
       return {
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'cross', // 十字准星指示器
+            type: 'cross',
           },
           formatter: function (params) {
-            const date = params[0].axisValue;
+            let result = `<div style="font-weight:bold;margin-bottom:5px;">${params[0].axisValue}</div>`;
+
+            // K线数据处理
             const candle = params[0].data;
-            const ma5 = params[1].data;
-            return `
-        <div style="font-weight: bold; margin-bottom: 5px;">${date}</div>
-        <div>开盘: ${candle[0]}</div>
-        <div>收盘: ${candle[1]}</div>
-        <div>最低: ${candle[2]}</div>
-        <div>最高: ${candle[3]}</div>
-        <div style="margin-top: 5px; color: ${params[1].color}">MA5: ${ma5?.toFixed(2) || '—'}</div>
-      `;
+            result += `
+      <div style="display:flex;align-items:center;margin:3px 0;">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
+        开盘: <span style="margin-left:5px;font-weight:bold">${candle[0]}</span>
+      </div>
+      <div style="display:flex;align-items:center;margin:3px 0;">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
+        收盘: <span style="margin-left:5px;font-weight:bold">${candle[1]}</span>
+      </div>
+      <div style="display:flex;align-items:center;margin:3px 0;">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
+        最低: <span style="margin-left:5px;font-weight:bold">${candle[2]}</span>
+      </div>
+      <div style="display:flex;align-items:center;margin:3px 0;">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
+        最高: <span style="margin-left:5px;font-weight:bold">${candle[3]}</span>
+      </div>
+    `;
+
+            // 处理均线数据
+            for (let i = 1; i < params.length; i++) {
+              if (params[i].seriesName.includes('MA')) {
+                const color = params[i].color;
+                const seriesName = params[i].seriesName;
+                let value = params[i].value;
+
+                // 格式化数值，保留2位小数
+                value = typeof value === 'number' ? value.toFixed(2) : '—';
+
+                result += `
+          <div style="display:flex;align-items:center;margin:3px 0;">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+          </div>
+        `;
+              }
+            }
+
+            return result;
           },
         },
+
         legend: {
           data: ['K线', 'MA5'],
           bottom: 10,
@@ -494,12 +538,20 @@ export const getTrendingChartOptions = (data, name) => {
           type: 'category',
           data: data.data.map((item) => item.date), // 假设原始数据有date字段
         },
-        yAxis: { type: 'value' },
+        yAxis: { type: 'value', scale: true },
         series: [
           {
             name: 'K线',
             type: 'candlestick',
             data: data.data.map((item) => [item.open, item.close, item.low, item.high]), // 假设是K线图
+            itemStyle: {
+              color: '#ef5350',
+              color0: '#26a69a',
+              borderColor: '#ef5350',
+              borderColor0: '#26a69a',
+              borderWidth: 2,
+            },
+            barWidth: '80%',
           },
           {
             name: 'MA5',
@@ -508,7 +560,7 @@ export const getTrendingChartOptions = (data, name) => {
             smooth: true,
             symbol: 'none',
             lineStyle: {
-              width: 1,
+              width: 2,
             },
           },
           {
@@ -518,10 +570,21 @@ export const getTrendingChartOptions = (data, name) => {
             smooth: true,
             symbol: 'none',
             lineStyle: {
-              width: 1,
+              width: 2,
             },
           },
-          // 可以继续添加更多MA线...
+          {
+            name: '辅助线',
+            type: 'line',
+            data: Array(data.data.length).fill(500),
+            lineStyle: {
+              color: '#f6685d',
+              type: 'dashed',
+              width: 1,
+            },
+            symbol: 'none',
+            silent: true,
+          },
         ],
       };
     case 'MA(20)':
@@ -531,7 +594,7 @@ export const getTrendingChartOptions = (data, name) => {
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'cross', // 十字准星指示器
+            type: 'cross',
           },
           formatter: function (params) {
             // 检查params是否存在且是数组
@@ -539,30 +602,49 @@ export const getTrendingChartOptions = (data, name) => {
               return '';
             }
 
-            // 安全获取各个参数
-            const date = params[0]?.axisValue || '—';
+            let result = `<div style="font-weight:bold;margin-bottom:5px;">${params[0]?.axisValue || '—'}</div>`;
+
+            // K线数据处理
             const candle = params[0]?.data || [];
-            const ma20Data = params[1]?.data;
+            result += `
+      <div style="display:flex;align-items:center;margin:3px 0;">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
+        开盘: <span style="margin-left:5px;font-weight:bold">${candle[0] ?? '—'}</span>
+      </div>
+      <div style="display:flex;align-items:center;margin:3px 0;">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
+        收盘: <span style="margin-left:5px;font-weight:bold">${candle[1] ?? '—'}</span>
+      </div>
+      <div style="display:flex;align-items:center;margin:3px 0;">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
+        最低: <span style="margin-left:5px;font-weight:bold">${candle[2] ?? '—'}</span>
+      </div>
+      <div style="display:flex;align-items:center;margin:3px 0;">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
+        最高: <span style="margin-left:5px;font-weight:bold">${candle[3] ?? '—'}</span>
+      </div>
+    `;
 
-            // 构建HTML字符串
-            let html = `<div style="font-weight: bold; margin-bottom: 5px;">${date}</div>`;
+            // 处理均线数据
+            for (let i = 1; i < params.length; i++) {
+              if (params[i] && params[i].seriesName && params[i].seriesName.includes('MA')) {
+                const color = params[i].color || '#000';
+                const seriesName = params[i].seriesName;
+                const value = typeof params[i].data === 'number' ? params[i].data.toFixed(2) : '—';
 
-            // 添加蜡烛图数据（开盘、收盘、最低、最高）
-            html += `<div>开盘: ${candle[0] ?? '—'}</div>`;
-            html += `<div>收盘: ${candle[1] ?? '—'}</div>`;
-            html += `<div>最低: ${candle[2] ?? '—'}</div>`;
-            html += `<div>最高: ${candle[3] ?? '—'}</div>`;
-
-            // 添加MA20数据
-            if (params[1]) {
-              const ma20Color = params[1]?.color || '#000';
-              const ma20Value = typeof ma20Data === 'number' ? ma20Data.toFixed(2) : '—';
-              html += `<div style="margin-top: 5px; color: ${ma20Color}">MA20: ${ma20Value}</div>`;
+                result += `
+          <div style="display:flex;align-items:center;margin:3px 0;">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+          </div>
+        `;
+              }
             }
 
-            return html;
+            return result;
           },
         },
+
         legend: {
           data: ['K线', 'MA20'],
           bottom: 10,
@@ -585,6 +667,14 @@ export const getTrendingChartOptions = (data, name) => {
             name: 'K线',
             type: 'candlestick',
             data: data.data.map((item) => [item.open, item.close, item.low, item.high]),
+            itemStyle: {
+              color: '#ef5350',
+              color0: '#26a69a',
+              borderColor: '#ef5350',
+              borderColor0: '#26a69a',
+              borderWidth: 2,
+            },
+            barWidth: '70%',
           },
           {
             name: 'MA20',
@@ -593,7 +683,7 @@ export const getTrendingChartOptions = (data, name) => {
             smooth: true,
             symbol: 'none',
             lineStyle: {
-              width: 1,
+              width: 2,
             },
           },
           {
@@ -603,10 +693,21 @@ export const getTrendingChartOptions = (data, name) => {
             smooth: true,
             symbol: 'none',
             lineStyle: {
-              width: 1,
+              width: 2,
             },
           },
-          // 可以继续添加更多MA线...
+          {
+            name: '辅助线',
+            type: 'line',
+            data: Array(data.data.length).fill(70),
+            lineStyle: {
+              color: '#f6685d',
+              type: 'dashed',
+              width: 1,
+            },
+            symbol: 'none',
+            silent: true,
+          },
         ],
       };
     case '布林带':

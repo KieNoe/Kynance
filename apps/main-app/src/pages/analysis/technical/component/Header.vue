@@ -1,8 +1,8 @@
 <template>
   <header class="card">
     <div class="header-title">
-      <t-tooltip content="腾讯 - HKG: 0700" show-arrow
-        ><t-button variant="text" class="button"> {{ companyInfo.name }} </t-button></t-tooltip
+      <t-tooltip :content="companyInfo.description" show-arrow>
+        <t-button variant="text" class="button"> {{ companyInfo.name }} </t-button></t-tooltip
       >
     </div>
     <div class="header-info">
@@ -18,14 +18,17 @@
         </div>
       </div>
       <div class="comment">
-        7.22, UTC+8 18:00:00 · {{ companyInfo.currency }} · {{ companyInfo.market }} ·
-        <t-link @click="visible = true"> 免责声明 </t-link>
+        {{ dayjs().month() }}.{{ dayjs().date() }}, UTC+8 {{ dayjs().format('HH:mm:ss') }} ·
+        {{ companyInfo.currency }} · {{ companyInfo.market }} ·
+        <t-link @click="visible = true">
+          {{ t('pages.analysis.technical.header.legalDisclaimer') }}
+        </t-link>
       </div>
       <t-dialog
         destroyOnClose
         v-model:visible="visible"
         :on-confirm="() => (visible = false)"
-        header="免责声明(bushi)"
+        :header="t('pages.analysis.technical.header.legalDisclaimer') + '(bushi)'"
         top="2vh"
         width="70%"
       >
@@ -36,8 +39,10 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
+import dayjs from 'dayjs'
 
 import { useSettingStore } from '@/stores'
+import { t } from '@/infrastructure/locales'
 
 import Disclaimer from './Disclaimer.vue'
 defineProps({

@@ -1,0 +1,107 @@
+.card {
+  background-color: var(--td-bg-color-container);
+  border-radius: var(--td-radius-medium);
+  font: var(--td-font-body-medium);
+  color: var(--td-font-color-text);
+  transition: 0.2s cubic-bezier(0.38, 0, 0.24, 1);
+  border: 1px solid var(--td-component-border);
+}
+header.card {
+  height: 12vh;
+  margin: 0 0 2vh 0;
+  display: flex;
+  align-items: center;
+}
+header.card .header-title {
+  font-weight: 600;
+  padding-left: 1vw;
+  margin-right: 2vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+header.card .header-title .button {
+  font-size: 2.5vw;
+  height: 8vh;
+}
+header.card .header-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 12vh;
+}
+header.card .header-info .base {
+  display: flex;
+  align-items: flex-end;
+}
+header.card .header-info .base .left {
+  margin-bottom: 1.7vh;
+}
+header.card .header-info .base .left p {
+  margin: 0;
+  padding: 0;
+  font-size: 2.5vw;
+}
+header.card .header-info .base .right {
+  padding-bottom: 1vh;
+}
+header.card .header-info .base .right .tag {
+  padding: 0.5em 0.5em 0.5em 0.3em;
+  margin-left: 1vw;
+  border-radius: 0.4em;
+  font-size: 1.56vw;
+}
+header.card .header-info .comment {
+  height: 2vh;
+}
+#chartContainer {
+  min-height: 70vh;
+}
+#chartContainer header {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 2vh;
+}
+#chartContainer .chart-container {
+  width: 56.7vw;
+  height: 50vh;
+}
+footer {
+  min-height: 18vh;
+  margin: 2vh 0;
+}
+.basicInfo {
+  min-height: 55vh;
+}
+.basicInfo .buttons {
+  display: flex;
+  justify-content: space-between;
+}
+.basicInfo .content {
+  display: flex;
+  justify-content: space-between;
+}
+.basicInfo .content p {
+  margin: 0;
+  font-size: 1vw;
+}
+.basicInfo .content .value {
+  font-weight: 600;
+}
+.introduction {
+  min-height: 50vh;
+}
+.introduction header {
+  margin-bottom: 2vh;
+}
+.introduction .content {
+  display: flex;
+  justify-content: space-between;
+}
+.introduction .content p {
+  margin: 0;
+  font-size: 1vw;
+}
+.introduction .content .value {
+  font-weight: 600;
+}
