@@ -1145,3 +1145,17 @@ export const getShockChartOptions = (data, name) => {
       };
   }
 };
+export const getInitialOptions = (stockData) => {
+  return [
+    getStockChartOptions(stockData, 'HKD'),
+    getTrendingChartOptions(stockData, 'MA(5)'),
+    getShockChartOptions(stockData, 'RSI'),
+  ];
+};
+export const getOptions = (stockData, options) => {
+  return [
+    getStockChartOptions(stockData, 'HKD'),
+    getTrendingChartOptions(stockData, options[0]),
+    getShockChartOptions(stockData, options[1]),
+  ];
+};

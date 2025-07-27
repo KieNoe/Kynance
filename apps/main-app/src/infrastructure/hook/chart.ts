@@ -18,7 +18,7 @@ const chartColorOption = computed(() => {
   return getChartColorOption(getChartListColor())
 })
 const useChart = (domId: string, onCleanUp): echarts.ECharts => {
-  let chartContainer: HTMLCanvasElement
+  const chartContainer = document.getElementById(domId) as HTMLCanvasElement
   // eslint-disable-next-line
   let selfChart: echarts.ECharts
   const updateContainer = () => {
@@ -26,9 +26,6 @@ const useChart = (domId: string, onCleanUp): echarts.ECharts => {
       width: chartContainer.clientWidth,
       height: chartContainer.clientHeight,
     })
-  }
-  if (!chartContainer) {
-    chartContainer = document.getElementById(domId) as HTMLCanvasElement
   }
   selfChart = echarts.init(chartContainer)
 
@@ -42,12 +39,8 @@ const useChart = (domId: string, onCleanUp): echarts.ECharts => {
   return selfChart
 }
 
-export const initCharts = async (
-  domIds: string | string[],
-  charts: echarts.ECharts | echarts.ECharts[],
-  options: any | any[],
-  onCleanUp,
-) => {
+export const initCharts = async (domIds: string | string[], options: any | any[], onCleanUp) => {
+  const charts = []
   for (let i = 0; i < domIds.length; i++) {
     charts[i] = await useChart(domIds[i], onCleanUp)
     charts[i].setOption({

@@ -1,7 +1,6 @@
 <template>
   <div id="chartContainer" class="card">
     <header>
-      <!-- 下拉菜单组 -->
       <t-dropdown
         v-for="(item, key) in OPTIONS.dropdownItems"
         :key="key"
@@ -76,18 +75,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, reactive, shallowRef } from 'vue'
+import { onMounted, onUnmounted, reactive, ref, shallowRef } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
-import {
-  getStockChartOptions,
-  changeCharts,
-  getTrendingChartOptions,
-  getShockChartOptions,
-} from '@kynance/chart-core'
+import { changeCharts, getInitialOptions, getOptions } from '@kynance/chart-core'
 
 import { initCharts } from '@/infrastructure/hook'
 import { debounce } from '@/infrastructure/utils'
 import { getDayData } from '@/services/client'
+import { useStockDataStore } from '@/stores'
 import { t } from '@/infrastructure/locales'
 
 import { OPTIONS } from '../index'
@@ -99,24 +94,22 @@ const props = defineProps({
   },
 })
 
-const visible = shallowRef(false)
-const disabled = shallowRef(false)
-const search = shallowRef('')
+const stockDataStore = useStockDataStore()
+
+const visible = ref(false)
+const disabled = ref(false)
+const search = ref('')
 const stock = shallowRef('腾讯控股(Tencent)')
 
 const dropdownStatus = reactive({
   date: { value: t('pages.analysis.technical.oneMonth'), loading: false },
   trending: { value: 'MA(5)', loading: false },
   shock: { value: 'RSI', loading: false },
-})
-
-const stockData = reactive({
-  default: {},
-  '1d': {},
-  '10d': {},
-  '1m': {},
-  '6m': {},
-  '1y': {},
+  init: () => {
+    dropdownStatus['date'].value = t('pages.analysis.technical.oneMonth')
+    dropdownStatus['trending'].value = 'MA(5)'
+    dropdownStatus['shock'].value = 'RSI'
+  },
 })
 
 const stockOptions = shallowRef(OPTIONS.stock)
@@ -127,20 +120,15 @@ let shockChart
 
 const updateCharts = async (isReRender = false) => {
   if (isReRender) {
-    dropdownStatus['date'].value = t('pages.analysis.technical.oneMonth')
-    dropdownStatus['trending'].value = 'MA(5)'
-    dropdownStatus['shock'].value = 'RSI'
-    stockData['1m'] = await getDayData('0700', '1m')
-    stockData['10d'] = stockData['1d'] = stockData['6m'] = stockData['1y'] = {}
-    stockData['default'] = stockData['1m']
+    dropdownStatus.init()
+    stockDataStore.init(getDayData)
   }
   changeCharts(
     [mainChart, trendingChart, shockChart],
-    [
-      getStockChartOptions(stockData['default'], props.companyInfo.currency),
-      getTrendingChartOptions(stockData['default'], dropdownStatus.trending.value),
-      getShockChartOptions(stockData['default'], dropdownStatus.shock.value),
-    ],
+    getOptions(stockDataStore.stockData.default, [
+      dropdownStatus.trending.value,
+      dropdownStatus.shock.value,
+    ]),
   )
 }
 
@@ -169,16 +157,12 @@ const handleDropdownClick = async (key, data) => {
   try {
     dropdownStatus[key].loading = true
     if (key === 'date') {
-      if (!stockData[data.value] || Object.keys(stockData[data.value]).length === 0) {
-        stockData[data.value] = await getDayData('0700', data.value)
-        stockData.default = stockData[data.value]
-      }
+      await stockDataStore.update(data.value, getDayData)
     }
     updateCharts()
     dropdownStatus[key].loading = false
   } catch (err) {
     MessagePlugin.error(t('pages.analysis.technical.chart.dataError'))
-    console.error(err)
     dropdownStatus[key].loading = false
   } finally {
     disabled.value = false
@@ -187,21 +171,16 @@ const handleDropdownClick = async (key, data) => {
 
 onMounted(async () => {
   try {
-    stockData['1m'] = await getDayData('0700', '1m')
-    stockData['default'] = stockData['1m']
-    const arr = await initCharts(
+    await stockDataStore.init(getDayData)
+
+    const charts = await initCharts(
       ['mainChart', 'trendingChart', 'shockChart'],
-      [mainChart, trendingChart, shockChart],
-      [
-        getStockChartOptions(stockData['default'], props.companyInfo.currency),
-        getTrendingChartOptions(stockData['default'], 'MA(5)'),
-        getShockChartOptions(stockData['default'], 'RSI'),
-      ],
+      getInitialOptions(stockDataStore.stockData['default']),
       onUnmounted,
     )
-    mainChart = arr[0]
-    trendingChart = arr[1]
-    shockChart = arr[2]
+    mainChart = charts[0]
+    trendingChart = charts[1]
+    shockChart = charts[2]
   } catch (err) {
     handleError(err)
   }

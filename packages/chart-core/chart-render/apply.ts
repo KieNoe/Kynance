@@ -71,7 +71,7 @@ export function changeChartsTheme(chartsList: echarts.EChartsType[]): void {
   }
 }
 
-export function changeCharts(chartsList: echarts.EChartsType[], options): void {
+export function changeCharts(chartsList, options): void {
   if (chartsList && chartsList.length) {
     for (let i = 0; i < chartsList.length; i++) {
       const chart = chartsList[i];
