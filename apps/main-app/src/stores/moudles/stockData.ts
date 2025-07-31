@@ -17,8 +17,9 @@ export const useStockDataStore = defineStore('stockData', () => {
   }
   const update = async (data, getDayData) => {
     if (Object.keys(stockData[data]).length === 0) {
-      stockData.default = stockData[data] = await getDayData('0700', data)
+      stockData[data] = await getDayData('0700', data)
     }
+    stockData.default = stockData[data]
   }
   return { stockData, init, update }
 })

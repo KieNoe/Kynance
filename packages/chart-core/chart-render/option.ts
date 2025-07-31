@@ -161,19 +161,11 @@ export const getTrendingChartColorOption = (colorList) => {
         lineStyle: {
           color: colorList[2],
         },
-        areaStyle: {
-          color: `rgba(${hexToRgb(colorList[2])}, 0.05)`,
-        },
-        symbol: 'none',
       },
       {
         lineStyle: {
           color: colorList[3],
         },
-        areaStyle: {
-          color: `rgba(${hexToRgb(colorList[3])}, 0.05)`,
-        },
-        symbol: 'none',
       },
     ],
   };
@@ -215,17 +207,6 @@ export const getShockChartColorOption = (colorList) => {
   };
 };
 
-function hexToRgb(hex) {
-  // 移除#字符
-  hex = hex.replace('#', '');
-
-  // 解析RGB值
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-
-  return `${r}, ${g}, ${b}`;
-}
 function formatNumberToWan(num) {
   // 处理非数字或无效输入
   if (typeof num !== 'number' || isNaN(num)) {

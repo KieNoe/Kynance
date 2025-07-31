@@ -1,5 +1,6 @@
 import { t } from '@/infrastructure/locales'
 export const OPTIONS = {
+  CHARTS: ['mainChart', 'trendingChart', 'shockChart'],
   dropdownItems: {
     date: t('pages.analysis.technical.date'),
     trending: t('pages.analysis.technical.trending'),

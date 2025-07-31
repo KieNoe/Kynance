@@ -68,14 +68,14 @@
     </header>
 
     <!-- 图表容器 -->
-    <div id="mainChart" class="chart-container"></div>
-    <div id="trendingChart" class="chart-container"></div>
-    <div id="shockChart" class="chart-container"></div>
+    <div class="charts-wrapper" v-for="chart in OPTIONS.CHARTS">
+      <div class="chart-container" :id="chart" :ref="chart"></div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, reactive, ref, shallowRef } from 'vue'
+import { nextTick, onMounted, onUnmounted, reactive, ref, shallowRef } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { changeCharts, getInitialOptions, getOptions } from '@kynance/chart-core'
 
@@ -86,13 +86,6 @@ import { useStockDataStore } from '@/stores'
 import { t } from '@/infrastructure/locales'
 
 import { OPTIONS } from '../index'
-
-const props = defineProps({
-  companyInfo: {
-    type: Object,
-    required: true,
-  },
-})
 
 const stockDataStore = useStockDataStore()
 
@@ -114,9 +107,10 @@ const dropdownStatus = reactive({
 
 const stockOptions = shallowRef(OPTIONS.stock)
 
-let mainChart
-let trendingChart
-let shockChart
+const mainChart = ref(null)
+const trendingChart = ref(null)
+const shockChart = ref(null)
+const charts = [{ ref: mainChart }, { ref: trendingChart }, { ref: shockChart }]
 
 const updateCharts = async (isReRender = false) => {
   if (isReRender) {
@@ -124,7 +118,7 @@ const updateCharts = async (isReRender = false) => {
     stockDataStore.init(getDayData)
   }
   changeCharts(
-    [mainChart, trendingChart, shockChart],
+    charts,
     getOptions(stockDataStore.stockData.default, [
       dropdownStatus.trending.value,
       dropdownStatus.shock.value,
@@ -169,21 +163,21 @@ const handleDropdownClick = async (key, data) => {
   }
 }
 
-onMounted(async () => {
-  try {
-    await stockDataStore.init(getDayData)
-
-    const charts = await initCharts(
-      ['mainChart', 'trendingChart', 'shockChart'],
-      getInitialOptions(stockDataStore.stockData['default']),
-      onUnmounted,
-    )
-    mainChart = charts[0]
-    trendingChart = charts[1]
-    shockChart = charts[2]
-  } catch (err) {
-    handleError(err)
-  }
+onMounted(() => {
+  nextTick(async () => {
+    if (mainChart.value) {
+      try {
+        await stockDataStore.init(getDayData)
+        await initCharts(
+          charts,
+          getInitialOptions(stockDataStore.stockData['default']),
+          onUnmounted,
+        )
+      } catch (err) {
+        handleError(err)
+      }
+    }
+  })
 })
 </script>
 

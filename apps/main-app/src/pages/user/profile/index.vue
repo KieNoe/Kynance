@@ -221,7 +221,8 @@ const onSubmit = ({ validateResult, firstError, e }) => {
 }
 
 onMounted(() => {
-  initCharts(['lineContainer'], [lineChart], [PROFIT_OPTION], onUnmounted)
+  const charts = initCharts(['lineContainer'], [PROFIT_OPTION], onUnmounted)
+  lineChart = charts[0]
 })
 </script>
 <style scoped>

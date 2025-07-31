@@ -1,4 +1,3 @@
-import * as echarts from 'echarts/core';
 import trim from 'lodash/trim';
 import { Color } from 'tvision-color';
 import { ModeType, KColorToken } from '@kynance/types';
@@ -54,10 +53,10 @@ function deepMerge(target, source) {
  * @param {Array<string>} chartsList
  * @param {string} theme
  */
-export function changeChartsTheme(chartsList: echarts.EChartsType[]): void {
+export function changeChartsTheme(chartsList): void {
   if (chartsList && chartsList.length) {
     for (let index = 0; index < chartsList.length; index++) {
-      const elementChart = chartsList[index];
+      const elementChart = chartsList[index].ref;
 
       if (elementChart) {
         const optionVal = elementChart.getOption();
@@ -74,7 +73,7 @@ export function changeChartsTheme(chartsList: echarts.EChartsType[]): void {
 export function changeCharts(chartsList, options): void {
   if (chartsList && chartsList.length) {
     for (let i = 0; i < chartsList.length; i++) {
-      const chart = chartsList[i];
+      const chart = chartsList[i].ref;
       let optionVal = chart.getOption();
       optionVal = Object.assign(optionVal, options[i]);
       const chartChangeColor = getChartListColor();
