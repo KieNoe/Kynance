@@ -47,7 +47,7 @@
       <t-dialog
         v-model:visible="visible"
         header="请输入文本"
-        width="50%"
+        width="60%"
         top="3%"
         :confirm-on-enter="true"
         :on-cancel="onClose"
@@ -61,21 +61,21 @@
           <div>
             <p>很抱歉，先生，虽然让您遇到了数据单一的问题</p>
             <p>但KieNoe保证，会提供除帮助以外的一切支持</p>
-            <img src="@/assets/assets-maodie.jpg" alt="" />
+            <img src="@/assets/assets-maodie.jpg" />
           </div>
         </t-space>
       </t-dialog>
     </header>
 
     <!-- 图表容器 -->
-    <div class="charts-wrapper" v-for="chart in OPTIONS.CHARTS">
+    <div class="charts-wrapper" v-for="chart in sortedCharts">
       <div class="chart-container" :id="chart" :ref="chart"></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, reactive, ref, shallowRef } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, reactive, ref, shallowRef } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { changeCharts, getInitialOptions, getOptions } from '@kynance/chart-core'
 
@@ -106,6 +106,9 @@ const dropdownStatus = reactive({
 })
 
 const stockOptions = shallowRef(OPTIONS.stock)
+const sortedCharts = computed(() => {
+  return stockDataStore.sortPlace.map((index) => OPTIONS.CHARTS[index - 1])
+})
 
 const mainChart = ref(null)
 const trendingChart = ref(null)
@@ -115,7 +118,7 @@ const charts = [{ ref: mainChart }, { ref: trendingChart }, { ref: shockChart }]
 const updateCharts = async (isReRender = false) => {
   if (isReRender) {
     dropdownStatus.init()
-    stockDataStore.init(getDayData)
+    stockDataStore.initStockData(getDayData)
   }
   changeCharts(
     charts,
@@ -151,7 +154,7 @@ const handleDropdownClick = async (key, data) => {
   try {
     dropdownStatus[key].loading = true
     if (key === 'date') {
-      await stockDataStore.update(data.value, getDayData)
+      await stockDataStore.updateStockData(data.value, getDayData)
     }
     updateCharts()
     dropdownStatus[key].loading = false
@@ -167,7 +170,7 @@ onMounted(() => {
   nextTick(async () => {
     if (mainChart.value) {
       try {
-        await stockDataStore.init(getDayData)
+        await stockDataStore.initStockData(getDayData)
         await initCharts(
           charts,
           getInitialOptions(stockDataStore.stockData['default']),

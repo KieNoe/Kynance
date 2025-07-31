@@ -2,7 +2,7 @@
   <t-card class="basicInfo" style="margin-bottom: 2vh">
     <div class="buttons">
       <t-tooltip :content="t('pages.analysis.technical.basicInfo.layout')">
-        <t-button shape="circle" variant="outline">
+        <t-button shape="circle" variant="outline" @click="onLayout">
           <template #icon> <t-icon name="module" /></template> </t-button></t-tooltip
       ><t-tooltip :content="t('pages.analysis.technical.basicInfo.analysis')">
         <t-button shape="circle" variant="outline">
@@ -15,6 +15,23 @@
           <template #icon> <t-icon name="download" /></template> </t-button
       ></t-tooltip>
     </div>
+    <t-dialog
+      v-model:visible="layoutVisible"
+      header="请拖拽布局"
+      width="40%"
+      top="2%"
+      :confirm-on-enter="true"
+      :on-cancel="onClose"
+      :on-esc-keydown="onClose"
+      :on-close-btn-click="onClose"
+      :on-overlay-click="onClose"
+      :on-close="onClose"
+      :on-confirm="onConfirm"
+    >
+      <div>
+        <Draggable ref="draggable" />
+      </div>
+    </t-dialog>
     <div class="contents" v-for="i in companyInfo.basicInfo" :key="i.title">
       <t-divider style="margin: var(--td-comp-margin-m) 0"></t-divider>
       <div class="content">
@@ -27,7 +44,12 @@
   </t-card>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue'
+import { MessagePlugin } from 'tdesign-vue-next'
+
 import { t } from '@/infrastructure/locales'
+
+import Draggable from './Draggable.vue'
 
 defineProps({
   companyInfo: {
@@ -35,6 +57,22 @@ defineProps({
     required: true,
   },
 })
+
+const layoutVisible = ref(false)
+const draggable = ref(null)
+const onClose = () => {
+  layoutVisible.value = false
+}
+
+const onLayout = () => {
+  layoutVisible.value = true
+}
+
+const onConfirm = () => {
+  layoutVisible.value = false
+  draggable.value?.saveSortPlace()
+  MessagePlugin.success('保存成功')
+}
 </script>
 <style scoped lang="less">
 @import '../index.less';
