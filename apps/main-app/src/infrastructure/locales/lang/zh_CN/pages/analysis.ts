@@ -98,5 +98,17 @@ export default {
       technologyCurve: '技术曲线',
       dataError: '获取数据失败',
     },
+    analysis: {
+      generate: '生成报告',
+      export: '导出报告',
+      loading: '加载中...',
+      priceAnalysis: '价格分析',
+      volumeAnalysis: '成交量分析',
+      trendAnalysis: '趋势分析',
+      marketState: '市场情况',
+      bidAskAnalysis: '买盘卖盘分析',
+      overallAssessment: '总体评价',
+      noData: '暂无数据',
+    },
   },
 }

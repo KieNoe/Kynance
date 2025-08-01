@@ -57,8 +57,8 @@ export const initCharts = async (charts, options, onCleanUp) => {
   const stopThemeWatch = watch(
     () => settingStore.mode,
     () => {
-      for (const chart of charts as echarts.ECharts[]) {
-        chart.setOption(chartThemeOption.value)
+      for (const chart of charts) {
+        chart.ref.setOption(chartThemeOption.value)
       }
     },
   )

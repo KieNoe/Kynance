@@ -6,10 +6,14 @@
         :key="image.id"
         class="sortable-item"
         draggable="true"
+        :class="{
+          dragging: draggedIndex === index,
+          'drag-over': dragOverIndex === index,
+        }"
         @dragstart="handleDragStart($event, index)"
         @dragover.prevent="handleDragOver($event, index)"
         @dragenter="handleDragEnter($event, index)"
-        @dragleave="handleDragLeave($event)"
+        @dragleave="handleDragLeave"
         @dragend="handleDragEnd"
         @drop.prevent="handleDrop($event, index)"
       >
@@ -20,30 +24,67 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
+import { useSettingStore } from '@/stores'
 import { useStockDataStore } from '@/stores'
-import KLinePng from '@/assets/assets-KLine.png'
-import RsiPng from '@/assets/assets-RSI.png'
-import StockPng from '@/assets/assets-Stock.png'
+import KLinePngLight from '@/assets/assets-kline-light.png'
+import RsiPngLight from '@/assets/assets-RSI-light.png'
+import StockPngLight from '@/assets/assets-stock-light.png'
+import StockPngDark from '@/assets/assets-stock-dark.png'
+import KLinePngDark from '@/assets/assets-KLine-dark.png'
+import RsiPngDark from '@/assets/assets-RSI-dark.png'
 
 const stockDataStore = useStockDataStore()
+const settingStore = useSettingStore()
 
-const images = ref(
-  [
-    { id: 1, src: StockPng },
-    { id: 2, src: KLinePng },
-    { id: 3, src: RsiPng },
-  ].sort((a, b) => stockDataStore.sortPlace.indexOf(a.id) - stockDataStore.sortPlace.indexOf(b.id)),
-)
+// 使用计算属性获取当前主题
+const isDark = computed(() => settingStore.mode !== 'light')
 
+// 图片资源配置，便于维护
+const imageResources = [
+  {
+    id: 1,
+    light: StockPngLight,
+    dark: StockPngDark,
+  },
+  {
+    id: 2,
+    light: KLinePngLight,
+    dark: KLinePngDark,
+  },
+  {
+    id: 3,
+    light: RsiPngLight,
+    dark: RsiPngDark,
+  },
+]
+
+// 创建响应式图片数组
+const images = ref([])
+
+// 更新图片数组的函数
+const updateImages = () => {
+  images.value = imageResources
+    .map((resource) => ({
+      id: resource.id,
+      src: isDark.value ? resource.dark : resource.light,
+    }))
+    .sort((a, b) => stockDataStore.sortPlace.indexOf(a.id) - stockDataStore.sortPlace.indexOf(b.id))
+}
+
+// 初始化图片
+onMounted(() => {
+  updateImages()
+})
+
+// 拖拽状态管理
 const draggedIndex = ref(null)
 const dragOverIndex = ref(null)
 
 const handleDragStart = (event, index) => {
   draggedIndex.value = index
   event.dataTransfer.effectAllowed = 'move'
-  event.currentTarget.classList.add('dragging')
 }
 
 const handleDragOver = (event, index) => {
@@ -52,74 +93,83 @@ const handleDragOver = (event, index) => {
 }
 
 const handleDragEnter = (event, index) => {
-  event.currentTarget.classList.add('drag-over')
+  dragOverIndex.value = index
 }
 
-const handleDragLeave = (event) => {
-  event.currentTarget.classList.remove('drag-over')
+const handleDragLeave = () => {
   dragOverIndex.value = null
 }
 
-const handleDragEnd = (event) => {
-  event.currentTarget.classList.remove('dragging')
-  document.querySelectorAll('.sortable-item').forEach((item) => {
-    item.classList.remove('drag-over')
-  })
+const handleDragEnd = () => {
   draggedIndex.value = null
   dragOverIndex.value = null
-  console.log(images.value)
 }
 
 const handleDrop = (event, targetIndex) => {
-  event.currentTarget.classList.remove('drag-over')
-
   if (draggedIndex.value !== null && draggedIndex.value !== targetIndex) {
     const newImages = [...images.value]
     const [removed] = newImages.splice(draggedIndex.value, 1)
     newImages.splice(targetIndex, 0, removed)
     images.value = newImages
+
+    // 拖拽完成后自动保存排序状态
+    saveSortPlace()
   }
 
   draggedIndex.value = null
   dragOverIndex.value = null
 }
 
+// 保存排序状态
 const saveSortPlace = () => {
   stockDataStore.updateSortPlace(images.value.map((item) => item.id))
 }
+
+// 监听主题变化
+const stopWatch = watch(
+  () => settingStore.mode,
+  () => {
+    updateImages()
+  },
+)
+
+// 导出方法
 defineExpose({ saveSortPlace })
+
+// 组件卸载时清理
+onUnmounted(() => {
+  stopWatch()
+  saveSortPlace() // 组件卸载时自动保存排序状态
+})
 </script>
 
 <style scoped>
 .sortable-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 50em;
   margin: 0 auto;
-  padding: 12px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 0.5em;
 }
 
 .transition-group-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1em;
 }
 
 .sortable-item {
   cursor: grab;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
+  border: 1px solid var(--td-gray-color-1);
+  border-radius: 0.33em;
   overflow: hidden;
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.0625em 0.1875em var(--bg-color-demo-select);
   position: relative;
 }
 
 .sortable-item:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+  box-shadow: 0 0.22em 0.44em var(--bg-color-scroll);
+  transform: translateY(-0.11em);
 }
 
 .sortable-item:active {
@@ -129,12 +179,11 @@ defineExpose({ saveSortPlace })
 .sortable-item.dragging {
   opacity: 0.5;
   transform: scale(0.98);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.33em 0.66em var(--bg-color-scroll);
 }
 
 .sortable-item.drag-over {
-  border-top: 3px dashed #3498db;
-  background-color: #f0f8ff;
+  border-top: 0.16em dashed var(--td-brand-color-5);
 }
 
 .sortable-item img {
@@ -155,7 +204,7 @@ defineExpose({ saveSortPlace })
 .sortable-list-enter-from,
 .sortable-list-leave-to {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateX(1.875em);
 }
 
 /* 占位指示器效果 */
@@ -171,6 +220,6 @@ defineExpose({ saveSortPlace })
 }
 
 .sortable-item.drag-over::after {
-  background: rgba(52, 152, 219, 0.1);
+  background: var(--td-mask-disabled);
 }
 </style>

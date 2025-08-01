@@ -4,14 +4,19 @@ import { reactive, ref } from 'vue'
 // 本地存储的键名
 const SORT_PLACE_KEY = 'kynance_sort_place'
 
+interface StockDataItem {
+  data?: any // 或者更具体的类型
+  symbol?: any
+}
+
 export const useStockDataStore = defineStore('stockData', () => {
   const stockData = reactive({
-    default: {},
-    '1d': {},
-    '10d': {},
-    '1m': {},
-    '6m': {},
-    '1y': {},
+    default: {} as StockDataItem,
+    '1d': {} as StockDataItem,
+    '10d': {} as StockDataItem,
+    '1m': {} as StockDataItem,
+    '6m': {} as StockDataItem,
+    '1y': {} as StockDataItem,
   })
 
   const sortPlace = ref(getSavedSortPlace())

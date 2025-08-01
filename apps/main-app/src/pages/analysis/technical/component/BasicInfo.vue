@@ -5,7 +5,7 @@
         <t-button shape="circle" variant="outline" @click="onLayout">
           <template #icon> <t-icon name="module" /></template> </t-button></t-tooltip
       ><t-tooltip :content="t('pages.analysis.technical.basicInfo.analysis')">
-        <t-button shape="circle" variant="outline">
+        <t-button shape="circle" variant="outline" @click="onAnalysis">
           <template #icon> <t-icon name="analytics" /></template> </t-button></t-tooltip
       ><t-tooltip :content="t('pages.analysis.technical.basicInfo.star')">
         <t-button shape="circle" variant="outline">
@@ -16,7 +16,7 @@
       ></t-tooltip>
     </div>
     <t-dialog
-      v-model:visible="layoutVisible"
+      :visible="layoutVisible"
       header="请拖拽布局"
       width="40%"
       top="2%"
@@ -31,6 +31,21 @@
       <div>
         <Draggable ref="draggable" />
       </div>
+    </t-dialog>
+    <t-dialog
+      :visible="analysisVisible"
+      header="分析报告"
+      width="65%"
+      top="2%"
+      :confirm-on-enter="true"
+      :on-cancel="onClose"
+      :on-esc-keydown="onClose"
+      :on-close-btn-click="onClose"
+      :on-overlay-click="onClose"
+      :on-close="onClose"
+      :on-confirm="onClose"
+    >
+      <Analysis />
     </t-dialog>
     <div class="contents" v-for="i in companyInfo.basicInfo" :key="i.title">
       <t-divider style="margin: var(--td-comp-margin-m) 0"></t-divider>
@@ -50,6 +65,7 @@ import { MessagePlugin } from 'tdesign-vue-next'
 import { t } from '@/infrastructure/locales'
 
 import Draggable from './Draggable.vue'
+import Analysis from './Analysis.vue'
 
 defineProps({
   companyInfo: {
@@ -59,13 +75,20 @@ defineProps({
 })
 
 const layoutVisible = ref(false)
+const analysisVisible = ref(false)
 const draggable = ref(null)
+
 const onClose = () => {
   layoutVisible.value = false
+  analysisVisible.value = false
 }
 
 const onLayout = () => {
   layoutVisible.value = true
+}
+
+const onAnalysis = () => {
+  analysisVisible.value = true
 }
 
 const onConfirm = () => {

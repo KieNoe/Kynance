@@ -102,5 +102,17 @@ export default {
       technologyCurve: 'Technology Curve',
       dataError: 'Failed to get data',
     },
+    analysis: {
+      generate: 'Generate Report',
+      export: 'Export Report',
+      loading: 'Loading...',
+      priceAnalysis: 'Price Analysis',
+      volumeAnalysis: 'Volume Analysis',
+      trendAnalysis: 'Trend Analysis',
+      marketState: 'Market State',
+      bidAskAnalysis: 'Bid/Ask Analysis',
+      overallAssessment: 'Overall Assessment',
+      noData: 'No Data',
+    },
   },
 }
