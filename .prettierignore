@@ -4,3 +4,4 @@ dist
 *.js
 coverage
 MenuContent.vue
+apps/main-app/src/pages/watchlists/base/index.vue

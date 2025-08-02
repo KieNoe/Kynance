@@ -35,7 +35,7 @@
       <!-- 股票列表表格 -->
       <t-table
         :data="paginatedStocks"
-        :columns="columns as any"
+        :columns="(columns as any)"
         :loading="loading"
         row-key="id"
         :selected-row-keys="selectedRowKeys"
@@ -114,7 +114,7 @@
 
           <t-table
             :data="searchResults"
-            :columns="searchColumns as any"
+            :columns="(searchColumns as any)"
             :pagination="{
               total: searchResults.length,
               defaultCurrent: 1,
