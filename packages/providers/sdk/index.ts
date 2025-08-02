@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
+import { getMarketStateTracker, getRandomEvent, resetMarketStateTracker, updateMarketState } from './marketState.ts';
 import { marketStates } from './types.ts';
-import { updateMarketState, getRandomEvent, getMarketStateTracker, resetMarketStateTracker } from './marketState.ts';
 import { generateFixedDates } from './utils.ts';
 
 /**
@@ -251,3 +251,71 @@ function addMarketMicrostructure(data) {
     spread: parseFloat(spread.toFixed(4)),
   };
 }
+
+/**
+ * 生成模拟的股票信息数据
+ * @param name 股票名称
+ * @param code 股票代码
+ * @returns 符合 StockInfo 接口的模拟数据
+ */
+export function generateMockStockInfo(name: string, code: string) {
+  // 生成唯一ID
+  const id = `stock_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+
+  // 生成随机价格 (10-1000之间)
+  const price = +(Math.random() * 990 + 10).toFixed(2);
+
+  // 生成涨跌幅 (-5% 到 +5% 之间)
+  const change = +(Math.random() * 10 - 5).toFixed(2);
+
+  // 计算涨跌百分比
+  const changePercent = +((change / (price - change)) * 100).toFixed(2);
+
+  // 生成成交量 (10万-1000万之间)
+  const volume = Math.floor(Math.random() * 9900000 + 100000);
+
+  // 生成成交额 (价格 * 成交量)
+  const turnover = +(price * volume).toFixed(2);
+
+  // 生成市值 (1亿-1000亿之间)
+  const marketCap = +(Math.random() * 99000000000 + 1000000000).toFixed(2);
+
+  // 生成市盈率 (5-50之间)
+  const pe = +(Math.random() * 45 + 5).toFixed(2);
+
+  // 生成市净率 (0.5-10之间)
+  const pb = +(Math.random() * 9.5 + 0.5).toFixed(2);
+
+  // 默认未选中
+  const isSelected = false;
+
+  return {
+    id,
+    code,
+    name,
+    price,
+    change,
+    changePercent,
+    volume,
+    turnover,
+    marketCap,
+    pe,
+    pb,
+    isSelected,
+  };
+}
+
+/**
+ * 生成多个模拟股票数据
+ * @param stockList 包含名称和代码的股票列表
+ * @returns 符合 StockInfo 接口的模拟数据数组
+ */
+export function generateMockStockList(stockList: Array<{ name: string; code: string }>) {
+  return stockList.map((stock) => generateMockStockInfo(stock.name, stock.code));
+}
+// 使用示例
+// const mockStocks = generateMockStockList([
+//   { name: '腾讯控股', code: '00700.HK' },
+//   { name: '阿里巴巴', code: '09988.HK' },
+//   { name: '贵州茅台', code: '600519.SH' }
+// ]);

@@ -4,6 +4,8 @@ const Api = {
   dailyGainer: '/api/stocks/dailyGainer/:region',
   dailyLoser: '/api/stocks/dailyLoser/:region',
   day: '/api/stocks/:symbol/:day',
+  watchList: '/api/stocks/watchList',
+  searchList: '/api/stocks/searchList',
 }
 
 export function getDailyLoser(region) {
@@ -17,4 +19,10 @@ export function getDailyGainer(region) {
 export function getDayData(symbol, day) {
   const url = Api.day.replace(':symbol', symbol).replace(':day', day)
   return alovaInstance.Get(url)
+}
+export function getWatchList(data) {
+  return alovaInstance.Post(Api.watchList, data)
+}
+export function getSearchList() {
+  return alovaInstance.Get(Api.searchList)
 }

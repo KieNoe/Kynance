@@ -53,6 +53,7 @@ module.exports = {
       },
     ],
   },
+  noInlineConfig: false,
   overrides: [
     {
       files: ["*.ts"],
