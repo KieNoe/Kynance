@@ -68,14 +68,12 @@
                 />
                 <div class="bid-ask-labels">
                   <span class="bid-label"
-                    >买盘: {{ formatNumber(latestData?.bidSize) }} ({{
-                      bidAskRatio.bidPercentage
-                    }}%)</span
+                    >{{ t('pages.analysis.technical.analysis.buy') }}:
+                    {{ formatNumber(latestData?.bidSize) }} ({{ bidAskRatio.bidPercentage }}%)</span
                   >
                   <span class="ask-label"
-                    >卖盘: {{ formatNumber(latestData?.askSize) }} ({{
-                      bidAskRatio.askPercentage
-                    }}%)</span
+                    >{{ t('pages.analysis.technical.analysis.sell') }}:
+                    {{ formatNumber(latestData?.askSize) }} ({{ bidAskRatio.askPercentage }}%)</span
                   >
                 </div>
               </div>
@@ -233,7 +231,7 @@ const getIndicatorColor = (value) => {
 // 导出报告为PDF
 const exportReport = async () => {
   if (!report.value) {
-    MessagePlugin.warning('请先生成分析报告')
+    MessagePlugin.warning(t('pages.analysis.technical.analysis.warn'))
     return
   }
 
@@ -250,10 +248,10 @@ const exportReport = async () => {
     }
 
     await html2pdf().set(opt).from(element).save()
-    MessagePlugin.success('报告导出成功')
+    MessagePlugin.success(t('pages.analysis.technical.analysis.success'))
   } catch (error) {
-    console.error('导出报告失败:', error)
-    MessagePlugin.error('导出报告失败')
+    console.error(t('pages.analysis.technical.analysis.error'), ':', error)
+    MessagePlugin.error(t('pages.analysis.technical.analysis.error'))
   } finally {
     loading.value = false
   }
@@ -268,7 +266,7 @@ const generateReport = async () => {
     const data = stockDataStore.stockData.default.data || props.stockData
 
     if (!data || data.length === 0) {
-      MessagePlugin.error('没有可用的股票数据')
+      MessagePlugin.error(t('pages.analysis.technical.analysis.noData'))
       loading.value = false
       return
     }
@@ -286,8 +284,8 @@ const generateReport = async () => {
       { name: '短期展望', value: report.value.shortTermOutlook },
     ]
   } catch (error) {
-    console.error('生成分析报告失败:', error)
-    MessagePlugin.error('生成分析报告失败')
+    console.error(t('pages.analysis.technical.analysis.error'), ':', error)
+    MessagePlugin.error(t('pages.analysis.technical.analysis.error'))
   } finally {
     loading.value = false
   }

@@ -109,6 +109,11 @@ export default {
       bidAskAnalysis: '买盘卖盘分析',
       overallAssessment: '总体评价',
       noData: '暂无数据',
+      buy: '买盘',
+      sell: '卖盘',
+      warn: '请先生成分析报告',
+      success: '报告导出成功',
+      error: '操作失败',
     },
   },
 }

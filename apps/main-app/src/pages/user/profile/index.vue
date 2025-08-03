@@ -119,7 +119,9 @@
               mode="date"
             />
           </template>
-          <div id="lineContainer" style="width: 51.7vw; height: 328px"></div>
+          <div class="charts-wrapper" v-for="chart in ['lineChart']">
+            <div :id="chart" :ref="chart" style="width: 51.7vw; height: 328px"></div>
+          </div>
         </t-card>
       </t-card>
     </t-col>
@@ -157,7 +159,7 @@
   </t-row>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, reactive, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 
 import { useUserStore } from '@/stores'
@@ -172,7 +174,7 @@ const dialogVisible = ref(false)
 const dialogVisibleRecommend = ref(false)
 let USER_LIST = USER_INFO_LIST
 const form = ref(null)
-let lineChart
+const lineChart = ref(null)
 
 const userInfo = reactive({
   name: userStore.user.name,
@@ -221,8 +223,11 @@ const onSubmit = ({ validateResult, firstError, e }) => {
 }
 
 onMounted(() => {
-  const charts = initCharts(['lineContainer'], [PROFIT_OPTION], onUnmounted)
-  lineChart = charts[0]
+  nextTick(() => {
+    if (lineChart.value) {
+      initCharts([{ ref: lineChart }], [PROFIT_OPTION], onUnmounted)
+    }
+  })
 })
 </script>
 <style scoped>

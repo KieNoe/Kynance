@@ -9,6 +9,7 @@ const STORAGE_KEY = 'kynance-watchlist'
 export const useWatchListStore = defineStore('watchList', () => {
   // 状态
   const currentStock = ref<StockInfo | null>(null)
+  const currentStockCode = ref('')
   const stocks = ref<StockInfo[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -65,6 +66,10 @@ export const useWatchListStore = defineStore('watchList', () => {
     currentStock.value = stock
   }
 
+  function setCurrentStockCode(code: string) {
+    currentStockCode.value = code
+  }
+
   function addStock(stock: StockInfo) {
     // 检查是否已存在
     const exists = stocks.value.some((s) => s.code === stock.code)
@@ -74,7 +79,9 @@ export const useWatchListStore = defineStore('watchList', () => {
         isSelected: true,
       })
       saveToLocalStorage() // 添加后保存
+      return true
     }
+    return false
   }
 
   function removeStock(code: string) {
@@ -230,6 +237,7 @@ export const useWatchListStore = defineStore('watchList', () => {
   return {
     // 状态
     currentStock,
+    currentStockCode,
     stocks,
     loading,
     error,
@@ -242,6 +250,7 @@ export const useWatchListStore = defineStore('watchList', () => {
 
     // 方法
     setCurrentStock,
+    setCurrentStockCode,
     addStock,
     removeStock,
     addStocks,

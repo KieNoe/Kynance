@@ -113,6 +113,11 @@ export default {
       bidAskAnalysis: 'Bid/Ask Analysis',
       overallAssessment: 'Overall Assessment',
       noData: 'No Data',
+      buy: 'Buy',
+      sell: 'Sell',
+      warn: 'Please generate an analysis report first',
+      success: 'Report exported succeeded',
+      error: 'Operation failed',
     },
   },
 }

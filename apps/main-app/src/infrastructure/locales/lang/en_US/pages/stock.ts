@@ -1,5 +1,3 @@
-import Recommend from '@/pages/market/stocks/components/Recommend.vue'
-
 export default {
   countries: {
     China: { title: 'Chinese Mainland', value: 'CN' },
@@ -15,6 +13,10 @@ export default {
   dropdown: {
     up: 'Gainer list',
     down: 'Loser list',
+    stockCode: 'Stock Code',
+    toggleSuccess: 'Toggle Successfully',
+    part1: 'Ehm, actually the story is like this,"boss!, our funds are not enough(。•́︿•̀。)"',
+    part2: 'So my suggestion is, the data seems only Chinese mainland and USA',
   },
   columns: {
     name: 'stock name',
@@ -29,6 +31,7 @@ export default {
   error: 'Request Failed',
   recommend: {
     title: 'Daily Recommend',
+    stockCode: 'stock code',
     Tencent: 'Tencent',
     Bank: 'Bank of China',
     TSMC: 'TSMC',

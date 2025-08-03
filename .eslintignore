@@ -15,4 +15,3 @@ apps/main-app/env.d.ts
 MenuContent.vue
 Ranking.vue
 Recommend.vue
-apps/main-app/src/pages/watchlists/base/index.vue

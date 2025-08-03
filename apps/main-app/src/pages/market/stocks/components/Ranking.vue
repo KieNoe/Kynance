@@ -6,7 +6,7 @@
           :options="CONSTANTS.DROPDOWN_OPTIONS"
           trigger="click"
           @click="onRankChange"
-          min-column-width="120px"
+          min-column-width="7.5em"
           :disabled="disabled"
         >
           <t-space>
@@ -36,15 +36,15 @@
           :on-cancel="onClose"
           top="5vh"
         >
-          <p>额，其实事情是这个样子的,"老大！我们的经费不够了(。•́︿•̀。)"</p>
-          <p>所以，数据就只有中国大陆和漂亮国的了</p>
+          <p>{{ t('pages.stock.dropdown.part1') }}</p>
+          <p>{{ t('pages.stock.dropdown.part2') }}</p>
           <img ref="img" alt="(°ー°〃)" width="100%" />
         </t-dialog>
       </header>
       <t-skeleton
         :loading="loading"
         animation="gradient"
-        :rowCol="Array(22).fill({ width: '918px' })"
+        :rowCol="Array(22).fill({ width: '57.375em' })"
       >
         <t-table
           row-key="key"
@@ -68,6 +68,7 @@ import { MessagePlugin, TableProps } from 'tdesign-vue-next'
 
 import { getDailyGainer, getDailyLoser } from '@/services/client'
 import { t } from '@/infrastructure/locales'
+import router from '@/router'
 
 const tab = ref(t('pages.stock.dropdown.up'))
 const img = ref(null)
@@ -223,7 +224,8 @@ const onRankChange = (data) => {
   }
 }
 const onRowClick = (data) => {
-  MessagePlugin.success('股票代码' + data.row.key)
+  MessagePlugin.success(t('pages.stock.dropdown.stockCode') + data.row.key)
+  router.push('/analysis/technical')
 }
 const onClose = () => {
   visible.value = false
@@ -235,7 +237,7 @@ const getImg = () => {
 const onAreaChange = (data) => {
   region.value = data
   if (region.value == 'CN' || region.value === 'US') {
-    MessagePlugin.success('切换成功')
+    MessagePlugin.success(t('pages.stock.dropdown.toggleSuccess'))
     getDailyList(
       tab.value == t('pages.stock.dropdown.up') ? getDailyGainer : getDailyLoser,
       region.value,

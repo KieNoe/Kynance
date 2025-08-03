@@ -30,12 +30,13 @@
         @change="
           (data) => {
             updateCharts(true)
-            visible = data != '0700'
+            visible = data != '07000.HK'
+            watchListStore.setCurrentStockCode(stock)
           }
         "
       >
         <template #panelTopContent>
-          <div style="padding: 6px 6px 0 6px">
+          <div style="padding: 0.375em 0.375em 0 0.375em">
             <t-input
               v-model="search"
               :placeholder="t('pages.analysis.technical.chart.search')"
@@ -82,17 +83,18 @@ import { changeCharts, getInitialOptions, getOptions } from '@kynance/chart-core
 import { initCharts } from '@/infrastructure/hook'
 import { debounce } from '@/infrastructure/utils'
 import { getDayData } from '@/services/client'
-import { useStockDataStore } from '@/stores'
+import { useStockDataStore, useWatchListStore } from '@/stores'
 import { t } from '@/infrastructure/locales'
 
 import { OPTIONS } from '../index'
 
 const stockDataStore = useStockDataStore()
+const watchListStore = useWatchListStore()
 
 const visible = ref(false)
 const disabled = ref(false)
 const search = ref('')
-const stock = shallowRef('腾讯控股(Tencent)')
+const stock = shallowRef('07000.HK')
 
 const dropdownStatus = reactive({
   date: { value: t('pages.analysis.technical.oneMonth'), loading: false },
@@ -168,6 +170,7 @@ const handleDropdownClick = async (key, data) => {
 
 onMounted(() => {
   nextTick(async () => {
+    watchListStore.setCurrentStockCode('07000.HK')
     if (mainChart.value) {
       try {
         await stockDataStore.initStockData(getDayData)

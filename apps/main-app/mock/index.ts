@@ -673,7 +673,7 @@ export default [
       return {
         code: 200,
         data: [
-          { name: '腾讯控股', code: '00700.HK' },
+          { name: '腾讯控股', code: '07000.HK' },
           { name: '阿里巴巴', code: '09988.HK' },
           { name: '贵州茅台', code: '600519.SH' },
           { name: '美团', code: '03690.HK' },

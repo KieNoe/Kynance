@@ -13,6 +13,10 @@ export default {
   dropdown: {
     up: '涨幅榜',
     down: '跌幅榜',
+    stockCode: '股票代码',
+    toggleSuccess: '切换成功',
+    part1: '额，其实事情是这个样子的,"老大！我们的经费不够了(。•́︿•̀。)"',
+    part2: '所以本人认为，数据似乎确实只有中国大陆和漂亮国的了',
   },
   columns: {
     name: '股票名称',
@@ -27,6 +31,7 @@ export default {
   error: '请求失败',
   recommend: {
     title: '今日推荐',
+    stockCode: '股票代码',
     Tencent: '腾讯 - Tencent',
     Bank: '中国银行 - Bank of China',
     TSMC: '台积电 - TSMC',

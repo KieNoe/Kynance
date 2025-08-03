@@ -6,15 +6,15 @@
         <div class="left-operations">
           <t-button theme="primary" @click="showAddStockModal">
             <template #icon><t-icon name="add" /></template>
-            批量添加
+            {{ t('pages.watchList.base.addInBatches') }}
           </t-button>
           <t-button theme="danger" :disabled="!hasSelected" @click="batchDeleteConfirm">
             <template #icon><t-icon name="delete" /></template>
-            批量删除
+            {{ t('pages.watchList.base.batchDelete') }}
           </t-button>
           <t-button @click="refreshData">
             <template #icon><t-icon name="refresh" /></template>
-            刷新
+            {{ t('pages.watchList.base.refresh') }}
           </t-button>
         </div>
         <div class="right-operations">
@@ -23,11 +23,11 @@
             style="width: 12.5rem; margin-left: 0.5rem"
             @change="handleSortChange"
           >
-            <t-option value="default" label="默认排序" />
-            <t-option value="priceAsc" label="价格 (低 → 高)" />
-            <t-option value="priceDesc" label="价格 (高 → 低)" />
-            <t-option value="changePercentAsc" label="涨跌幅 (低 → 高)" />
-            <t-option value="changePercentDesc" label="涨跌幅 (高 → 低)" />
+            <t-option value="default" :label="t('pages.watchList.base.defaultSort')" />
+            <t-option value="priceAsc" :label="t('pages.watchList.base.priceAsc')" />
+            <t-option value="priceDesc" :label="t('pages.watchList.base.priceDesc')" />
+            <t-option value="changePercentAsc" :label="t('pages.watchList.base.changePercentAsc')" />
+            <t-option value="changePercentDesc" :label="t('pages.watchList.base.changePercentDesc')" />
           </t-select>
         </div>
       </div>
@@ -68,10 +68,10 @@
         <!-- 操作列 -->
         <template #operation="{ row }">
           <t-space>
-            <t-link @click="viewStockDetail(row)">详情</t-link>
+            <t-link @click="viewStockDetail(row)">{{ t('pages.watchList.base.viewDetails') }}</t-link>
             <t-divider layout="vertical" style="margin: 0 var(--td-comp-margin-xs)" />
-            <t-popconfirm content="确定要删除这只股票吗?" @confirm="() => removeStock(row.code)">
-              <t-link class="delete-link">删除</t-link>
+            <t-popconfirm :content="t('pages.watchList.base.confirmDelete')" @confirm="() => removeStock(row.code)">
+              <t-link class="delete-link">{{ t('pages.watchList.base.delete') }}</t-link>
             </t-popconfirm>
           </t-space>
         </template>
@@ -94,7 +94,7 @@
       <!-- 批量添加股票弹窗 -->
       <t-dialog
         v-model:visible="addModalVisible"
-        header="批量添加股票"
+        :header="t('pages.watchList.base.addStocksTitle')"
         width="46.875rem"
         top="2%"
         @confirm="handleAddStocks"
@@ -102,7 +102,7 @@
         <div class="search-stock-container">
           <t-input
             v-model="stockSearchText"
-            placeholder="输入股票代码或名称搜索"
+            :placeholder="t('pages.watchList.base.searchPlaceholder')"
             style="width: 18.75rem; margin-bottom: 1rem"
             clearable
             v-on:enter="searchStocks"
@@ -134,21 +134,22 @@
       </t-dialog>
 
       <!-- 空状态提示 -->
-      <t-empty v-if="filteredStocks.length === 0 && !loading" description="暂无自选股，请添加">
+      <t-empty v-if="filteredStocks.length === 0 && !loading" :description="t('pages.watchList.base.noStocks')">
         <template #actions>
-          <t-button theme="primary" @click="showAddStockModal"> 添加股票 </t-button>
+          <t-button theme="primary" @click="showAddStockModal"> {{t('pages.watchList.base.addStock')}} </t-button>
         </template>
       </t-empty>
-    </div></t-card
-  >
+    </div>
+  </t-card>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { MessagePlugin, DialogPlugin } from 'tdesign-vue-next'
+
 import { getWatchList, getSearchList } from '@/services/client'
 import { useWatchListStore } from '@/stores'
-import { StockInfo } from '@kynance/types'
+import { t } from '@/infrastructure/locales'
 
 // 初始化 store
 const watchListStore = useWatchListStore()
@@ -193,50 +194,50 @@ const columns = [
   },
   {
     colKey: 'code',
-    title: '代码',
+    title: t('pages.watchList.base.column.code'),
     width: 100,
     cell: 'code',
   },
   {
     colKey: 'name',
-    title: '名称',
+    title: t('pages.watchList.base.column.name'),
     width: 100,
     cell: 'name',
   },
   {
     colKey: 'price',
-    title: '最新价',
+    title: t('pages.watchList.base.column.price'),
     width: 100,
     cell: 'price',
     sorter: true,
   },
   {
     colKey: 'changePercent',
-    title: '涨跌幅',
+    title: t('pages.watchList.base.column.changePercent'),
     width: 100,
     cell: 'changePercent',
     sorter: true,
   },
   {
     colKey: 'volume',
-    title: '成交量',
+    title: t('pages.watchList.base.column.volume'),
     width: 100,
   },
   {
     colKey: 'turnover',
-    title: '成交额',
+    title: t('pages.watchList.base.column.turnover'),
     width: 100,
     ellipsis: true,
   },
   {
     colKey: 'marketCap',
-    title: '市值',
+    title: t('pages.watchList.base.column.marketCap'),
     width: 100,
     ellipsis: true,
   },
   {
     colKey: 'operation',
-    title: '操作',
+    title: t('pages.watchList.base.column.operation'),
     fixed: 'right',
     width: 150,
     cell: 'operation',
@@ -252,19 +253,19 @@ const searchColumns = [
   },
   {
     colKey: 'code',
-    title: '代码',
+    title: t('pages.watchList.base.searchColumns.code'),
   },
   {
     colKey: 'name',
-    title: '名称',
+    title: t('pages.watchList.base.searchColumns.name'),
   },
   {
     colKey: 'price',
-    title: '最新价',
+    title: t('pages.watchList.base.searchColumns.price'),
   },
   {
     colKey: 'changePercent',
-    title: '涨跌幅',
+    title: t('pages.watchList.base.searchColumns.changePercent'),
     cell: 'changePercent',
   },
 ]
@@ -285,7 +286,7 @@ async function fetchData() {
   try {
     await watchListStore.fetchWatchlist(getWatchList)
   } catch (error) {
-    MessagePlugin.error('获取自选股数据失败')
+    MessagePlugin.error(t('pages.watchList.base.fetchError'))
     console.error(error)
   } finally {
     loading.value = false
@@ -294,7 +295,7 @@ async function fetchData() {
 
 function refreshData() {
   fetchData()
-  MessagePlugin.success('数据已刷新')
+  MessagePlugin.success(t('pages.watchList.base.refreshed'))
 }
 
 function handlePageChange(pageInfo) {
@@ -309,10 +310,6 @@ function handleSizeChange(size) {
 function onSelectChange(keys) {
   selectedRowKeys.value = keys
 }
-
-// function onSearch() {
-//   currentPage.value = 1
-// }
 
 function handleSortChange(value) {
   switch (value) {
@@ -329,30 +326,35 @@ function handleSortChange(value) {
       watchListStore.sortStocks('changePercent', false)
       break
     default:
-      // 默认排序，可以按添加顺序或其他逻辑
+      // 默认排序
       break
   }
 }
 
 function viewStockDetail(stock) {
   watchListStore.setCurrentStock(stock)
-  // 这里未来添加导航到股票详情页的逻辑
-  MessagePlugin.info(`查看股票: ${stock.name} (${stock.code})`)
+  MessagePlugin.info(
+    t('pages.watchList.base.viewStockDetail', {
+      name: stock.name,
+      code: stock.code
+    })
+  )
 }
 
 function removeStock(code) {
   watchListStore.removeStock(code)
-  MessagePlugin.success('已从自选股移除')
+  MessagePlugin.success(t('pages.watchList.base.removeSuccess'))
 }
 
 function batchDeleteConfirm() {
   if (selectedRowKeys.value.length === 0) return
 
   DialogPlugin.confirm({
-    header: '批量删除确认',
-    body: `确定要删除选中的 ${selectedRowKeys.value.length} 只股票吗？`,
+    header: t('pages.watchList.base.batchDeleteConfirm.header'),
+    body: t('pages.watchList.base.batchDeleteConfirm.body', {
+      count: selectedRowKeys.value.length
+    }),
     onConfirm: () => {
-      // 找到对应的股票代码并删除
       const stocksToDelete = watchListStore.stocks
         .filter((stock) => selectedRowKeys.value.includes(stock.id))
         .map((stock) => stock.code)
@@ -362,7 +364,11 @@ function batchDeleteConfirm() {
       })
 
       selectedRowKeys.value = []
-      MessagePlugin.success(`已删除 ${stocksToDelete.length} 只股票`)
+      MessagePlugin.success(
+        t('pages.watchList.base.batchDeleteSuccess', {
+          count: stocksToDelete.length
+        })
+      )
     },
   })
 }
@@ -372,16 +378,15 @@ function showAddStockModal() {
   stockSearchText.value = ''
   searchResults.value = []
   selectedSearchKeys.value = []
-
-  // 模拟一些搜索结果
   searchStocks()
 }
 
-// 模拟搜索股票
 async function searchStocks() {
   const keyword = stockSearchText.value
 
-  const mockSearchResults: any = await getWatchList(await getSearchList())
+  const mockSearchResults = await getWatchList(await getSearchList())
+
+  if(Array.isArray(mockSearchResults)){
 
   if (!keyword) {
     searchResults.value = mockSearchResults
@@ -392,22 +397,26 @@ async function searchStocks() {
   searchResults.value = mockSearchResults.filter(
     (stock) =>
       stock.code.toLowerCase().includes(lowerKeyword) ||
-      stock.name.toLowerCase().includes(lowerKeyword),
-  )
+      stock.name.toLowerCase().includes(lowerKeyword)
+  )}
 }
 
 function handleAddStocks() {
   if (selectedSearchKeys.value.length === 0) {
-    MessagePlugin.warning('请选择要添加的股票')
+    MessagePlugin.warning(t('pages.watchList.base.selectStocksWarning'))
     return false
   }
 
   const stocksToAdd = searchResults.value.filter((stock) =>
-    selectedSearchKeys.value.includes(stock.id),
+    selectedSearchKeys.value.includes(stock.id)
   )
 
   watchListStore.addStocks(stocksToAdd)
-  MessagePlugin.success(`成功添加 ${stocksToAdd.length} 只股票到自选列表`)
+  MessagePlugin.success(
+    t('pages.watchList.base.addStocksSuccess', {
+      count: stocksToAdd.length
+    })
+  )
   addModalVisible.value = false
   return true
 }

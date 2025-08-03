@@ -26,6 +26,7 @@ import { shallowRef } from 'vue'
 import { MessagePlugin, TableProps } from 'tdesign-vue-next'
 
 import { t } from '@/infrastructure/locales'
+import router from '@/router'
 
 const tableData = shallowRef<TableProps['data']>([
   {
@@ -241,7 +242,8 @@ const CONSTANTS = {
   ],
 }
 const onRowClick = (data) => {
-  MessagePlugin.success('股票代码' + data.row.key)
+  MessagePlugin.success(t('pages.stock.recommend.stockCode') + data.row.key)
+  router.push('/analysis/technical')
 }
 </script>
 <style lang="less" scoped>
