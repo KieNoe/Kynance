@@ -1,14 +1,14 @@
 import {
-  getChartThemeOption,
+  changeChartsTheme,
   getChartColorOption,
   getChartListColor,
-  changeChartsTheme,
+  getChartThemeOption,
 } from '@kynance/chart-core'
 import * as echarts from 'echarts'
 import { computed, watch } from 'vue'
 
+import { DARK_CHART_COLORS, LIGHT_CHART_COLORS } from '@/constants'
 import { useSettingStore } from '@/stores'
-import { LIGHT_CHART_COLORS, DARK_CHART_COLORS } from '@/constants'
 
 const settingStore = useSettingStore()
 const chartThemeOption = computed(() => {

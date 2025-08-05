@@ -18,7 +18,6 @@ export const alovaInstance = createAlova({
   cacheFor: {
     GET: 0,
     POST: {
-      mode: 'restore',
       expire: 60 * 10 * 1000,
     },
     PUT: 0,

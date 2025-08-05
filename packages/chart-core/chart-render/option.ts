@@ -1,10 +1,10 @@
 import {
-  calculateMACD,
-  calculateMA,
   calculateBollingerBands,
-  calculateRSI,
-  calculateKDJ,
   calculateCCI,
+  calculateKDJ,
+  calculateMA,
+  calculateMACD,
+  calculateRSI,
 } from '../data-transformer/index';
 export const getChartThemeOption = ({ borderColor, containerColor, textColor }) => {
   return {
@@ -115,9 +115,15 @@ export const getChartColorOption = (colorList) => {
             ],
           },
         },
+        itemStyle: {
+          color: colorList[0],
+        },
       },
       {
         lineStyle: {
+          color: colorList[1],
+        },
+        itemStyle: {
           color: colorList[1],
         },
       },

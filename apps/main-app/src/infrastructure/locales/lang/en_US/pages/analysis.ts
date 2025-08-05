@@ -120,4 +120,57 @@ export default {
       error: 'Operation failed',
     },
   },
+  fundamental: {
+    analysis: 'Fundamental Analysis',
+    company: {
+      name: 'Tencent Holdings',
+      industry: 'Internet Services',
+      marketCap: 'Market Capitalization',
+      floatMarketCap: 'Free Float Market Cap',
+      pe: 'P/E Ratio',
+      pb: 'P/B Ratio',
+      stockPrice: 'Stock Price',
+      priceChange: 'Price Change',
+    },
+    button: {
+      refresh: 'Refresh Data',
+      updateTime: 'Update Time',
+    },
+    financialIndicators: {
+      title: 'Key Financial Indicators',
+      yearOverYear: 'YoY',
+      revenue: 'Revenue',
+      netProfit: 'Net Profit',
+      grossMargin: 'Gross Margin',
+      roe: 'ROE (Return on Equity)',
+      AssetLiabilityRatio: 'Debt-to-Asset Ratio',
+    },
+    chart: {
+      revenueTrend: 'Revenue & Net Profit Trend',
+      profitability: 'Profitability Analysis',
+    },
+    risk: {
+      assessment: 'Risk Assessment',
+      levels: {
+        high: 'High Risk',
+        medium: 'Medium Risk',
+        low: 'Low Risk',
+      },
+      types: {
+        industry: 'Industry Risk',
+        financial: 'Financial Risk',
+        operation: 'Operational Risk',
+        market: 'Market Risk',
+        liquidity: 'Liquidity Risk',
+      },
+    },
+    ratings: {
+      excellent: 'Excellent',
+      good: 'Good',
+      average: 'Average',
+      poor: 'Poor',
+      warning: 'Warning',
+    },
+    refresh: 'Data refreshed successfully',
+  },
 }

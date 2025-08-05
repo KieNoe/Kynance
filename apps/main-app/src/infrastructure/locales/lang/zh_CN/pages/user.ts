@@ -8,7 +8,9 @@ export default {
   personalInfo: {
     title: '个人信息',
     description: '时间与智慧，终将开花结果',
+    editTitle: '编辑个人信息',
     desc: {
+      name: '昵称',
       telephone: '手机号',
       identity: '身份',
       email: '邮箱',
@@ -20,9 +22,29 @@ export default {
       yield: '收益率',
       description: '个性签名',
     },
+    validation: {
+      nameRequired: '昵称不能为空',
+      nameLength: '输入字数应在3到6之间',
+      telNumber: '必须为数字',
+      telLength: '必须为11位',
+      signatureRequired: '个性签名不能为空',
+      signatureLength: '输入字数应在3到30之间',
+    },
+    placeholder: {
+      input: '请输入内容',
+    },
+    button: {
+      submit: '提交',
+      reset: '重置',
+    },
     normal: '用户',
     admin: '管理员',
   },
+  message: {
+    success: '修改成功',
+    fail: '修改失败',
+  },
+  refreshed: '刷新成功',
   recentProfit: '近期盈亏',
   websiteRecommend: '网站推荐',
   mutualEncouragement: '共勉',

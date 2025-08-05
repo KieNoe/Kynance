@@ -1,5 +1,6 @@
-import { useUserStore } from '@/stores'
 import { t } from '@/infrastructure/locales'
+import { getStocks } from '@/services/client'
+import { useUserStore } from '@/stores'
 const userStore = useUserStore()
 
 export const USER_INFO_LIST = [
@@ -149,74 +150,85 @@ const stockData = {
     { date: '2025-07-22', open: 521.5, high: 525.5, low: 519.0, close: 521.46, volume: 16414000 },
   ],
 }
-export const PROFIT_OPTION = {
-  xAxis: {
-    data: stockData.data.map((item) => item.date),
-    type: 'category',
-    axisLabel: {
-      interval: Math.floor(stockData.data.length / 4), // 计算间隔使只显示4-5个标签
-    },
-  },
-  tooltip: {
-    trigger: 'axis',
-    formatter: function (params) {
-      const data = params[0].data
-      return `
+export async function getStockData(date) {
+  return getStocks(date)
+}
+export const getOptions = (stockData) => {
+  return {
+    xAxis: [
+      {
+        data: stockData.map((item) => item.date),
+        type: 'category',
+        axisLabel: {
+          interval: Math.floor(stockData.length / 4), // 计算间隔使只显示4-5个标签
+        },
+      },
+    ],
+    tooltip: [
+      {
+        trigger: 'axis',
+        formatter: function (params) {
+          const data = params[0].data
+          return `
         <div><strong>盈利$${data.close}万</strong></div>
         <div>${params[0].axisValueLabel}</div>
       `
-    },
-  },
-  yAxis: {
-    scale: true,
-    axisLabel: {
-      formatter: '{value}',
-    },
-  },
-  series: [
-    {
-      name: '0700 股价',
-      data: stockData.data.map((item) => ({
-        value: item.close,
-        open: item.open,
-        high: item.high,
-        low: item.low,
-        close: item.close,
-        volume: item.volume,
-      })),
-      type: 'line',
-      smooth: true,
-      showSymbol: false,
-      lineStyle: {
-        width: 2,
-        color: '#5470C6',
-      },
-      areaStyle: {
-        color: {
-          type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: 'rgba(84, 112, 198, 0.5)',
-            },
-            {
-              offset: 1,
-              color: 'rgba(84, 112, 198, 0.1)',
-            },
-          ],
         },
       },
+    ],
+    yAxis: [
+      {
+        scale: true,
+        axisLabel: {
+          formatter: '{value}',
+        },
+      },
+    ],
+    series: [
+      {
+        name: '股价',
+        data: stockData.map((item) => ({
+          value: item.close,
+          open: item.open,
+          high: item.high,
+          low: item.low,
+          close: item.close,
+          volume: item.volume,
+        })),
+        type: 'line',
+        smooth: true,
+        showSymbol: false,
+        lineStyle: {
+          width: 2,
+          color: '#5470C6',
+        },
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(84, 112, 198, 0.5)',
+              },
+              {
+                offset: 1,
+                color: 'rgba(84, 112, 198, 0.1)',
+              },
+            ],
+          },
+        },
+      },
+    ],
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '15%',
+      top: '10%',
+      containLabel: true,
     },
-  ],
-  grid: {
-    left: '3%',
-    right: '4%',
-    bottom: '15%',
-    top: '10%',
-    containLabel: true,
-  },
+  }
 }

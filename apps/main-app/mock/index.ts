@@ -720,4 +720,115 @@ export default [
       }
     },
   },
+  {
+    url: '/api/companyInfo/00700',
+    method: 'get',
+    timeout: 200,
+    response: () => {
+      return {
+        code: 200,
+        data: {
+          companyInfo: {
+            name: '腾讯控股',
+            code: '00700.HK',
+            industry: '互联网服务',
+            logo: '',
+            currentPrice: 368.5,
+            priceChange: 12.3,
+            priceChangePercent: 3.45,
+            marketCap: 35280,
+            floatMarketCap: 32150,
+            pe: 18.5,
+            pb: 3.2,
+          },
+          financialIndicators: [
+            {
+              key: 'revenue',
+              name: '营业收入',
+              value: '5601.18亿',
+              change: 8.2,
+              rating: '优秀',
+              score: 85,
+            },
+            {
+              key: 'netProfit',
+              name: '净利润',
+              value: '1227.42亿',
+              change: 12.5,
+              rating: '优秀',
+              score: 90,
+            },
+            {
+              key: 'roe',
+              name: 'ROE',
+              value: '16.8%',
+              change: 2.1,
+              rating: '良好',
+              score: 75,
+            },
+            {
+              key: 'roa',
+              name: 'ROA',
+              value: '8.9%',
+              change: 1.8,
+              rating: '良好',
+              score: 70,
+            },
+            {
+              key: 'debtRatio',
+              name: '资产负债率',
+              value: '32.5%',
+              change: -1.2,
+              rating: '优秀',
+              score: 80,
+            },
+            {
+              key: 'grossMargin',
+              name: '毛利率',
+              value: '45.2%',
+              change: 0.8,
+              rating: '良好',
+              score: 78,
+            },
+          ],
+          riskAssessment: [
+            {
+              type: '流动性风险',
+              level: '低风险',
+              description: '公司现金流充足，短期偿债能力强，流动性风险较低。',
+            },
+            {
+              type: '经营风险',
+              level: '中等风险',
+              description: '受行业监管政策影响，部分业务增长面临不确定性。',
+            },
+            {
+              type: '财务风险',
+              level: '低风险',
+              description: '财务结构稳健，负债率合理，财务风险可控。',
+            },
+          ],
+        },
+      }
+    },
+  },
+  {
+    url: '/api/stocks',
+    method: 'post',
+    timeout: 200,
+    response: (req) => {
+      const data = req.body
+      return {
+        code: 200,
+        data: getWholeData(
+          {
+            basePrice: 480.2,
+            volumeMax: 38200000,
+            volumeMin: 10200000,
+          },
+          data,
+        ),
+      }
+    },
+  },
 ] as MockMethod[]

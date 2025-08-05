@@ -17,7 +17,7 @@
           </t-button>
           <t-dialog
             :visible="dialogVisible"
-            header="编辑个人信息"
+            :header="t('pages.user.editTitle')"
             width="40%"
             :on-cancel="close"
             :on-esc-keydown="close"
@@ -32,17 +32,17 @@
                 name: [
                   {
                     whitespace: true,
-                    message: '昵称不能为空',
+                    message: t('pages.user.personalInfo.validation.nameRequired'),
                   },
                   {
                     min: 3,
-                    message: '输入字数应在3到6之间',
+                    message: t('pages.user.personalInfo.validation.nameLength'),
                     type: 'error',
                     trigger: 'blur',
                   },
                   {
                     max: 6,
-                    message: '输入字数应在3到6之间',
+                    message: t('pages.user.personalInfo.validation.nameLength'),
                     type: 'error',
                     trigger: 'blur',
                   },
@@ -50,27 +50,27 @@
                 tel: [
                   {
                     validator: (n) => !isNaN(n) && !isNaN(parseFloat(n)),
-                    message: '必须为数字',
+                    message: t('pages.user.personalInfo.validation.telNumber'),
                   },
                   {
                     len: 11,
-                    message: '必须为11位',
+                    message: t('pages.user.personalInfo.validation.telLength'),
                   },
                 ],
                 signature: [
                   {
                     whitespace: true,
-                    message: '个性签名不能为空',
+                    message: t('pages.user.personalInfo.validation.signatureRequired'),
                   },
                   {
                     min: 3,
-                    message: '输入字数应在3到30之间',
+                    message: t('pages.user.personalInfo.validation.signatureLength'),
                     type: 'error',
                     trigger: 'blur',
                   },
                   {
                     max: 30,
-                    message: '输入字数应在3到30之间',
+                    message: t('pages.user.personalInfo.validation.signatureLength'),
                     type: 'error',
                     trigger: 'blur',
                   },
@@ -81,19 +81,26 @@
               @reset="onReset"
               @submit="onSubmit"
             >
-              <t-form-item label="昵称" name="name">
+              <t-form-item :label="t('pages.user.personalInfo.desc.name')" name="name">
                 <t-input v-model="userInfo.name" placeholder="请输入内容"></t-input>
               </t-form-item>
-              <t-form-item label="手机号码" name="tel">
+              <t-form-item :label="t('pages.user.personalInfo.desc.telephone')" name="tel">
                 <t-input v-model="userInfo.tel" placeholder="请输入内容"></t-input>
               </t-form-item>
-              <t-form-item label="个性签名" name="signature">
-                <t-input v-model="userInfo.signature" placeholder="请输入内容"></t-input>
+              <t-form-item :label="t('pages.user.personalInfo.desc.description')" name="signature">
+                <t-input
+                  v-model="userInfo.signature"
+                  :placeholder="t('pages.user.personalInfo.placeholder.input')"
+                ></t-input>
               </t-form-item>
               <t-form-item>
                 <t-space size="small">
-                  <t-button theme="primary" type="submit">提交</t-button>
-                  <t-button theme="default" variant="base" type="reset">重置</t-button>
+                  <t-button theme="primary" type="submit">{{
+                    t('pages.user.personalInfo.button.submit')
+                  }}</t-button>
+                  <t-button theme="default" variant="base" type="reset">{{
+                    t('pages.user.personalInfo.button.reset')
+                  }}</t-button>
                 </t-space>
               </t-form-item>
             </t-form>
@@ -117,6 +124,8 @@
               :default-value="LAST_7_DAYS"
               theme="primary"
               mode="date"
+              :value="date"
+              @change="onDateChange"
             />
           </template>
           <div class="charts-wrapper" v-for="chart in ['lineChart']">
@@ -168,13 +177,15 @@ import { LAST_7_DAYS } from '@/infrastructure/utils/date'
 import { t } from '@/infrastructure/locales'
 import { initCharts } from '@/infrastructure/hook'
 
-import { USER_INFO_LIST, WEBSITE_RECOMMEND, PROFIT_OPTION, refreshUserInfoList } from './index'
+import { getStockData, getOptions } from './index'
+import { USER_INFO_LIST, WEBSITE_RECOMMEND, refreshUserInfoList } from './index'
 const userStore = useUserStore()
 const dialogVisible = ref(false)
 const dialogVisibleRecommend = ref(false)
 let USER_LIST = USER_INFO_LIST
 const form = ref(null)
 const lineChart = ref(null)
+const date = ref(LAST_7_DAYS)
 
 const userInfo = reactive({
   name: userStore.user.name,
@@ -216,16 +227,30 @@ const onSubmit = ({ validateResult, firstError, e }) => {
     userStore.setUser('description', userInfo.signature)
     USER_LIST = refreshUserInfoList(userStore, t)
     close()
-    MessagePlugin.success('编辑成功')
+    MessagePlugin.success(t('pages.user.personalInfo.message.success'))
   } else {
     MessagePlugin.warning(firstError)
   }
 }
 
+const onDateChange = async (value) => {
+  date.value = value
+  lineChart.value.setOption(
+    Object.assign(lineChart.value.getOption(), getOptions(await getStockData(date.value))),
+  )
+  MessagePlugin.success(t('pages.user.refreshed'))
+}
+
 onMounted(() => {
-  nextTick(() => {
+  nextTick(async () => {
     if (lineChart.value) {
-      initCharts([{ ref: lineChart }], [PROFIT_OPTION], onUnmounted)
+      lineChart.value = (
+        await initCharts(
+          [{ ref: lineChart }],
+          [getOptions(await getStockData(LAST_7_DAYS))],
+          onUnmounted,
+        )
+      )[0].ref
     }
   })
 })
