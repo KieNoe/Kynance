@@ -31,6 +31,10 @@ export function getSearchList() {
 export function getCompanyInfo() {
   return alovaInstance.Get(Api.company)
 }
-export function getStocks(date) {
-  return alovaInstance.Post(Api.stocks, date)
+export function getStocks(date, noCache = false) {
+  return alovaInstance.Post(Api.stocks, date, {
+    headers: {
+      noCache: noCache,
+    },
+  })
 }

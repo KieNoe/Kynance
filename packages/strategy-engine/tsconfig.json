@@ -1,4 +1,10 @@
 {
-  "include": ["ast", "backtest", "plugins"], // 包含的源文件目录
-  "exclude": ["**/__tests__", "**/*.test.ts"] // 排除的测试文件
+  "include": ["ast"],
+  "exclude": ["**/__tests__", "**/*.test.ts"], // 排除的测试文件
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
+    "noEmit": true
+  },
+  "module": "ESNext"
 }

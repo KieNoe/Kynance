@@ -98,6 +98,9 @@ importers:
       '@kynance/providers':
         specifier: workspace:^
         version: link:../../packages/providers
+      '@kynance/strategy-engine':
+        specifier: workspace:^
+        version: link:../../packages/strategy-engine
       '@vueuse/core':
         specifier: 13.4.0
         version: 13.4.0(vue@3.5.16(typescript@5.8.3))
@@ -312,7 +315,11 @@ importers:
         specifier: 1.11.13
         version: 1.11.13
 
-  packages/strategy-engine: {}
+  packages/strategy-engine:
+    devDependencies:
+      '@kynance/types':
+        specifier: workspace:^
+        version: link:../types
 
   packages/types: {}
 

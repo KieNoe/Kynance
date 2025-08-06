@@ -17,14 +17,19 @@ export const alovaInstance = createAlova({
   shareRequest: false,
   cacheFor: {
     GET: 0,
-    POST: {
-      expire: 60 * 10 * 1000,
-    },
+    POST: 0,
     PUT: 0,
     DELETE: 0,
     HEAD: 60 * 10 * 1000,
   },
   beforeRequest(method) {
+    if (method.config.headers['noCache']) {
+      method.meta = {
+        ...method.meta,
+        cacheFor: 0,
+      }
+      delete method.config.headers['noCache']
+    }
     method.config.headers = {
       'Content-Type': 'application/json',
     }

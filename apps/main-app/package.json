@@ -26,6 +26,7 @@
   "dependencies": {
     "@kynance/chart-core": "workspace:^",
     "@kynance/providers": "workspace:^",
+    "@kynance/strategy-engine": "workspace:^",
     "@vueuse/core": "13.4.0",
     "alova": "^3.3.0",
     "dayjs": "1.11.13",
