@@ -15,3 +15,4 @@ apps/main-app/env.d.ts
 MenuContent.vue
 Ranking.vue
 Recommend.vue
+Setting.vue

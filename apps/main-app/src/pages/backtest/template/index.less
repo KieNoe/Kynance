@@ -1,0 +1,103 @@
+.backtest-container {
+  padding: 1rem;
+  min-height: 100vh;
+
+  .header-card {
+    margin-bottom: 1rem;
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    h2 {
+      margin: 0;
+      margin-right: 0.9375rem;
+    }
+
+    .buttons {
+      width: 19vw;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .config-card,
+  .params-card {
+    margin-bottom: 1rem;
+  }
+
+  .result-card,
+  .chart-card,
+  .trades-card {
+    margin-bottom: 1rem;
+  }
+
+  .chart-card {
+    width: 100%;
+  }
+
+  .metric-item {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    border: 0.0625rem solid var(--td-bg-color-page);
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--td-bg-color-component-active);
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: var(--td-text-color-primary);
+
+      &.positive {
+        color: #e34d59;
+      }
+
+      &.negative {
+        color: #00a870;
+      }
+    }
+  }
+
+  .second-row {
+    margin-top: 1rem;
+  }
+
+  .empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .chart-container {
+    height: 18.75rem;
+    width: 100%;
+  }
+
+  :deep(.t-card__header) {
+    border-bottom: 0.0625rem solid var(--td-bg-color-component-active);
+  }
+
+  :deep(.t-card__body) {
+    padding: 1rem;
+  }
+
+  :deep(.t-form-item) {
+    margin-bottom: 1rem;
+  }
+}

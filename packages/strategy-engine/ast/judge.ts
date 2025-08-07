@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 // 获取交易信号
 export function getSignal(today, yesterday, indicators, index, strategy, params) {
   switch (strategy) {
@@ -21,23 +22,47 @@ export function getSignal(today, yesterday, indicators, index, strategy, params)
       break;
 
     case 'rsi_reversal':
-      // RSI超卖后回升买入
-      if (indicators.rsi[index - 1] <= params.oversold && indicators.rsi[index] > params.oversold) {
+      // 参数中增加buffer（例如20）
+      const buffer = params.buffer || 19;
+
+      // RSI从超卖区回升（不一定要完全穿越，接近即可）
+      if (indicators.rsi[index - 1] <= params.oversold + buffer && indicators.rsi[index] > params.oversold + buffer) {
         return 'BUY';
       }
-      // RSI超买后回落卖出
-      else if (indicators.rsi[index - 1] >= params.overbought && indicators.rsi[index] < params.overbought) {
+      // RSI从超买区回落（不一定要完全穿越，接近即可）
+      else if (
+        indicators.rsi[index - 1] >= params.overbought - buffer &&
+        indicators.rsi[index] < params.overbought - buffer
+      ) {
         return 'SELL';
       }
       break;
 
     case 'bollinger_bands':
-      // 价格触及下轨后反弹买入
-      if (yesterday.close <= indicators.lower[index - 1] && today.close > yesterday.close) {
+      // 设置缓冲区比例（例如0.05表示5%的带宽作为缓冲）
+      const bandwidthBuffer = params.buffer || 0.1;
+
+      // 计算动态缓冲范围
+      const bandWidth = indicators.upper[index - 1] - indicators.lower[index - 1];
+      const upperBuffer = indicators.upper[index - 1] - bandWidth * bandwidthBuffer;
+      const lowerBuffer = indicators.lower[index - 1] + bandWidth * bandwidthBuffer;
+
+      // 价格接近下轨（不要求完全触及）且开始反弹
+      if (
+        yesterday.close <= lowerBuffer &&
+        today.close > yesterday.close && // 价格回升
+        today.close > indicators.lower[index]
+      ) {
+        // 确认离开下轨区域
         return 'BUY';
       }
-      // 价格触及上轨后回落卖出
-      else if (yesterday.close >= indicators.upper[index - 1] && today.close < yesterday.close) {
+      // 价格接近上轨（不要求完全触及）且开始回落
+      else if (
+        yesterday.close >= upperBuffer &&
+        today.close < yesterday.close && // 价格回落
+        today.close < indicators.upper[index]
+      ) {
+        // 确认离开上轨区域
         return 'SELL';
       }
       break;
