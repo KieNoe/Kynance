@@ -1,37 +1,52 @@
 <template>
-  <t-card title="回测配置" class="config-card">
+  <t-card :title="t('pages.backtest.backtestConfig.title')" class="config-card">
     <t-form :data="backtestConfig" label-width="5rem">
-      <t-form-item label="策略名称">
-        <t-select v-model="backtestConfig.strategy" placeholder="请选择策略">
-          <t-option value="ma_cross" label="均线交叉策略" />
-          <t-option value="rsi_reversal" label="RSI反转策略" />
-          <t-option value="bollinger_bands" label="布林带策略" />
+      <t-form-item :label="t('pages.backtest.backtestConfig.strategyName')">
+        <t-select
+          v-model="backtestConfig.strategy"
+          :placeholder="t('pages.backtest.backtestConfig.placeholders.selectStrategy')"
+        >
+          <t-option
+            value="ma_cross"
+            :label="t('pages.backtest.backtestConfig.strategies.ma_cross')"
+          />
+          <t-option
+            value="rsi_reversal"
+            :label="t('pages.backtest.backtestConfig.strategies.rsi_reversal')"
+          />
+          <t-option
+            value="bollinger_bands"
+            :label="t('pages.backtest.backtestConfig.strategies.bollinger_bands')"
+          />
         </t-select>
       </t-form-item>
 
-      <t-form-item label="股票代码">
-        <t-input v-model="backtestConfig.symbol" placeholder="如：000001" />
-      </t-form-item>
-
-      <t-form-item label="回测周期">
-        <t-date-range-picker
-          v-model="backtestConfig.dateRange"
-          format="YYYY-MM-DD"
-          placeholder="选择回测时间范围"
+      <t-form-item :label="t('pages.backtest.backtestConfig.stockCode')">
+        <t-input
+          v-model="backtestConfig.symbol"
+          :placeholder="t('pages.backtest.backtestConfig.placeholders.inputStockCode')"
         />
       </t-form-item>
 
-      <t-form-item label="初始资金">
+      <t-form-item :label="t('pages.backtest.backtestConfig.backtestPeriod')">
+        <t-date-range-picker
+          v-model="backtestConfig.dateRange"
+          format="YYYY-MM-DD"
+          :placeholder="t('pages.backtest.backtestConfig.placeholders.selectDateRange')"
+        />
+      </t-form-item>
+
+      <t-form-item :label="t('pages.backtest.backtestConfig.initialCapital')">
         <t-input-number
           v-model="backtestConfig.initialCapital"
           :min="10000"
           :max="10000000"
-          suffix="元"
+          :suffix="t('pages.backtest.backtestConfig.units.yuan')"
           style="width: 12.5rem"
         />
       </t-form-item>
 
-      <t-form-item label="手续费率">
+      <t-form-item :label="t('pages.backtest.backtestConfig.commissionRate')">
         <t-input-number
           v-model="backtestConfig.commission"
           :min="0"
@@ -45,6 +60,7 @@
   </t-card>
 </template>
 <script setup lang="ts">
+import { t } from '@/infrastructure/locales'
 defineProps({
   backtestConfig: {
     type: Object,

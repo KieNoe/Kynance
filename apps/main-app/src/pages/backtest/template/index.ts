@@ -1,3 +1,4 @@
+import { t } from '@/infrastructure/locales'
 export const getOption = (sortedData) => {
   return {
     xAxis: {
@@ -92,11 +93,39 @@ export const getOption = (sortedData) => {
   }
 }
 export const tradeColumns = [
-  { colKey: 'date', title: '交易日期', width: 120 },
-  { colKey: 'type', title: '交易类型', width: 80 },
-  { colKey: 'price', title: '成交价格', width: 100 },
-  { colKey: 'quantity', title: '交易数量', width: 100 },
-  { colKey: 'amount', title: '交易金额', width: 120 },
-  { colKey: 'profit', title: '盈亏', width: 100 },
-  { colKey: 'totalValue', title: '总资产', width: 120 },
+  {
+    colKey: 'date',
+    title: t('pages.backtest.table.columns.date'),
+    width: 120,
+  },
+  {
+    colKey: 'type',
+    title: t('pages.backtest.table.columns.type'),
+    width: 80,
+  },
+  {
+    colKey: 'price',
+    title: t('pages.backtest.table.columns.price'),
+    width: 100,
+  },
+  {
+    colKey: 'quantity',
+    title: t('pages.backtest.table.columns.quantity'),
+    width: 100,
+  },
+  {
+    colKey: 'amount',
+    title: t('pages.backtest.table.columns.amount'),
+    width: 120,
+  },
+  {
+    colKey: 'profit',
+    title: t('pages.backtest.table.columns.profit'),
+    width: 100,
+  },
+  {
+    colKey: 'totalValue',
+    title: t('pages.backtest.table.columns.totalValue'),
+    width: 120,
+  },
 ]

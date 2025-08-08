@@ -1,4 +1,5 @@
 import analysis from './analysis'
+import backtest from './backtest'
 import login from './login'
 import notice from './notice'
 import result from './result'
@@ -14,4 +15,5 @@ export default {
   stock,
   analysis,
   watchList,
+  backtest,
 }

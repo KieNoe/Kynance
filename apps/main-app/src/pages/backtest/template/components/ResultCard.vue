@@ -1,5 +1,5 @@
 <template>
-  <t-card title="回测结果" class="result-card">
+  <t-card :title="t('pages.backtest.resultCard.title')" class="result-card">
     <t-row :gutter="16" v-if="backtestResult">
       <!-- 收益指标 -->
       <t-col v-for="metric in returnMetrics" :key="metric.label" :span="6">
@@ -27,22 +27,49 @@
         </div>
       </t-col>
     </t-row>
-
+    <div
+      class="tag"
+      style="width: 100%; display: flex; justify-content: center"
+      v-if="backtestResult"
+    >
+      <t-tag
+        variant="light"
+        size="large"
+        shape="round"
+        style="margin-top: 1rem; cursor: default; user-select: none"
+        @click="onTagClick"
+        :color="getTagColor()"
+        >{{ t('pages.backtest.resultCard.comment') + getTag() }}</t-tag
+      >
+      <t-dialog
+        v-model:visible="visible"
+        :header="t('pages.backtest.resultCard.easterEgg.title')"
+        width="40%"
+        top="1%"
+      >
+        <p>{{ t('pages.backtest.resultCard.easterEgg.content') }}</p>
+        <img :src="Egg" width="100%" />
+      </t-dialog>
+    </div>
     <!-- 空状态 -->
     <div class="empty" v-if="!backtestResult && !isRunning">
-      <t-empty description="请配置参数并开始回测" />
+      <t-empty :description="t('pages.backtest.resultCard.emptyState')" />
     </div>
     <!-- 加载状态 -->
     <div v-if="isRunning" class="loading-container">
-      <t-loading size="large" text="正在进行回测计算..." />
+      <t-loading size="large" :text="t('pages.backtest.resultCard.loading')" />
     </div>
   </t-card>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { MessagePlugin } from 'tdesign-vue-next'
+import { computed, ref } from 'vue'
 
-defineProps({
+import Egg from '@/assets/assets-coloredEgg.png'
+import { t } from '@/infrastructure/locales'
+
+const props = defineProps({
   backtestResult: {
     type: Object,
     default: null,
@@ -53,107 +80,113 @@ defineProps({
   },
 })
 
+let num = 0
+const visible = ref(false)
+
 // 定义指标配置
 const metricsConfig = [
   // 收益指标
   {
-    label: '总收益率',
+    label: t('pages.backtest.resultCard.metrics.totalReturn.label'),
     field: 'totalReturn',
     type: 'percent',
     positive: true,
-    tip: '整个回测期间的总收益百分比，负值表示亏损',
+    tip: t('pages.backtest.resultCard.metrics.totalReturn.tip'),
   },
   {
-    label: '年化收益率',
+    label: t('pages.backtest.resultCard.metrics.annualReturn.label'),
     field: 'annualReturn',
     type: 'percent',
     positive: true,
-    tip: '将总收益率折算为年度平均收益率，便于与其他投资比较',
+    tip: t('pages.backtest.resultCard.metrics.annualReturn.tip'),
   },
   // 风险指标
   {
-    label: '最大回撤',
+    label: t('pages.backtest.resultCard.metrics.maxDrawdown.label'),
     field: 'maxDrawdown',
     type: 'percent',
     positive: false,
-    tip: '从最高点到最低点的最大亏损幅度，反映策略的风险控制能力',
+    tip: t('pages.backtest.resultCard.metrics.maxDrawdown.tip'),
   },
   {
-    label: '夏普比率',
+    label: t('pages.backtest.resultCard.metrics.sharpeRatio.label'),
     field: 'sharpeRatio',
     type: 'number',
-    tip: '衡量风险调整后的收益，负值表示收益低于无风险利率（如国债），波动过大',
+    tip: t('pages.backtest.resultCard.metrics.sharpeRatio.tip'),
   },
   {
-    label: '波动率',
+    label: t('pages.backtest.resultCard.metrics.volatility.label'),
     field: 'volatility',
     type: 'custom',
     formatter: (value) => adjustToRange(value),
-    tip: '收益率的年化标准差，数值极高表明策略收益极不稳定（可能因高频交易或杠杆）',
+    tip: t('pages.backtest.resultCard.metrics.volatility.tip'),
   },
   {
-    label: 'Beta值',
+    label: t('pages.backtest.resultCard.metrics.Beta.label'),
     field: 'Beta',
     type: 'number',
-    tip: '策略相对于大盘的波动性，1表示与市场波动一致，小于1表示波动小于市场',
+    tip: t('pages.backtest.resultCard.metrics.Beta.tip'),
   },
   // 交易统计
   {
-    label: '交易次数',
+    label: t('pages.backtest.resultCard.metrics.totalTrades.label'),
     field: 'totalTrades',
     type: 'integer',
-    tip: '回测期间的总交易笔数',
+    tip: t('pages.backtest.resultCard.metrics.totalTrades.tip'),
   },
   {
-    label: '胜率',
+    label: t('pages.backtest.resultCard.metrics.winRate.label'),
     field: 'winRate',
     type: 'percent',
     positive: (value) => value > 0.5,
-    tip: '盈利交易占总交易次数的比例，较低胜率需结合盈亏比分析策略有效性',
+    tip: t('pages.backtest.resultCard.metrics.winRate.tip'),
   },
   {
-    label: '平均盈利',
+    label: t('pages.backtest.resultCard.metrics.avgWin.label'),
     field: 'avgWin',
     type: 'custom',
     formatter: (value) => adjustToRange(value) + '%',
     positive: true,
-    tip: '盈利交易的平均收益率，需与平均亏损比较评估风险收益比',
+    tip: t('pages.backtest.resultCard.metrics.avgWin.tip'),
   },
   {
-    label: '平均亏损',
+    label: t('pages.backtest.resultCard.metrics.avgLoss.label'),
     field: 'avgLoss',
     type: 'custom',
     formatter: (value) => adjustToRange(value) + '%',
     positive: false,
-    tip: '亏损交易的平均亏损率，远高于平均盈利时表明止损或选股可能存在问题',
+    tip: t('pages.backtest.resultCard.metrics.avgLoss.tip'),
   },
   // 其他分析指标
   {
-    label: '持仓周期',
+    label: t('pages.backtest.resultCard.metrics.positionPeriod.label'),
     field: 'positionPeriod',
     type: 'integer',
-    suffix: '天',
-    tip: '平均持仓天数，反映策略类型（如日内交易为1天，长线投资则数值较大）',
+    suffix: t('pages.backtest.resultCard.metrics.positionPeriod.suffix'),
+    tip: t('pages.backtest.resultCard.metrics.positionPeriod.tip'),
   },
   {
-    label: '仓位利用率',
+    label: t('pages.backtest.resultCard.metrics.positionUtilizationRate.label'),
     field: 'positionUtilizationRate',
     type: 'custom',
     formatter: (value) => (value >= 1 ? '全仓' : '半仓'),
-    tip: '资金使用效率，异常负值可能表示频繁做空或杠杆操作，需检查计算逻辑',
+    tip: t('pages.backtest.resultCard.metrics.positionUtilizationRate.tip'),
   },
   {
-    label: '相关性分析',
+    label: t('pages.backtest.resultCard.metrics.correlationAnalysis.label'),
     field: 'correlationAnalysis',
     type: 'number',
-    tip: '策略收益与大盘收益的相关系数，接近1表示高度依赖市场行情，缺乏独立性',
+    tip: t('pages.backtest.resultCard.metrics.correlationAnalysis.tip'),
   },
   {
-    label: '板块分布',
+    label: t('pages.backtest.resultCard.metrics.sectorDistribution.label'),
     field: 'sectorDistribution',
     type: 'custom',
-    formatter: (value) => (value >= 2 ? '高度依赖' : '较依赖'),
-    tip: '策略收益在行业板块的集中程度，分散性不足时易受特定板块波动影响',
+    formatter: (value) =>
+      value >= 2
+        ? t('pages.backtest.resultCard.metrics.sectorDistribution.formatter.high')
+        : t('pages.backtest.resultCard.metrics.sectorDistribution.formatter.medium'),
+    tip: t('pages.backtest.resultCard.metrics.sectorDistribution.tip'),
   },
 ]
 
@@ -192,7 +225,6 @@ function adjustToRange(value) {
   return clampedValue.toFixed(2)
 }
 
-// 获取值的样式类
 const getValueClass = (value, metric) => {
   if (metric.positive === undefined) return ''
 
@@ -201,6 +233,99 @@ const getValueClass = (value, metric) => {
   }
 
   return value >= 0 === metric.positive ? 'positive' : 'negative'
+}
+
+const getTag = () => {
+  const returnPercentage = Number(props.backtestResult.totalReturn * 100)
+
+  const performanceLevels = [
+    {
+      threshold: -30,
+      messages: [
+        t('pages.backtest.resultCard.performanceLevels.veryBad.one'),
+        t('pages.backtest.resultCard.performanceLevels.veryBad.second'),
+        t('pages.backtest.resultCard.performanceLevels.veryBad.third'),
+      ],
+    },
+    {
+      threshold: -10,
+      messages: [
+        t('pages.backtest.resultCard.performanceLevels.bad.one'),
+        t('pages.backtest.resultCard.performanceLevels.bad.second'),
+        t('pages.backtest.resultCard.performanceLevels.bad.third'),
+      ],
+    },
+    {
+      threshold: 0,
+      messages: [
+        t('pages.backtest.resultCard.performanceLevels.neutral.one'),
+        t('pages.backtest.resultCard.performanceLevels.neutral.second'),
+        t('pages.backtest.resultCard.performanceLevels.neutral.third'),
+      ],
+    },
+    {
+      threshold: 10,
+      messages: [
+        t('pages.backtest.resultCard.performanceLevels.good.one'),
+        t('pages.backtest.resultCard.performanceLevels.good.second'),
+        t('pages.backtest.resultCard.performanceLevels.good.third'),
+      ],
+    },
+    {
+      threshold: 20,
+      messages: [
+        t('pages.backtest.resultCard.performanceLevels.veryGood.one'),
+        t('pages.backtest.resultCard.performanceLevels.veryGood.second'),
+        t('pages.backtest.resultCard.performanceLevels.veryGood.third'),
+      ],
+    },
+    {
+      threshold: 50,
+      messages: [
+        t('pages.backtest.resultCard.performanceLevels.excellent.one'),
+        t('pages.backtest.resultCard.performanceLevels.excellent.second'),
+        t('pages.backtest.resultCard.performanceLevels.excellent.third'),
+      ],
+    },
+    {
+      threshold: 100,
+      messages: [
+        t('pages.backtest.resultCard.performanceLevels.unbelievable.one'),
+        t('pages.backtest.resultCard.performanceLevels.unbelievable.second'),
+        t('pages.backtest.resultCard.performanceLevels.unbelievable.third'),
+      ],
+    },
+    {
+      threshold: Infinity,
+      messages: [t('pages.backtest.resultCard.performanceLevels.legendary.one')],
+    },
+  ]
+
+  for (const level of performanceLevels) {
+    if (returnPercentage < level.threshold) {
+      const randomIndex = Math.floor(Math.random() * level.messages.length)
+      return level.messages[randomIndex]
+    }
+  }
+
+  const lastLevel = performanceLevels[performanceLevels.length - 1]
+  const randomIndex = Math.floor(Math.random() * lastLevel.messages.length)
+  return lastLevel.messages[randomIndex]
+}
+
+const getTagColor = () => {
+  const returnPercentage = Number(props.backtestResult.totalReturn * 100)
+  if (returnPercentage >= 10) return '#e34d59'
+  else if (returnPercentage <= -10) return '#00a870'
+}
+
+const onTagClick = () => {
+  if (num >= 8) {
+    visible.value = true
+  } else {
+    MessagePlugin.info(t('pages.backtest.resultCard.easterEggHint'))
+    num++
+  }
 }
 </script>
 

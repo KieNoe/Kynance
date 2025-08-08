@@ -1,8 +1,13 @@
 <template>
   <t-space direction="vertical" style="width: 100%">
-    <t-card title="策略参数设置" bordered>
+    <t-card :title="t('pages.backtest.setting.title')" bordered>
       <!-- 显示当前参数 -->
-      <t-descriptions :data="parametersList" :column="2" bordered>
+      <t-descriptions
+        :title="t('pages.backtest.setting.currentParameters')"
+        :data="parametersList"
+        :column="2"
+        bordered
+      >
         <t-descriptions-item v-for="item in parametersList" :key="item.label" :label="item.label">{{
           item.content
         }}</t-descriptions-item>
@@ -10,22 +15,29 @@
 
       <!-- 操作按钮 -->
       <t-space style="margin-top: 1.25rem">
-        <t-button @click="saveCurrentStrategy" theme="primary">保存当前参数</t-button>
-        <t-button @click="showLoadDialog = true">读取已保存参数</t-button>
+        <t-button @click="saveCurrentStrategy" theme="primary">{{
+          t('pages.backtest.setting.buttons.save')
+        }}</t-button>
+        <t-button @click="showLoadDialog = true">{{
+          t('pages.backtest.setting.buttons.load')
+        }}</t-button>
       </t-space>
     </t-card>
 
     <!-- 保存参数对话框 -->
     <t-dialog
       v-model:visible="showSaveDialog"
-      header="保存策略参数"
-      :confirm-btn="{ content: '保存', theme: 'primary' }"
-      :cancel-btn="{ content: '取消' }"
+      :header="t('pages.backtest.setting.dialog.save.title')"
+      :confirm-btn="{ content: t('pages.backtest.setting.dialog.save.confirm'), theme: 'primary' }"
+      :cancel-btn="{ content: t('pages.backtest.setting.dialog.save.cancel') }"
       @confirm="confirmSave"
     >
       <t-form>
-        <t-form-item label="策略名称">
-          <t-input v-model="saveForm.name" placeholder="请输入策略名称" />
+        <t-form-item :label="t('pages.backtest.setting.dialog.save.nameLabel')">
+          <t-input
+            v-model="saveForm.name"
+            :placeholder="t('pages.backtest.setting.dialog.save.namePlaceholder')"
+          />
         </t-form-item>
       </t-form>
     </t-dialog>
@@ -34,9 +46,9 @@
     <t-dialog
       v-model:visible="showLoadDialog"
       width="46%"
-      header="读取策略参数"
-      :confirm-btn="{ content: '读取', theme: 'primary' }"
-      :cancel-btn="{ content: '取消' }"
+      :header="t('pages.backtest.setting.dialog.load.title')"
+      :confirm-btn="{ content: t('pages.backtest.setting.dialog.load.confirm'), theme: 'primary' }"
+      :cancel-btn="{ content: t('pages.backtest.setting.dialog.load.cancel') }"
       @confirm="confirmLoad"
     >
       <t-table
@@ -62,6 +74,7 @@
 import { computed, ref } from 'vue'
 import { useBacktestStore } from '@/stores'
 import { MessagePlugin } from 'tdesign-vue-next'
+import { t } from '@/infrastructure/locales'
 
 const props = defineProps({
   backtestConfig: {
@@ -98,17 +111,17 @@ const parametersList = computed(() => {
     Object.entries(props.backtestConfig).forEach(([key, value]) => {
       if (key === 'dateRange' && Array.isArray(value)) {
         list.push({
-          label: '开始日期',
+          label: t('pages.backtest.setting.parameters.startDate'),
           content: value[0],
         })
         list.push({
-          label: '结束日期',
+          label: t('pages.backtest.setting.parameters.endDate'),
           content: value[1],
         })
       } else {
         list.push({
           label: getParameterLabel(key),
-          content: value,
+          content: formatParameterValue(key, value),
         })
       }
     })
@@ -118,7 +131,7 @@ const parametersList = computed(() => {
     Object.entries(props.strategyParams).forEach(([key, value]) => {
       list.push({
         label: getParameterLabel(key),
-        content: value,
+        content: formatParameterValue(key, value),
       })
     })
   }
@@ -126,69 +139,65 @@ const parametersList = computed(() => {
   return list
 })
 
-// 获取参数的中文标签
-function getParameterLabel(key) {
-  const labelMap = {
-    // 回测配置参数
-    strategy: '策略类型',
-    symbol: '股票代码',
-    initialCapital: '初始资金',
-    commission: '手续费率',
-
-    // 通用策略参数
-    holdingPeriod: '持仓周期',
-    shareHoldingLimit: '持股限制',
-    profitHoldThreshold: '盈利持有阈值',
-    trailingStopPercent: '追踪止损百分比',
-    stopLossLimit: '止损限制',
-
-    // 均线交叉策略参数
-    shortPeriod: '短期均线周期',
-    longPeriod: '长期均线周期',
-
-    // RSI策略参数
-    rsiPeriod: 'RSI周期',
-    overbought: '超买阈值',
-    oversold: '超卖阈值',
-
-    // 布林带策略参数
-    bollingerBandsPeriod: '布林带周期',
-    standardDeviationMultiple: '标准差倍数',
+// 格式化参数值显示
+function formatParameterValue(key, value) {
+  if (key.includes('Percent') || key.includes('Threshold') || key.includes('Limit')) {
+    return `${value}` + t('pages.backtest.setting.units.percent')
   }
 
-  return labelMap[key] || key
+  if (key === 'shareHoldingLimit') {
+    return `${value}` + t('pages.backtest.setting.units.shares')
+  }
+
+  if (key === 'strategy') {
+    const translationPath = `pages.backtest.setting.strategyTypes.${value}`
+    if (t(translationPath)) {
+      return t(translationPath)
+    }
+  }
+
+  return value
+}
+
+// 获取参数的中文标签
+function getParameterLabel(key) {
+  const translationPath = `pages.backtest.setting.parameters.${key}`
+  if (t(translationPath)) {
+    return t(translationPath)
+  }
 }
 
 const columns = [
-  { colKey: 'name', title: '策略名称', width: 150 },
-  { colKey: 'time', title: '创建时间', width: 150 },
+  { colKey: 'name', title: t('pages.backtest.setting.table.columns.name'), width: 150 },
+  { colKey: 'time', title: t('pages.backtest.setting.table.columns.time'), width: 150 },
   {
     colKey: 'strategy',
-    title: '策略类型',
+    title: t('pages.backtest.setting.table.columns.strategy'),
     cell: (h, { row }) => {
-      const strategyTypeMap = {
-        ma_cross: '均线交叉',
-        rsi_reversal: 'RSI反转',
-        bollinger_bands: '布林带',
+      switch (row.backtestConfig.strategy) {
+        case 'ma_cross':
+          return t('pages.backtest.setting.strategyTypes.ma_cross')
+        case 'rsi_reversal':
+          return t('pages.backtest.setting.strategyTypes.rsi_reversal')
+        case 'bollinger_bands':
+          return t('pages.backtest.setting.strategyTypes.bollinger_bands')
       }
-
-      return strategyTypeMap[row.backtestConfig?.strategy] || row.backtestConfig?.strategy
     },
   },
   {
-    title: '操作',
+    title: t('pages.backtest.setting.table.columns.actions'),
     colKey: 'link',
     cell: (h, { row }) => {
       return (
         <t-popconfirm
-          content="确认删除吗"
+          content={t('pages.backtest.setting.table.actions.deleteConfirm')}
           onConfirm={() => {
             backtestStore.deleteStrategy(row.id)
             savedStrategies.value = backtestStore.getStrategy()
-            MessagePlugin.success('删除成功')
+            MessagePlugin.success(t('pages.backtest.setting.messages.deleteSuccess'))
           }}
         >
-          <t-link>删除</t-link>
+          <t-link>{t('pages.backtest.setting.table.actions.delete')}</t-link>
         </t-popconfirm>
       )
     },
@@ -212,12 +221,12 @@ function saveCurrentStrategy() {
 // 确认保存
 function confirmSave() {
   if (!saveForm.value.name.trim()) {
-    MessagePlugin.error('请输入策略名称')
+    MessagePlugin.error(t('pages.backtest.setting.messages.emptyName'))
     return
   }
   const nameRegex = /^[\w\u4e00-\u9fa5]{1,7}$/
   if (!nameRegex.test(saveForm.value.name)) {
-    MessagePlugin.error('策略名称只能包含字母、数字或中文，且最多7个字符')
+    MessagePlugin.error(t('pages.backtest.setting.dialog.save.nameError'))
     return
   }
 
@@ -229,17 +238,17 @@ function confirmSave() {
     }
 
     backtestStore.addStrategy(newStrategy)
-    MessagePlugin.success('策略参数保存成功')
+    MessagePlugin.success(t('pages.backtest.setting.messages.saveSuccess'))
     showSaveDialog.value = false
   } catch (error) {
-    MessagePlugin.error(error.message || '保存失败')
+    MessagePlugin.error(error.message || t('common.error.saveFailed'))
   }
 }
 
 // 确认读取
 function confirmLoad() {
   if (!selectedStrategy.value) {
-    MessagePlugin.warning('请选择一个策略')
+    MessagePlugin.warning(t('pages.backtest.setting.dialog.load.noSelection'))
     return
   }
 
@@ -248,7 +257,7 @@ function confirmLoad() {
     emit('update:backtestConfig', { ...strategy.backtestConfig })
     emit('update:strategyParams', { ...strategy.strategyParams })
 
-    MessagePlugin.success('策略参数读取成功')
+    MessagePlugin.success(t('pages.backtest.setting.messages.loadSuccess'))
     showLoadDialog.value = false
     showSaveDialog.value = false
   }

@@ -4,19 +4,27 @@
     <t-card class="header-card">
       <template #header>
         <div class="header-content">
-          <h2>策略回测</h2>
+          <h2>{{ t('pages.backtest.title') }}</h2>
           <div class="buttons">
             <t-button theme="primary" @click="runBacktest" :loading="isRunning">
               <template #icon><play-icon /></template>
-              {{ isRunning ? '回测中...' : '开始回测' }}
+              {{
+                isRunning
+                  ? t('pages.backtest.buttons.running')
+                  : t('pages.backtest.buttons.runBacktest')
+              }}
             </t-button>
             <t-button variant="text" @click="onSettingClick" :loading="isRunning">
               <template #icon><SettingIcon /></template>
-              {{ isRunning ? '回测中...' : '参数设置' }}
+              {{
+                isRunning
+                  ? t('pages.backtest.buttons.running')
+                  : t('pages.backtest.buttons.settings')
+              }}
             </t-button>
             <t-dialog
               v-model:visible="settingVisible"
-              header="参数设置"
+              :header="t('pages.backtest.dialog.settingsTitle')"
               width="50%"
               top="1%"
               :confirm-on-enter="true"
@@ -35,30 +43,31 @@
     </t-card>
 
     <t-row :gutter="16">
-      <!-- 左侧配置面板 -->
       <t-col :span="6">
         <BacktestConfig v-model:backtestConfig="backtestConfig" />
-
-        <!-- 策略参数 -->
         <StrategyParams
           v-model:strategyParams="strategyParams"
           v-model:backtestConfig="backtestConfig"
         />
       </t-col>
 
-      <!-- 右侧结果展示 -->
       <t-col :span="6">
-        <!-- 回测结果概览 -->
         <ResultCard :backtestResult="backtestResult" :isRunning="isRunning" />
       </t-col>
 
-      <!-- 收益曲线图表 -->
-      <t-card title="收益曲线" class="chart-card" v-if="backtestResult">
+      <t-card
+        :title="t('pages.backtest.cards.profitChart')"
+        class="chart-card"
+        v-if="backtestResult"
+      >
         <div ref="chartContainer" class="chart-container"></div>
       </t-card>
 
-      <!-- 交易记录 -->
-      <t-card title="交易记录" class="trades-card" v-if="backtestResult">
+      <t-card
+        :title="t('pages.backtest.cards.tradeRecords')"
+        class="trades-card"
+        v-if="backtestResult"
+      >
         <t-table
           :data="backtestResult.trades"
           :columns="tradeColumns"
@@ -81,6 +90,7 @@ import * as echarts from 'echarts'
 
 import { getStocks } from '@/services/client'
 import { throttle } from '@/infrastructure/utils'
+import { t } from '@/infrastructure/locales'
 
 import { getOption, tradeColumns } from '.'
 import Setting from './components/Setting.vue'
@@ -90,11 +100,10 @@ import StrategyParams from './components/StrategyParams.vue'
 
 const settingVisible = ref(false)
 
-// 回测配置
 const backtestConfig = reactive({
   strategy: 'ma_cross',
   symbol: '000001',
-  dateRange: ['2024-01-01', '2025-01-01'], //回测周期
+  dateRange: ['2024-01-01', '2025-01-01'],
   initialCapital: 100000, //初始资金
   commission: 0.0003, //手续费率
 })
@@ -145,11 +154,11 @@ const runBacktest = throttle(
     // 渲染图表
     await nextTick()
     renderChart(backtestResult.value.trades)
-    MessagePlugin.success('回测计算完成！')
+    MessagePlugin.success(t('pages.backtest.messages.success'))
   },
   5000,
   () => {
-    MessagePlugin.info('请勿频繁点击（；´д｀）ゞ')
+    MessagePlugin.info(t('pages.backtest.messages.tooFrequent'))
   },
 )
 

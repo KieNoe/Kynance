@@ -1,50 +1,70 @@
 <template>
-  <t-card title="策略参数" class="params-card">
+  <t-card :title="t('pages.backtest.strategyParams.title')" class="params-card">
     <t-form :data="strategyParams" label-width="7.5rem">
-      <!-- Common parameters -->
-      <t-form-item v-for="item in commonParams" :key="item.field" :label="item.label">
-        <t-input-number
-          v-model="strategyParams[item.field]"
-          :min="item.min"
-          :max="item.max"
-          :suffix="item.suffix || ''"
-          style="width: 9.875rem"
-        />
+      <t-form-item
+        v-for="item in commonParams"
+        :key="item.field"
+        :label="t(`pages.backtest.strategyParams.common.${item.field}.label`)"
+      >
+        <t-tooltip :content="t(`pages.backtest.strategyParams.common.${item.field}.tip`)">
+          <t-input-number
+            v-model="strategyParams[item.field]"
+            :min="item.min"
+            :max="item.max"
+            :suffix="t(`pages.backtest.strategyParams.common.${item.field}.suffix`) || ''"
+            style="width: 9.875rem"
+          />
+        </t-tooltip>
       </t-form-item>
 
-      <!-- MA Cross strategy parameters -->
       <template v-if="backtestConfig.strategy === 'ma_cross'">
-        <t-form-item v-for="item in maCrossParams" :key="item.field" :label="item.label">
-          <t-input-number
-            v-model="strategyParams[item.field]"
-            :min="item.min"
-            :max="item.max"
-            style="width: 9.875rem"
-          />
+        <t-form-item
+          v-for="item in maCrossParams"
+          :key="item.field"
+          :label="t(`pages.backtest.strategyParams.maCross.${item.field}.label`)"
+        >
+          <t-tooltip :content="t(`pages.backtest.strategyParams.maCross.${item.field}.tip`)">
+            <t-input-number
+              v-model="strategyParams[item.field]"
+              :min="item.min"
+              :max="item.max"
+              style="width: 9.875rem"
+            />
+          </t-tooltip>
         </t-form-item>
       </template>
 
-      <!-- RSI Reversal strategy parameters -->
       <template v-if="backtestConfig.strategy === 'rsi_reversal'">
-        <t-form-item v-for="item in rsiReversalParams" :key="item.field" :label="item.label">
-          <t-input-number
-            v-model="strategyParams[item.field]"
-            :min="item.min"
-            :max="item.max"
-            style="width: 9.875rem"
-          />
+        <t-form-item
+          v-for="item in rsiReversalParams"
+          :key="item.field"
+          :label="t(`pages.backtest.strategyParams.rsiReversal.${item.field}.label`)"
+        >
+          <t-tooltip :content="t(`pages.backtest.strategyParams.rsiReversal.${item.field}.tip`)">
+            <t-input-number
+              v-model="strategyParams[item.field]"
+              :min="item.min"
+              :max="item.max"
+              style="width: 9.875rem"
+            />
+          </t-tooltip>
         </t-form-item>
       </template>
 
-      <!-- Bollinger Bands strategy parameters -->
       <template v-if="backtestConfig.strategy === 'bollinger_bands'">
-        <t-form-item v-for="item in bollingerBandsParams" :key="item.field" :label="item.label">
-          <t-input-number
-            v-model="strategyParams[item.field]"
-            :min="item.min"
-            :max="item.max"
-            style="width: 9.875rem"
-          />
+        <t-form-item
+          v-for="item in bollingerBandsParams"
+          :key="item.field"
+          :label="t(`pages.backtest.strategyParams.bollingerBands.${item.field}.label`)"
+        >
+          <t-tooltip :content="t(`pages.backtest.strategyParams.bollingerBands.${item.field}.tip`)">
+            <t-input-number
+              v-model="strategyParams[item.field]"
+              :min="item.min"
+              :max="item.max"
+              style="width: 9.875rem"
+            />
+          </t-tooltip>
         </t-form-item>
       </template>
     </t-form>
@@ -52,9 +72,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
-const props = defineProps({
+import { t } from '@/infrastructure/locales'
+defineProps({
   strategyParams: {
     type: Object,
     required: true,
@@ -65,7 +84,6 @@ const props = defineProps({
   },
 })
 
-// Define all parameter configurations
 const commonParams = [
   { field: 'shareHoldingLimit', label: '持股上限', min: 1, max: 100, suffix: '支' },
   { field: 'profitHoldThreshold', label: '盈利达标持有', min: 1, max: 100, suffix: '%' },
