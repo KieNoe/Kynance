@@ -272,6 +272,11 @@ export default {
         tip: 'Force sell when loss reaches this percentage',
         suffix: '%',
       },
+      customCode: {
+        title: 'Custom Code is enabled',
+        subTitle:
+          'Your code is available in <code>Custom Code</code> tab. Please be cautious about running untrusted code. The app will not be responsible for any damage caused by executing untrusted code.',
+      },
     },
     maCross: {
       shortPeriod: {

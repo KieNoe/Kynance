@@ -5,6 +5,7 @@ const store = createPinia()
 export { store }
 
 export * from './moudles/backtest'
+export * from './moudles/code'
 export * from './moudles/notification'
 export * from './moudles/premission'
 export * from './moudles/setting'

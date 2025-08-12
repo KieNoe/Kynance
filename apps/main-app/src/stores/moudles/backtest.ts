@@ -1,3 +1,4 @@
+import { generateBacktestResult } from '@kynance/strategy-engine'
 import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
 import { watch } from 'vue'
@@ -94,6 +95,11 @@ export const useBacktestStore = defineStore('backtest', () => {
       },
     },
   ]
+  const getBacktestResult = {
+    isCustomCode: false,
+    func: generateBacktestResult,
+    defaultFunc: generateBacktestResult,
+  }
   function addStrategy(newStrategy) {
     const nameExists = strategy.some((s) => s.name === newStrategy.name)
     if (nameExists) {
@@ -232,6 +238,7 @@ export const useBacktestStore = defineStore('backtest', () => {
   )
   return {
     strategy,
+    getBacktestResult,
     getStrategy,
     addStrategy,
     deleteStrategy,

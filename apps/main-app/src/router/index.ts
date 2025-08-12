@@ -23,7 +23,7 @@ export const fixedRouterList: Array<RouteRecordRaw> = mapModuleRouterList(fixedM
 
 export const allRoutes = [...homepageRouterList, ...fixedRouterList, ...defaultRouterList]
 export const navRoutes = [...homepageRouterList, ...fixedRouterList]
-export function mapModuleRouterList(modules: any): Array<RouteRecordRaw> {
+export function mapModuleRouterList(modules): Array<RouteRecordRaw> {
   const routerList: Array<RouteRecordRaw> = []
   Object.keys(modules).forEach((key) => {
     const mod = modules[key].default || {}
@@ -48,9 +48,7 @@ export const getActive = (maxLevel = 3): string => {
 }
 
 const router = createRouter({
-  history: createWebHistory(
-    env === 'production' ? '/starter/vue-next/' : import.meta.env.VITE_BASE_URL,
-  ),
+  history: createWebHistory(env === 'production' ? '/' : import.meta.env.VITE_BASE_URL),
   routes: allRoutes,
   scrollBehavior() {
     return {

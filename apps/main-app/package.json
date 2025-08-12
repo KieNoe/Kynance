@@ -34,6 +34,7 @@
     "html2pdf.js": "0.10.3",
     "less": "4.3.0",
     "lodash": "4.17.21",
+    "monaco-editor": "0.52.2",
     "nprogress": "0.2.0",
     "pinia": "^3.0.1",
     "tdesign-icons-vue-next": "0.3.6",

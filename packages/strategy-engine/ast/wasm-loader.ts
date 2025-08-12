@@ -1,3 +1,4 @@
+//wasm-loader.ts
 import { SandboxMessage } from '@kynance/types';
 
 export class WASMLoader {

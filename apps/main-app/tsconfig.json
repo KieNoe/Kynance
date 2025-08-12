@@ -19,6 +19,7 @@
     "src/**/*.ts",
     "src/**/*.vue",
     "node_modules/tdesign-vue-next/global.d.ts",
-    "../../packages/chart-core/chart-render/calculate.ts"
+    "../../packages/chart-core/chart-render/calculate.ts",
+    "src/workers/worker.js"
   ]
 }

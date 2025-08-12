@@ -1,8 +1,8 @@
 // stores/settingsStore.ts
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { Color } from 'tvision-color'
 import { generateColorMap, insertThemeStylesheet } from '@kynance/chart-core'
+import { defineStore } from 'pinia'
+import { Color } from 'tvision-color'
+import { ref } from 'vue'
 
 import { KThemeColor } from '@/constants'
 
@@ -81,11 +81,11 @@ export const useSettingStore = defineStore('settings', () => {
         step: 10,
         remainInput: false, // 是否保留输入 不保留会矫正不合适的主题色
       })
-      colorMap = generateColorMap(themeColor, newPalette, mode.value as any, brandColorIndex)
+      colorMap = generateColorMap(themeColor, newPalette, mode.value, brandColorIndex)
       colorList[colorKey] = colorMap
     }
     // TODO 需要解决不停切换时有反复插入 style 的问题
-    insertThemeStylesheet(themeColor, colorMap, mode.value as any)
+    insertThemeStylesheet(themeColor, colorMap, mode.value)
     document.documentElement.setAttribute('theme-color', themeColor)
   }
 

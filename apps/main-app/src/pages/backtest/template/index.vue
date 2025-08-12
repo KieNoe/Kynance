@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="backtest-container">
     <!-- 页面标题 -->
@@ -48,6 +49,7 @@
         <StrategyParams
           v-model:strategyParams="strategyParams"
           v-model:backtestConfig="backtestConfig"
+          ref="strategyParamsRef"
         />
       </t-col>
 
@@ -82,12 +84,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, nextTick } from 'vue'
+import { ref, reactive, nextTick, onMounted } from 'vue'
 import { PlayIcon, SettingIcon } from 'tdesign-icons-vue-next'
 import { MessagePlugin } from 'tdesign-vue-next'
-import { generateBacktestResult } from '@kynance/strategy-engine'
 import * as echarts from 'echarts'
 
+import { useBacktestStore } from '@/stores'
 import { getStocks } from '@/services/client'
 import { throttle } from '@/infrastructure/utils'
 import { t } from '@/infrastructure/locales'
@@ -99,6 +101,8 @@ import BacktestConfig from './components/BacktestConfig.vue'
 import StrategyParams from './components/StrategyParams.vue'
 
 const settingVisible = ref(false)
+const backtestStore = useBacktestStore()
+const strategyParamsRef = ref(null)
 
 const backtestConfig = reactive({
   strategy: 'ma_cross',
@@ -141,11 +145,18 @@ const pagination = reactive({
 // 开始回测
 const runBacktest = throttle(
   async () => {
+    if (!backtestStore.getBacktestResult.isCustomCode) {
+      strategyParamsRef.value.isCustomCode = false
+    }
     isRunning.value = true
 
     const stocksData = await getStocks(backtestConfig.dateRange, true)
 
-    backtestResult.value = await generateBacktestResult(backtestConfig, strategyParams, stocksData)
+    const getBacktestResult = backtestStore.getBacktestResult.isCustomCode
+      ? backtestStore.getBacktestResult.func
+      : backtestStore.getBacktestResult.defaultFunc
+
+    backtestResult.value = await getBacktestResult(backtestConfig, strategyParams, stocksData)
 
     pagination.total = backtestResult.value.trades.length
 
@@ -155,6 +166,7 @@ const runBacktest = throttle(
     await nextTick()
     renderChart(backtestResult.value.trades)
     MessagePlugin.success(t('pages.backtest.messages.success'))
+    backtestStore.getBacktestResult.isCustomCode = false
   },
   5000,
   () => {
@@ -193,6 +205,14 @@ const renderChart = (data) => {
 
   chartInstance.setOption(getOption(sortedData))
 }
+
+onMounted(async () => {
+  await nextTick()
+  if (backtestStore.getBacktestResult.isCustomCode) {
+    runBacktest()
+    strategyParamsRef.value.isCustomCode = true
+  }
+})
 </script>
 
 <style scoped lang="less">

@@ -47,11 +47,11 @@ export const initCharts = async (charts, options, onCleanUp) => {
       ...options[i],
     })
   }
-  changeChartsTheme(charts as any)
+  changeChartsTheme(charts)
   const stopColorWatch = watch(
     () => settingStore.themeColor,
     () => {
-      changeChartsTheme(charts as any)
+      changeChartsTheme(charts)
     },
   )
   const stopThemeWatch = watch(

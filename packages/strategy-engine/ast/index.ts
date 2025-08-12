@@ -7,7 +7,77 @@ import {
   shouldStopLoss,
   shouldTrailingStop,
 } from './judge';
-export * from './compiler';
+/**
+ * 根据历史数据生成交易策略的回测结果
+ *
+ * @param {Object} backtestConfig - 回测配置参数
+ *   @property {string} strategy - 策略名称（如：'ma_cross'均线交叉, 'rsi_reversal'RSI反转, 'bollinger_bands'布林带）
+ *   @property {string} symbol - 测试的股票代码
+ *   @property {string[]} dateRange - 回测日期范围 [开始日期, 结束日期]
+ *   @property {number} initialCapital - 初始资金（单位：元）
+ *   @property {number} commission - 交易手续费率（如0.0003表示0.03%）
+ *
+ * @param {Object} strategyParams - 策略参数
+ *   @property {number} holdingPeriod - 最大持仓周期（天）
+ *   @property {number} shareHoldingLimit - 最大持股数量
+ *   @property {number} profitHoldThreshold - 盈利持仓阈值（百分比）
+ *   @property {number} trailingStopPercent - 移动止损百分比
+ *   @property {number} stopLossLimit - 止损百分比
+ *   // 均线交叉策略专有参数
+ *   @property {number} shortPeriod - 短期均线周期
+ *   @property {number} longPeriod - 长期均线周期
+ *   // RSI策略专有参数
+ *   @property {number} rsiPeriod - RSI计算周期
+ *   @property {number} overbought - 超买阈值
+ *   @property {number} oversold - 超卖阈值
+ *   // 布林带策略专有参数
+ *   @property {number} bollingerBandsPeriod - 布林带计算周期
+ *   @property {number} standardDeviationMultiple - 标准差倍数
+ *
+ * @param {Array} stocksData - 股票历史数据数组
+ *   @property {string} date - 日期（YYYY-MM-DD格式）
+ *   @property {number} open - 开盘价
+ *   @property {number} high - 当日最高价
+ *   @property {number} low - 当日最低价
+ *   @property {number} close - 收盘价
+ *   @property {number} volume - 成交量
+ *   @property {number} change - 价格变动
+ *   @property {number} changePercent - 价格变动百分比
+ *   @property {string} marketState - 市场状态（如"NORMAL"正常交易）
+ *   @property {number} bid - 买一价
+ *   @property {number} ask - 卖一价
+ *   @property {number} bidSize - 买一量
+ *   @property {number} askSize - 卖一量
+ *   @property {number} spread - 买卖价差
+ *
+ * @returns {Object} 回测结果对象
+ *   @property {number} totalReturn - 总收益率（百分比）
+ *   @property {number} annualReturn - 年化收益率（百分比）
+ *   @property {number} maxDrawdown - 最大回撤（百分比）
+ *   @property {number} sharpeRatio - 夏普比率（风险调整后收益）
+ *   @property {number} totalTrades - 总交易次数
+ *   @property {number} winRate - 胜率（百分比）
+ *   @property {number} avgWin - 平均盈利（百分比）
+ *   @property {number} avgLoss - 平均亏损（百分比）
+ *   @property {Array} trades - 所有交易记录
+ *     @property {number} id - 交易ID
+ *     @property {string} date - 交易日期
+ *     @property {string} type - 交易类型（"买入"/"卖出"）
+ *     @property {string} price - 成交价格
+ *     @property {number} quantity - 交易数量（股）
+ *     @property {string} amount - 交易金额
+ *     @property {string} profit - 盈亏金额
+ *     @property {string} totalValue - 交易后总资产
+ *   @property {Array} equityCurve - 每日资产曲线
+ *     @property {string} date - 日期
+ *     @property {number} value - 当日资产总值
+ *   @property {number} positionPeriod - 平均持仓周期（天）
+ *   @property {number} volatility - 年化波动率（百分比）
+ *   @property {number} Beta - 贝塔系数（市场相关性）
+ *   @property {number} positionUtilizationRate - 仓位利用率（百分比）
+ *   @property {number} correlationAnalysis - 与大盘相关性（0-1）
+ *   @property {number} sectorDistribution - 行业分布（1表示单只股票）
+ */
 export const generateBacktestResult = (backtestConfig, strategyParams, stocksData) => {
   // 初始化回测结果数据
   const trades = [];

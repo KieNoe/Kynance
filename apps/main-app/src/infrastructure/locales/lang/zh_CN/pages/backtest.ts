@@ -252,7 +252,7 @@ export default {
     title: '策略参数',
     common: {
       shareHoldingLimit: {
-        label: '持股上限',
+        label: '最大持股上限',
         tip: '最大可持有的股票数量',
         suffix: '支',
       },
@@ -305,6 +305,10 @@ export default {
         label: '标准差倍数',
         tip: '布林带宽度的标准差倍数',
       },
+    },
+    customCode: {
+      title: '已启用自定义代码',
+      subTitle: '可再次点击以禁用自定义代码',
     },
   },
 }
