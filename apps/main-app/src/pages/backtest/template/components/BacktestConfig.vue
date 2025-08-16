@@ -1,52 +1,53 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <t-card :title="t('pages.backtest.backtestConfig.title')" class="config-card">
+  <t-card :title="t('pages.backtest.template.backtestConfig.title')" class="config-card">
     <t-form :data="backtestConfig" label-width="5rem">
-      <t-form-item :label="t('pages.backtest.backtestConfig.strategyName')">
+      <t-form-item :label="t('pages.backtest.template.backtestConfig.strategyName')">
         <t-select
           v-model="backtestConfig.strategy"
-          :placeholder="t('pages.backtest.backtestConfig.placeholders.selectStrategy')"
+          :placeholder="t('pages.backtest.template.backtestConfig.placeholders.selectStrategy')"
         >
           <t-option
             value="ma_cross"
-            :label="t('pages.backtest.backtestConfig.strategies.ma_cross')"
+            :label="t('pages.backtest.template.backtestConfig.strategies.ma_cross')"
           />
           <t-option
             value="rsi_reversal"
-            :label="t('pages.backtest.backtestConfig.strategies.rsi_reversal')"
+            :label="t('pages.backtest.template.backtestConfig.strategies.rsi_reversal')"
           />
           <t-option
             value="bollinger_bands"
-            :label="t('pages.backtest.backtestConfig.strategies.bollinger_bands')"
+            :label="t('pages.backtest.template.backtestConfig.strategies.bollinger_bands')"
           />
         </t-select>
       </t-form-item>
 
-      <t-form-item :label="t('pages.backtest.backtestConfig.stockCode')">
+      <t-form-item :label="t('pages.backtest.template.backtestConfig.stockCode')">
         <t-input
           v-model="backtestConfig.symbol"
-          :placeholder="t('pages.backtest.backtestConfig.placeholders.inputStockCode')"
+          :placeholder="t('pages.backtest.template.backtestConfig.placeholders.inputStockCode')"
         />
       </t-form-item>
 
-      <t-form-item :label="t('pages.backtest.backtestConfig.backtestPeriod')">
+      <t-form-item :label="t('pages.backtest.template.backtestConfig.backtestPeriod')">
         <t-date-range-picker
           v-model="backtestConfig.dateRange"
           format="YYYY-MM-DD"
-          :placeholder="t('pages.backtest.backtestConfig.placeholders.selectDateRange')"
+          :placeholder="t('pages.backtest.template.backtestConfig.placeholders.selectDateRange')"
         />
       </t-form-item>
 
-      <t-form-item :label="t('pages.backtest.backtestConfig.initialCapital')">
+      <t-form-item :label="t('pages.backtest.template.backtestConfig.initialCapital')">
         <t-input-number
           v-model="backtestConfig.initialCapital"
           :min="10000"
           :max="10000000"
-          :suffix="t('pages.backtest.backtestConfig.units.yuan')"
+          :suffix="t('pages.backtest.template.backtestConfig.units.yuan')"
           style="width: 12.5rem"
         />
       </t-form-item>
 
-      <t-form-item :label="t('pages.backtest.backtestConfig.commissionRate')">
+      <t-form-item :label="t('pages.backtest.template.backtestConfig.commissionRate')">
         <t-input-number
           v-model="backtestConfig.commission"
           :min="0"

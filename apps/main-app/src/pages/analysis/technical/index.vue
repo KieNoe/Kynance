@@ -1,10 +1,10 @@
 <template>
   <t-row :gutter="[24, 24]" class="analysis-page">
-    <t-col :flex="3">
+    <t-col :span="8">
       <Header :companyInfo="companyInfo"></Header>
       <Chart :companyInfo="companyInfo"></Chart>
     </t-col>
-    <t-col :flex="1">
+    <t-col :span="4">
       <BasicInfo :companyInfo="companyInfo" :pageDOM="page" />
       <Introduction :companyInfo="companyInfo" />
     </t-col>

@@ -41,6 +41,9 @@ export const editorProps = {
     },
     default: 'vs-dark',
   },
+  isFullscreen: {
+    type: Boolean,
+  },
   options: {
     type: Object as PropType<Options>,
     default() {

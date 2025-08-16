@@ -1,3 +1,4 @@
+export * from './backtestStorage'
 export * from './date'
 export * from './debounce'
 export * from './indexedDB'

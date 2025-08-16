@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div ref="codeEditBox" class="codeEditBox"></div>
+  <div ref="codeEditBox" class="codeEditBox" :class="{ fullscreen: isFullscreen }"></div>
 </template>
 
 <script setup lang="ts">
@@ -255,9 +255,13 @@ defineExpose({
   codeEditBox,
 })
 </script>
-<style scoped>
-.codeEditBox {
-  height: 100%;
-  width: 926px;
-}
+<style scoped lang="less">
+// .codeEditBox {
+//   height: 100%;
+//   width: 926px;
+//   .fullscreen {
+//     height: 100%;
+//     width: 100%;
+//   }
+// }
 </style>

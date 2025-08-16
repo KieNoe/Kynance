@@ -95,37 +95,37 @@ export const getOption = (sortedData) => {
 export const tradeColumns = [
   {
     colKey: 'date',
-    title: t('pages.backtest.table.columns.date'),
+    title: t('pages.backtest.template.table.columns.date'),
     width: 120,
   },
   {
     colKey: 'type',
-    title: t('pages.backtest.table.columns.type'),
+    title: t('pages.backtest.template.table.columns.type'),
     width: 80,
   },
   {
     colKey: 'price',
-    title: t('pages.backtest.table.columns.price'),
+    title: t('pages.backtest.template.table.columns.price'),
     width: 100,
   },
   {
     colKey: 'quantity',
-    title: t('pages.backtest.table.columns.quantity'),
+    title: t('pages.backtest.template.table.columns.quantity'),
     width: 100,
   },
   {
     colKey: 'amount',
-    title: t('pages.backtest.table.columns.amount'),
+    title: t('pages.backtest.template.table.columns.amount'),
     width: 120,
   },
   {
     colKey: 'profit',
-    title: t('pages.backtest.table.columns.profit'),
+    title: t('pages.backtest.template.table.columns.profit'),
     width: 100,
   },
   {
     colKey: 'totalValue',
-    title: t('pages.backtest.table.columns.totalValue'),
+    title: t('pages.backtest.template.table.columns.totalValue'),
     width: 120,
   },
 ]

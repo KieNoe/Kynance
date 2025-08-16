@@ -14,9 +14,6 @@
         <t-space>
           <t-button variant="text" :disabled="dropdownStatus[key].loading">
             {{ dropdownStatus[key].value }}
-            <template #suffix>
-              <t-icon name="chevron-down" size="16" />
-            </template>
           </t-button>
         </t-space>
       </t-dropdown>
@@ -26,7 +23,7 @@
         v-model="stock"
         :options="stockOptions"
         :placeholder="t('pages.analysis.technical.chart.select')"
-        style="max-width: 25vw; display: inline-block"
+        style="max-width: 22.5vw; display: inline-block"
         @change="
           (data) => {
             updateCharts(true)
@@ -69,7 +66,7 @@
     </header>
 
     <!-- 图表容器 -->
-    <div class="charts-wrapper" v-for="chart in sortedCharts">
+    <div class="charts-wrapper" v-for="chart in sortedCharts" :key="chart">
       <div class="chart-container" :id="chart" :ref="chart"></div>
     </div>
   </div>
@@ -161,7 +158,7 @@ const handleDropdownClick = async (key, data) => {
     updateCharts()
     dropdownStatus[key].loading = false
   } catch (err) {
-    MessagePlugin.error(t('pages.analysis.technical.chart.dataError'))
+    MessagePlugin.error(t('pages.analysis.technical.chart.dataError'), err)
     dropdownStatus[key].loading = false
   } finally {
     disabled.value = false

@@ -16,13 +16,13 @@ export default [
     },
     children: [
       {
-        path: 'history',
-        name: 'BacktestHistory',
-        component: () => import('@/pages/backtest/history/index.vue'),
+        path: 'template',
+        name: 'BacktestTemplate',
+        component: () => import('@/pages/backtest/template/index.vue'),
         meta: {
           title: {
-            zh_CN: '历史回测',
-            en_US: 'Backtest History',
+            zh_CN: '策略回测',
+            en_US: 'Backtest Template',
           },
         },
       },
@@ -32,19 +32,19 @@ export default [
         component: () => import('@/pages/backtest/new/index.vue'),
         meta: {
           title: {
-            zh_CN: '新回测',
+            zh_CN: '新建回测',
             en_US: 'Backtest New',
           },
         },
       },
       {
-        path: 'template',
-        name: 'BacktestTemplate',
-        component: () => import('@/pages/backtest/template/index.vue'),
+        path: 'history',
+        name: 'BacktestHistory',
+        component: () => import('@/pages/backtest/history/index.vue'),
         meta: {
           title: {
-            zh_CN: '策略回测',
-            en_US: 'Backtest Template',
+            zh_CN: '历史回测',
+            en_US: 'Backtest History',
           },
         },
       },

@@ -1,8 +1,8 @@
-import { defineStore } from 'pinia'
 import type { UserInfo } from '@kynance/types'
+import { defineStore } from 'pinia'
 
 // 定义存储的键名
-const USER_STORAGE_KEY = 'user_store'
+const USER_STORAGE_KEY = 'kynance-users'
 
 export const useUserStore = defineStore('user', () => {
   // 从本地存储初始化用户数据，如果没有则使用默认值
