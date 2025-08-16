@@ -16,17 +16,6 @@ export default [
     },
     children: [
       {
-        path: 'custom',
-        name: 'AnalysisCustom',
-        component: () => import('@/pages/analysis/custom/index.vue'),
-        meta: {
-          title: {
-            zh_CN: '自定义分析',
-            en_US: 'Custom Analysis',
-          },
-        },
-      },
-      {
         path: 'technical',
         name: 'AnalysisTechnical',
         component: () => import('@/pages/analysis/technical/index.vue'),

@@ -101,9 +101,14 @@ export const useBacktestStore = defineStore('backtest', () => {
     defaultFunc: generateBacktestResult,
   }
   function addStrategy(newStrategy) {
-    const nameExists = strategy.some((s) => s.name === newStrategy.name)
-    if (nameExists) {
-      throw new Error(`策略名称 "${newStrategy.name}" 已存在，请使用不同的名称`)
+    const existingIndex = strategy.findIndex((s) => s.name === newStrategy.name)
+
+    if (existingIndex !== -1) {
+      // 如果存在同名策略，则覆盖它
+      strategy[existingIndex] = newStrategy
+    } else {
+      // 如果不存在同名策略，则添加新策略
+      strategy.push(newStrategy)
     }
     if (!newStrategy.id) {
       newStrategy.id = `strategy_${dayjs().valueOf()}` // 使用dayjs获取时间戳

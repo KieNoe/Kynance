@@ -1,5 +1,5 @@
 <template>
-  <t-card :title="t('pages.backtest.resultCard.title')" class="result-card">
+  <t-card :title="t('pages.backtest.template.resultCard.title')" class="result-card">
     <t-row :gutter="16" v-if="backtestResult">
       <!-- 收益指标 -->
       <t-col v-for="metric in returnMetrics" :key="metric.label" :span="6">
@@ -39,25 +39,25 @@
         style="margin-top: 1rem; cursor: default; user-select: none"
         @click="onTagClick"
         :color="getTagColor()"
-        >{{ t('pages.backtest.resultCard.comment') + getTag() }}</t-tag
+        >{{ t('pages.backtest.template.resultCard.comment') + getTag() }}</t-tag
       >
       <t-dialog
         v-model:visible="visible"
-        :header="t('pages.backtest.resultCard.easterEgg.title')"
+        :header="t('pages.backtest.template.resultCard.easterEgg.title')"
         width="40%"
         top="1%"
       >
-        <p>{{ t('pages.backtest.resultCard.easterEgg.content') }}</p>
+        <p>{{ t('pages.backtest.template.resultCard.easterEgg.content') }}</p>
         <img :src="Egg" width="100%" />
       </t-dialog>
     </div>
     <!-- 空状态 -->
     <div class="empty" v-if="!backtestResult && !isRunning">
-      <t-empty :description="t('pages.backtest.resultCard.emptyState')" />
+      <t-empty :description="t('pages.backtest.template.resultCard.emptyState')" />
     </div>
     <!-- 加载状态 -->
     <div v-if="isRunning" class="loading-container">
-      <t-loading size="large" :text="t('pages.backtest.resultCard.loading')" />
+      <t-loading size="large" :text="t('pages.backtest.template.resultCard.loading')" />
     </div>
   </t-card>
 </template>
@@ -87,106 +87,106 @@ const visible = ref(false)
 const metricsConfig = [
   // 收益指标
   {
-    label: t('pages.backtest.resultCard.metrics.totalReturn.label'),
+    label: t('pages.backtest.template.resultCard.metrics.totalReturn.label'),
     field: 'totalReturn',
     type: 'percent',
     positive: true,
-    tip: t('pages.backtest.resultCard.metrics.totalReturn.tip'),
+    tip: t('pages.backtest.template.resultCard.metrics.totalReturn.tip'),
   },
   {
-    label: t('pages.backtest.resultCard.metrics.annualReturn.label'),
+    label: t('pages.backtest.template.resultCard.metrics.annualReturn.label'),
     field: 'annualReturn',
     type: 'percent',
     positive: true,
-    tip: t('pages.backtest.resultCard.metrics.annualReturn.tip'),
+    tip: t('pages.backtest.template.resultCard.metrics.annualReturn.tip'),
   },
   // 风险指标
   {
-    label: t('pages.backtest.resultCard.metrics.maxDrawdown.label'),
+    label: t('pages.backtest.template.resultCard.metrics.maxDrawdown.label'),
     field: 'maxDrawdown',
     type: 'percent',
     positive: false,
-    tip: t('pages.backtest.resultCard.metrics.maxDrawdown.tip'),
+    tip: t('pages.backtest.template.resultCard.metrics.maxDrawdown.tip'),
   },
   {
-    label: t('pages.backtest.resultCard.metrics.sharpeRatio.label'),
+    label: t('pages.backtest.template.resultCard.metrics.sharpeRatio.label'),
     field: 'sharpeRatio',
     type: 'number',
-    tip: t('pages.backtest.resultCard.metrics.sharpeRatio.tip'),
+    tip: t('pages.backtest.template.resultCard.metrics.sharpeRatio.tip'),
   },
   {
-    label: t('pages.backtest.resultCard.metrics.volatility.label'),
+    label: t('pages.backtest.template.resultCard.metrics.volatility.label'),
     field: 'volatility',
     type: 'custom',
-    formatter: (value) => adjustToRange(value),
-    tip: t('pages.backtest.resultCard.metrics.volatility.tip'),
+    formatter: (value) => adjustToRange(value) + '%',
+    tip: t('pages.backtest.template.resultCard.metrics.volatility.tip'),
   },
   {
-    label: t('pages.backtest.resultCard.metrics.Beta.label'),
+    label: t('pages.backtest.template.resultCard.metrics.Beta.label'),
     field: 'Beta',
     type: 'number',
-    tip: t('pages.backtest.resultCard.metrics.Beta.tip'),
+    tip: t('pages.backtest.template.resultCard.metrics.Beta.tip'),
   },
   // 交易统计
   {
-    label: t('pages.backtest.resultCard.metrics.totalTrades.label'),
+    label: t('pages.backtest.template.resultCard.metrics.totalTrades.label'),
     field: 'totalTrades',
     type: 'integer',
-    tip: t('pages.backtest.resultCard.metrics.totalTrades.tip'),
+    tip: t('pages.backtest.template.resultCard.metrics.totalTrades.tip'),
   },
   {
-    label: t('pages.backtest.resultCard.metrics.winRate.label'),
+    label: t('pages.backtest.template.resultCard.metrics.winRate.label'),
     field: 'winRate',
     type: 'percent',
     positive: (value) => value > 0.5,
-    tip: t('pages.backtest.resultCard.metrics.winRate.tip'),
+    tip: t('pages.backtest.template.resultCard.metrics.winRate.tip'),
   },
   {
-    label: t('pages.backtest.resultCard.metrics.avgWin.label'),
+    label: t('pages.backtest.template.resultCard.metrics.avgWin.label'),
     field: 'avgWin',
     type: 'custom',
     formatter: (value) => adjustToRange(value) + '%',
     positive: true,
-    tip: t('pages.backtest.resultCard.metrics.avgWin.tip'),
+    tip: t('pages.backtest.template.resultCard.metrics.avgWin.tip'),
   },
   {
-    label: t('pages.backtest.resultCard.metrics.avgLoss.label'),
+    label: t('pages.backtest.template.resultCard.metrics.avgLoss.label'),
     field: 'avgLoss',
     type: 'custom',
     formatter: (value) => adjustToRange(value) + '%',
     positive: false,
-    tip: t('pages.backtest.resultCard.metrics.avgLoss.tip'),
+    tip: t('pages.backtest.template.resultCard.metrics.avgLoss.tip'),
   },
   // 其他分析指标
   {
-    label: t('pages.backtest.resultCard.metrics.positionPeriod.label'),
+    label: t('pages.backtest.template.resultCard.metrics.positionPeriod.label'),
     field: 'positionPeriod',
     type: 'integer',
-    suffix: t('pages.backtest.resultCard.metrics.positionPeriod.suffix'),
-    tip: t('pages.backtest.resultCard.metrics.positionPeriod.tip'),
+    suffix: t('pages.backtest.template.resultCard.metrics.positionPeriod.suffix'),
+    tip: t('pages.backtest.template.resultCard.metrics.positionPeriod.tip'),
   },
   {
-    label: t('pages.backtest.resultCard.metrics.positionUtilizationRate.label'),
+    label: t('pages.backtest.template.resultCard.metrics.positionUtilizationRate.label'),
     field: 'positionUtilizationRate',
     type: 'custom',
     formatter: (value) => (value >= 1 ? '全仓' : '半仓'),
-    tip: t('pages.backtest.resultCard.metrics.positionUtilizationRate.tip'),
+    tip: t('pages.backtest.template.resultCard.metrics.positionUtilizationRate.tip'),
   },
   {
-    label: t('pages.backtest.resultCard.metrics.correlationAnalysis.label'),
+    label: t('pages.backtest.template.resultCard.metrics.correlationAnalysis.label'),
     field: 'correlationAnalysis',
     type: 'number',
-    tip: t('pages.backtest.resultCard.metrics.correlationAnalysis.tip'),
+    tip: t('pages.backtest.template.resultCard.metrics.correlationAnalysis.tip'),
   },
   {
-    label: t('pages.backtest.resultCard.metrics.sectorDistribution.label'),
+    label: t('pages.backtest.template.resultCard.metrics.sectorDistribution.label'),
     field: 'sectorDistribution',
     type: 'custom',
     formatter: (value) =>
       value >= 2
-        ? t('pages.backtest.resultCard.metrics.sectorDistribution.formatter.high')
-        : t('pages.backtest.resultCard.metrics.sectorDistribution.formatter.medium'),
-    tip: t('pages.backtest.resultCard.metrics.sectorDistribution.tip'),
+        ? t('pages.backtest.template.resultCard.metrics.sectorDistribution.formatter.high')
+        : t('pages.backtest.template.resultCard.metrics.sectorDistribution.formatter.medium'),
+    tip: t('pages.backtest.template.resultCard.metrics.sectorDistribution.tip'),
   },
 ]
 
@@ -242,62 +242,62 @@ const getTag = () => {
     {
       threshold: -30,
       messages: [
-        t('pages.backtest.resultCard.performanceLevels.veryBad.one'),
-        t('pages.backtest.resultCard.performanceLevels.veryBad.second'),
-        t('pages.backtest.resultCard.performanceLevels.veryBad.third'),
+        t('pages.backtest.template.resultCard.performanceLevels.veryBad.one'),
+        t('pages.backtest.template.resultCard.performanceLevels.veryBad.second'),
+        t('pages.backtest.template.resultCard.performanceLevels.veryBad.third'),
       ],
     },
     {
       threshold: -10,
       messages: [
-        t('pages.backtest.resultCard.performanceLevels.bad.one'),
-        t('pages.backtest.resultCard.performanceLevels.bad.second'),
-        t('pages.backtest.resultCard.performanceLevels.bad.third'),
+        t('pages.backtest.template.resultCard.performanceLevels.bad.one'),
+        t('pages.backtest.template.resultCard.performanceLevels.bad.second'),
+        t('pages.backtest.template.resultCard.performanceLevels.bad.third'),
       ],
     },
     {
       threshold: 0,
       messages: [
-        t('pages.backtest.resultCard.performanceLevels.neutral.one'),
-        t('pages.backtest.resultCard.performanceLevels.neutral.second'),
-        t('pages.backtest.resultCard.performanceLevels.neutral.third'),
+        t('pages.backtest.template.resultCard.performanceLevels.neutral.one'),
+        t('pages.backtest.template.resultCard.performanceLevels.neutral.second'),
+        t('pages.backtest.template.resultCard.performanceLevels.neutral.third'),
       ],
     },
     {
       threshold: 10,
       messages: [
-        t('pages.backtest.resultCard.performanceLevels.good.one'),
-        t('pages.backtest.resultCard.performanceLevels.good.second'),
-        t('pages.backtest.resultCard.performanceLevels.good.third'),
+        t('pages.backtest.template.resultCard.performanceLevels.good.one'),
+        t('pages.backtest.template.resultCard.performanceLevels.good.second'),
+        t('pages.backtest.template.resultCard.performanceLevels.good.third'),
       ],
     },
     {
       threshold: 20,
       messages: [
-        t('pages.backtest.resultCard.performanceLevels.veryGood.one'),
-        t('pages.backtest.resultCard.performanceLevels.veryGood.second'),
-        t('pages.backtest.resultCard.performanceLevels.veryGood.third'),
+        t('pages.backtest.template.resultCard.performanceLevels.veryGood.one'),
+        t('pages.backtest.template.resultCard.performanceLevels.veryGood.second'),
+        t('pages.backtest.template.resultCard.performanceLevels.veryGood.third'),
       ],
     },
     {
       threshold: 50,
       messages: [
-        t('pages.backtest.resultCard.performanceLevels.excellent.one'),
-        t('pages.backtest.resultCard.performanceLevels.excellent.second'),
-        t('pages.backtest.resultCard.performanceLevels.excellent.third'),
+        t('pages.backtest.template.resultCard.performanceLevels.excellent.one'),
+        t('pages.backtest.template.resultCard.performanceLevels.excellent.second'),
+        t('pages.backtest.template.resultCard.performanceLevels.excellent.third'),
       ],
     },
     {
       threshold: 100,
       messages: [
-        t('pages.backtest.resultCard.performanceLevels.unbelievable.one'),
-        t('pages.backtest.resultCard.performanceLevels.unbelievable.second'),
-        t('pages.backtest.resultCard.performanceLevels.unbelievable.third'),
+        t('pages.backtest.template.resultCard.performanceLevels.unbelievable.one'),
+        t('pages.backtest.template.resultCard.performanceLevels.unbelievable.second'),
+        t('pages.backtest.template.resultCard.performanceLevels.unbelievable.third'),
       ],
     },
     {
       threshold: Infinity,
-      messages: [t('pages.backtest.resultCard.performanceLevels.legendary.one')],
+      messages: [t('pages.backtest.template.resultCard.performanceLevels.legendary.one')],
     },
   ]
 
@@ -323,7 +323,7 @@ const onTagClick = () => {
   if (num >= 8) {
     visible.value = true
   } else {
-    MessagePlugin.info(t('pages.backtest.resultCard.easterEggHint'))
+    MessagePlugin.info(t('pages.backtest.template.resultCard.easterEggHint'))
     num++
   }
 }

@@ -5,31 +5,43 @@
     <t-card class="header-card">
       <template #header>
         <div class="header-content">
-          <h2>{{ t('pages.backtest.title') }}</h2>
+          <h2>{{ t('pages.backtest.template.title') }}</h2>
           <div class="buttons">
             <t-button theme="primary" @click="runBacktest" :loading="isRunning">
               <template #icon><play-icon /></template>
               {{
                 isRunning
-                  ? t('pages.backtest.buttons.running')
-                  : t('pages.backtest.buttons.runBacktest')
+                  ? t('pages.backtest.template.buttons.running')
+                  : t('pages.backtest.template.buttons.runBacktest')
               }}
             </t-button>
-            <t-button variant="text" @click="onSettingClick" :loading="isRunning">
+            <t-button
+              variant="text"
+              @click="
+                () => {
+                  settingVisible = true
+                }
+              "
+              :loading="isRunning"
+            >
               <template #icon><SettingIcon /></template>
               {{
                 isRunning
-                  ? t('pages.backtest.buttons.running')
-                  : t('pages.backtest.buttons.settings')
+                  ? t('pages.backtest.template.buttons.running')
+                  : t('pages.backtest.template.buttons.settings')
               }}
             </t-button>
             <t-dialog
               v-model:visible="settingVisible"
-              :header="t('pages.backtest.dialog.settingsTitle')"
+              :header="t('pages.backtest.template.dialog.settingsTitle')"
               width="50%"
               top="1%"
               :confirm-on-enter="true"
-              :on-confirm="close"
+              :on-confirm="
+                () => {
+                  settingVisible = false
+                }
+              "
             >
               <Setting
                 v-model:backtestConfig="backtestConfig"
@@ -49,7 +61,6 @@
         <StrategyParams
           v-model:strategyParams="strategyParams"
           v-model:backtestConfig="backtestConfig"
-          ref="strategyParamsRef"
         />
       </t-col>
 
@@ -58,7 +69,7 @@
       </t-col>
 
       <t-card
-        :title="t('pages.backtest.cards.profitChart')"
+        :title="t('pages.backtest.template.cards.profitChart')"
         class="chart-card"
         v-if="backtestResult"
       >
@@ -66,7 +77,7 @@
       </t-card>
 
       <t-card
-        :title="t('pages.backtest.cards.tradeRecords')"
+        :title="t('pages.backtest.template.cards.tradeRecords')"
         class="trades-card"
         v-if="backtestResult"
       >
@@ -84,15 +95,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, nextTick, onMounted } from 'vue'
+import { ref, reactive, nextTick, onMounted, onBeforeUnmount, toRaw } from 'vue'
 import { PlayIcon, SettingIcon } from 'tdesign-icons-vue-next'
 import { MessagePlugin } from 'tdesign-vue-next'
 import * as echarts from 'echarts'
+import dayjs from 'dayjs'
 
 import { useBacktestStore } from '@/stores'
 import { getStocks } from '@/services/client'
 import { throttle } from '@/infrastructure/utils'
 import { t } from '@/infrastructure/locales'
+import { backtestStorage } from '@/infrastructure/utils'
 
 import { getOption, tradeColumns } from '.'
 import Setting from './components/Setting.vue'
@@ -102,7 +115,6 @@ import StrategyParams from './components/StrategyParams.vue'
 
 const settingVisible = ref(false)
 const backtestStore = useBacktestStore()
-const strategyParamsRef = ref(null)
 
 const backtestConfig = reactive({
   strategy: 'ma_cross',
@@ -145,9 +157,6 @@ const pagination = reactive({
 // 开始回测
 const runBacktest = throttle(
   async () => {
-    if (!backtestStore.getBacktestResult.isCustomCode) {
-      strategyParamsRef.value.isCustomCode = false
-    }
     isRunning.value = true
 
     const stocksData = await getStocks(backtestConfig.dateRange, true)
@@ -162,25 +171,25 @@ const runBacktest = throttle(
 
     isRunning.value = false
 
+    await saveBacktest({
+      date: dayjs().format('YYYY-MM-DD HH:mm'),
+      backtestConfig: toRaw(backtestConfig), // 解包响应式对象
+      strategyParams: toRaw(strategyParams),
+      backtestResult: toRaw(backtestResult.value),
+      isCustomCode: toRaw(backtestStore.getBacktestResult.isCustomCode),
+      stocksData: toRaw(stocksData),
+    })
+
     // 渲染图表
     await nextTick()
     renderChart(backtestResult.value.trades)
-    MessagePlugin.success(t('pages.backtest.messages.success'))
-    backtestStore.getBacktestResult.isCustomCode = false
+    MessagePlugin.success(t('pages.backtest.template.messages.success'))
   },
   5000,
   () => {
-    MessagePlugin.info(t('pages.backtest.messages.tooFrequent'))
+    MessagePlugin.info(t('pages.backtest.template.messages.tooFrequent'))
   },
 )
-
-const close = () => {
-  settingVisible.value = false
-}
-
-const onSettingClick = async () => {
-  settingVisible.value = true
-}
 
 const updateBacktestConfig = (newBacktestConfig) => {
   settingVisible.value = false
@@ -206,12 +215,39 @@ const renderChart = (data) => {
   chartInstance.setOption(getOption(sortedData))
 }
 
+async function saveBacktest(data) {
+  const savedRecord = await backtestStorage.saveBacktestRecord(data)
+  console.log('保存的回测记录ID:', savedRecord.id)
+}
+
+async function queryBacktestRecords() {
+  // 获取所有回测记录
+  const allRecords = await backtestStorage.getAllBacktestRecords()
+  console.log('所有回测记录:', allRecords)
+
+  // 按策略查询
+  const maRecords = await backtestStorage.getBacktestRecordsByStrategy('ma_cross')
+  console.log('均线交叉策略回测记录:', maRecords)
+
+  // 按股票代码查询
+  const stockRecords = await backtestStorage.getBacktestRecordsBySymbol('000001')
+  console.log('上证指数回测记录:', stockRecords)
+}
+
 onMounted(async () => {
   await nextTick()
   if (backtestStore.getBacktestResult.isCustomCode) {
     runBacktest()
-    strategyParamsRef.value.isCustomCode = true
   }
+  try {
+    await backtestStorage.init()
+    await queryBacktestRecords()
+  } catch (error) {
+    console.error('回测存储操作失败:', error)
+  }
+})
+onBeforeUnmount(() => {
+  backtestStorage.close()
 })
 </script>
 

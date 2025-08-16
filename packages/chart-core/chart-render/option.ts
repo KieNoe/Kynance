@@ -82,38 +82,12 @@ export const getChartColorOption = (colorList) => {
       ],
     };
   }
-
-  function hexToRgba(hex, alpha = 1) {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  }
   return {
     color: colorList,
     series: [
       {
         lineStyle: {
           color: colorList[0],
-        },
-        areaStyle: {
-          color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 0,
-            y2: 1,
-            colorStops: [
-              {
-                offset: 0,
-                color: hexToRgba(colorList[0], 0.5),
-              },
-              {
-                offset: 1,
-                color: hexToRgba(colorList[0], 0.1),
-              },
-            ],
-          },
         },
         itemStyle: {
           color: colorList[0],
@@ -267,12 +241,14 @@ export const getStockChartOptions = (stockData, currency = '') => {
         }
       },
     },
-    yAxis: {
-      scale: true,
-      axisLabel: {
-        formatter: '{value}',
+    yAxis: [
+      {
+        scale: true,
+        axisLabel: {
+          formatter: '{value}',
+        },
       },
-    },
+    ],
     series: [
       {
         data: stockData.data.map((item) => ({
@@ -288,23 +264,6 @@ export const getStockChartOptions = (stockData, currency = '') => {
         showSymbol: false,
         lineStyle: {
           width: 2,
-        },
-        areaStyle: {
-          color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 0,
-            y2: 1,
-            colorStops: [
-              {
-                offset: 0,
-              },
-              {
-                offset: 1,
-              },
-            ],
-          },
         },
       },
     ],

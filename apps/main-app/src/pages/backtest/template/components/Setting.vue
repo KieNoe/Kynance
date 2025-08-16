@@ -1,9 +1,9 @@
 <template>
   <t-space direction="vertical" style="width: 100%">
-    <t-card :title="t('pages.backtest.setting.title')" bordered>
+    <t-card :title="t('pages.backtest.template.setting.title')" bordered>
       <!-- 显示当前参数 -->
       <t-descriptions
-        :title="t('pages.backtest.setting.currentParameters')"
+        :title="t('pages.backtest.template.setting.currentParameters')"
         :data="parametersList"
         :column="2"
         bordered
@@ -16,10 +16,10 @@
       <!-- 操作按钮 -->
       <t-space style="margin-top: 1.25rem">
         <t-button @click="saveCurrentStrategy" theme="primary">{{
-          t('pages.backtest.setting.buttons.save')
+          t('pages.backtest.template.setting.buttons.save')
         }}</t-button>
         <t-button @click="showLoadDialog = true">{{
-          t('pages.backtest.setting.buttons.load')
+          t('pages.backtest.template.setting.buttons.load')
         }}</t-button>
       </t-space>
     </t-card>
@@ -27,16 +27,19 @@
     <!-- 保存参数对话框 -->
     <t-dialog
       v-model:visible="showSaveDialog"
-      :header="t('pages.backtest.setting.dialog.save.title')"
-      :confirm-btn="{ content: t('pages.backtest.setting.dialog.save.confirm'), theme: 'primary' }"
-      :cancel-btn="{ content: t('pages.backtest.setting.dialog.save.cancel') }"
+      :header="t('pages.backtest.template.setting.dialog.save.title')"
+      :confirm-btn="{
+        content: t('pages.backtest.template.setting.dialog.save.confirm'),
+        theme: 'primary',
+      }"
+      :cancel-btn="{ content: t('pages.backtest.template.setting.dialog.save.cancel') }"
       @confirm="confirmSave"
     >
       <t-form>
-        <t-form-item :label="t('pages.backtest.setting.dialog.save.nameLabel')">
+        <t-form-item :label="t('pages.backtest.template.setting.dialog.save.nameLabel')">
           <t-input
             v-model="saveForm.name"
-            :placeholder="t('pages.backtest.setting.dialog.save.namePlaceholder')"
+            :placeholder="t('pages.backtest.template.setting.dialog.save.namePlaceholder')"
           />
         </t-form-item>
       </t-form>
@@ -46,9 +49,12 @@
     <t-dialog
       v-model:visible="showLoadDialog"
       width="46%"
-      :header="t('pages.backtest.setting.dialog.load.title')"
-      :confirm-btn="{ content: t('pages.backtest.setting.dialog.load.confirm'), theme: 'primary' }"
-      :cancel-btn="{ content: t('pages.backtest.setting.dialog.load.cancel') }"
+      :header="t('pages.backtest.template.setting.dialog.load.title')"
+      :confirm-btn="{
+        content: t('pages.backtest.template.setting.dialog.load.confirm'),
+        theme: 'primary',
+      }"
+      :cancel-btn="{ content: t('pages.backtest.template.setting.dialog.load.cancel') }"
       @confirm="confirmLoad"
     >
       <t-table
@@ -111,11 +117,11 @@ const parametersList = computed(() => {
     Object.entries(props.backtestConfig).forEach(([key, value]) => {
       if (key === 'dateRange' && Array.isArray(value)) {
         list.push({
-          label: t('pages.backtest.setting.parameters.startDate'),
+          label: t('pages.backtest.template.setting.parameters.startDate'),
           content: value[0],
         })
         list.push({
-          label: t('pages.backtest.setting.parameters.endDate'),
+          label: t('pages.backtest.template.setting.parameters.endDate'),
           content: value[1],
         })
       } else {
@@ -142,15 +148,15 @@ const parametersList = computed(() => {
 // 格式化参数值显示
 function formatParameterValue(key, value) {
   if (key.includes('Percent') || key.includes('Threshold') || key.includes('Limit')) {
-    return `${value}` + t('pages.backtest.setting.units.percent')
+    return `${value}` + t('pages.backtest.template.setting.units.percent')
   }
 
   if (key === 'shareHoldingLimit') {
-    return `${value}` + t('pages.backtest.setting.units.shares')
+    return `${value}` + t('pages.backtest.template.setting.units.shares')
   }
 
   if (key === 'strategy') {
-    const translationPath = `pages.backtest.setting.strategyTypes.${value}`
+    const translationPath = `pages.backtest.template.setting.strategyTypes.${value}`
     if (t(translationPath)) {
       return t(translationPath)
     }
@@ -161,43 +167,43 @@ function formatParameterValue(key, value) {
 
 // 获取参数的中文标签
 function getParameterLabel(key) {
-  const translationPath = `pages.backtest.setting.parameters.${key}`
+  const translationPath = `pages.backtest.template.setting.parameters.${key}`
   if (t(translationPath)) {
     return t(translationPath)
   }
 }
 
 const columns = [
-  { colKey: 'name', title: t('pages.backtest.setting.table.columns.name'), width: 150 },
-  { colKey: 'time', title: t('pages.backtest.setting.table.columns.time'), width: 150 },
+  { colKey: 'name', title: t('pages.backtest.template.setting.table.columns.name'), width: 150 },
+  { colKey: 'time', title: t('pages.backtest.template.setting.table.columns.time'), width: 150 },
   {
     colKey: 'strategy',
-    title: t('pages.backtest.setting.table.columns.strategy'),
+    title: t('pages.backtest.template.setting.table.columns.strategy'),
     cell: (h, { row }) => {
       switch (row.backtestConfig.strategy) {
         case 'ma_cross':
-          return t('pages.backtest.setting.strategyTypes.ma_cross')
+          return t('pages.backtest.template.setting.strategyTypes.ma_cross')
         case 'rsi_reversal':
-          return t('pages.backtest.setting.strategyTypes.rsi_reversal')
+          return t('pages.backtest.template.setting.strategyTypes.rsi_reversal')
         case 'bollinger_bands':
-          return t('pages.backtest.setting.strategyTypes.bollinger_bands')
+          return t('pages.backtest.template.setting.strategyTypes.bollinger_bands')
       }
     },
   },
   {
-    title: t('pages.backtest.setting.table.columns.actions'),
+    title: t('pages.backtest.template.setting.table.columns.actions'),
     colKey: 'link',
     cell: (h, { row }) => {
       return (
         <t-popconfirm
-          content={t('pages.backtest.setting.table.actions.deleteConfirm')}
+          content={t('pages.backtest.template.setting.table.actions.deleteConfirm')}
           onConfirm={() => {
             backtestStore.deleteStrategy(row.id)
             savedStrategies.value = backtestStore.getStrategy()
-            MessagePlugin.success(t('pages.backtest.setting.messages.deleteSuccess'))
+            MessagePlugin.success(t('pages.backtest.template.setting.messages.deleteSuccess'))
           }}
         >
-          <t-link>{t('pages.backtest.setting.table.actions.delete')}</t-link>
+          <t-link>{t('pages.backtest.template.setting.table.actions.delete')}</t-link>
         </t-popconfirm>
       )
     },
@@ -221,12 +227,12 @@ function saveCurrentStrategy() {
 // 确认保存
 function confirmSave() {
   if (!saveForm.value.name.trim()) {
-    MessagePlugin.error(t('pages.backtest.setting.messages.emptyName'))
+    MessagePlugin.error(t('pages.backtest.template.setting.messages.emptyName'))
     return
   }
   const nameRegex = /^[\w\u4e00-\u9fa5]{1,7}$/
   if (!nameRegex.test(saveForm.value.name)) {
-    MessagePlugin.error(t('pages.backtest.setting.dialog.save.nameError'))
+    MessagePlugin.error(t('pages.backtest.template.setting.dialog.save.nameError'))
     return
   }
 
@@ -238,7 +244,7 @@ function confirmSave() {
     }
 
     backtestStore.addStrategy(newStrategy)
-    MessagePlugin.success(t('pages.backtest.setting.messages.saveSuccess'))
+    MessagePlugin.success(t('pages.backtest.template.setting.messages.saveSuccess'))
     showSaveDialog.value = false
   } catch (error) {
     MessagePlugin.error(error.message || t('common.error.saveFailed'))
@@ -248,7 +254,7 @@ function confirmSave() {
 // 确认读取
 function confirmLoad() {
   if (!selectedStrategy.value) {
-    MessagePlugin.warning(t('pages.backtest.setting.dialog.load.noSelection'))
+    MessagePlugin.warning(t('pages.backtest.template.setting.dialog.load.noSelection'))
     return
   }
 
@@ -257,7 +263,7 @@ function confirmLoad() {
     emit('update:backtestConfig', { ...strategy.backtestConfig })
     emit('update:strategyParams', { ...strategy.strategyParams })
 
-    MessagePlugin.success(t('pages.backtest.setting.messages.loadSuccess'))
+    MessagePlugin.success(t('pages.backtest.template.setting.messages.loadSuccess'))
     showLoadDialog.value = false
     showSaveDialog.value = false
   }

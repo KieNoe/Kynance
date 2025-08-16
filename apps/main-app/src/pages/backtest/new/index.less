@@ -1,0 +1,52 @@
+.strategy-page {
+  padding: 1.25rem; // 20px / 16 = 1.25rem
+
+  .header-card {
+    margin-bottom: 1.25rem; // 20px
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .title {
+        margin: 0;
+        font-size: 1.25rem; // 20px
+        font-weight: 500;
+      }
+    }
+  }
+
+  .strategy-info-card,
+  .code-editor-card,
+  .snippets-card,
+  .visualization-card {
+    margin-bottom: 1.25rem; // 20px
+  }
+
+  .code-editor-card.fullscreen{
+    height: 100%;
+  }
+
+  .editor-container {
+    height: 25rem; // 400px / 16 = 25rem
+    .editor {
+      height: 100%;
+    }
+  }
+
+  .snippet-name {
+    color: var(--td-brand-color);
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .visualization-placeholder {
+    height: 18.75rem; // 300px / 16 = 18.75rem
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -26,6 +26,7 @@ module.exports = {
     "prettier/prettier": "error", // Prettier 格式错误作为错误处理
     "arrow-body-style":"off",//避免与prettier冲突
     "prefer-arrow-callback":"off",
+    "multi-word-component-names": "off",
 
     // TypeScript 规则
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }], // 忽略未使用变量
