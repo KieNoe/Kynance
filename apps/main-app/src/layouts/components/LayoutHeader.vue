@@ -11,6 +11,7 @@
         />
       </template>
       <template #operations>
+        <notice />
         <t-tooltip placement="bottom" :content="t('layout.header.code')" class="header-code-icon">
           <t-button theme="default" shape="square" variant="text" @click="navToGitHub">
             <t-icon name="logo-github" size="1.3em" />
@@ -92,6 +93,8 @@ import { useLocale } from '@/infrastructure/locales/useLocale'
 import { useSettingStore } from '@/stores'
 import { useUserStore } from '@/stores'
 import router from '@/router'
+
+import Notice from './Notice.vue'
 
 const settingStore = useSettingStore()
 const userStore = useUserStore()

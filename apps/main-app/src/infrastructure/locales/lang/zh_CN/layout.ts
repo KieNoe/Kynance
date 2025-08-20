@@ -23,4 +23,11 @@ export default {
       showFooter: '显示页脚',
     },
   },
+  notice: {
+    title: '通知中心',
+    clear: '清空',
+    setRead: '设为已读',
+    viewAll: '查看全部',
+    empty: '暂无通知',
+  },
 }
