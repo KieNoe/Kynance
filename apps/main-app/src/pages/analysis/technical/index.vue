@@ -23,7 +23,6 @@ const page = ref(null)
 
 onMounted(() => {
   page.value = document.querySelector('.analysis-page')
-  console.log(page.value)
 })
 </script>
 <style scoped lang="less">

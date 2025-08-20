@@ -215,14 +215,7 @@ const formatValue = (value, metric) => {
 function adjustToRange(value) {
   if (value === 0) return '0.00'
 
-  const scalePower = Math.floor(Math.log10(value)) - 1
-  const scaleFactor = Math.pow(10, scalePower)
-
-  const adjustedValue = value / scaleFactor
-
-  const clampedValue = Math.min(Math.max(adjustedValue, 10), 100)
-
-  return clampedValue.toFixed(2)
+  return (value * 10).toFixed(2)
 }
 
 const getValueClass = (value, metric) => {

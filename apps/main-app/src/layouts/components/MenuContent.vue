@@ -6,7 +6,7 @@
       :title="renderMenuTitle(route.meta?.title as string | Record<string, string>)"
     >
       <template #icon>
-        <t-icon :name="(route.meta?.icon as string)" />
+        <component :is="route.meta?.icon" />
       </template>
 
       <t-menu-item
@@ -16,7 +16,7 @@
         @click="() => handleMenuItemClick(child)"
       >
         <template #icon>
-          <t-icon :name="(child.meta?.icon as string)" />
+          <t-icon  />
         </template>
         {{ renderMenuTitle(child.meta?.title as string | Record<string, string>) }}
       </t-menu-item>
@@ -32,7 +32,6 @@ import { navRoutes } from '@/router'
 
 const handleMenuItemClick = (route) => {
   const targetPath = getFullPath(route)
-  console.log(targetPath)
   router.push(targetPath).catch(err => {
     MessagePlugin.error('导航失败:', err)
     router.push('/404')
@@ -61,8 +60,8 @@ const getFullPath = (route) => {
 
     // 标准解析
     return router.resolve(route).href || route.path
-  } catch (e) {
-    MessagePlugin.error('路由解析失败:', route)
+  } catch (err) {
+    MessagePlugin.error('路由解析失败:', route,err)
     return '/404'
   }
 }

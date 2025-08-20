@@ -60,7 +60,7 @@ router.beforeEach(async (to, from, next) => {
         // 路由不存在，重定向到首页
         next(`/result/404`)
       }
-    } catch (error: any) {
+    } catch (error) {
       // 捕获错误并显示错误消息
       MessagePlugin.error(error.message)
       // 跳转到登录页，并携带当前路径作为重定向参数

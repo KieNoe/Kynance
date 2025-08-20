@@ -7,9 +7,6 @@
       <t-button theme="default" @click="() => $router.push('/dashboard/base')">{{
         t('pages.result.fail.back')
       }}</t-button>
-      <t-button @click="() => $router.push('/form/base')"
-        >{{ t('pages.result.fail.modify') }}
-      </t-button>
     </div>
   </div>
 </template>

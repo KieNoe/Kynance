@@ -108,27 +108,37 @@ const getModeIcon = (mode) => {
 .tdesign-setting {
   z-index: 100;
   position: fixed;
-  bottom: 200px;
+  bottom: 12.5rem; // 使用rem单位
   right: 0;
-  height: 40px;
-  width: 40px;
-  border-radius: 20px 0 0 20px;
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 1.25rem 0 0 1.25rem;
   transition: all 0.3s;
 
   .t-icon {
-    margin-left: 8px;
+    margin-left: 0.5rem;
   }
 
   .tdesign-setting-text {
-    font-size: 12px;
+    font-size: 0.75rem;
     display: none;
   }
 
   &:hover {
-    width: 96px;
+    width: 6rem;
 
     .tdesign-setting-text {
       display: inline-block;
+    }
+  }
+
+  @media (max-width: 768px) {
+    bottom: 1rem;
+    height: 2rem;
+    width: 2rem;
+
+    &:hover {
+      width: 5rem;
     }
   }
 }
@@ -138,8 +148,8 @@ const getModeIcon = (mode) => {
   justify-content: center;
   align-items: center;
   border-radius: 50% !important;
-  padding: 6px !important;
-  border: 2px solid transparent !important;
+  padding: 0.375rem !important;
+  border: 0.125rem solid transparent !important;
 
   > .t-radio-button__label {
     display: inline-flex;
@@ -148,47 +158,74 @@ const getModeIcon = (mode) => {
 
 .tdesign-setting-close {
   position: fixed;
-  bottom: 200px;
-  right: 300px;
+  bottom: 12.5rem;
+  right: 18.75rem;
+
+  @media (max-width: 1200px) {
+    right: 15rem;
+  }
+
+  @media (max-width: 992px) {
+    right: 10rem;
+  }
+
+  @media (max-width: 768px) {
+    right: 1rem;
+    bottom: 1rem;
+  }
 }
 
 .setting-group-title {
-  font-size: 14px;
-  line-height: 22px;
-  margin: 32px 0 24px;
+  font-size: 0.875rem;
+  line-height: 1.375rem;
+  margin: 2rem 0 1.5rem;
   text-align: left;
   font-family: 'PingFang SC', var(--td-font-family);
   font-style: normal;
   font-weight: 500;
   color: var(--td-text-color-primary);
+
+  @media (max-width: 768px) {
+    margin: 1.5rem 0 1rem;
+    font-size: 0.8125rem;
+  }
 }
 
 .setting-link {
   cursor: pointer;
   color: var(--td-brand-color);
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 }
 
 .setting-info {
   position: absolute;
-  padding: 24px;
+  padding: 1.5rem;
   bottom: 0;
   left: 0;
-  line-height: 20px;
-  font-size: 12px;
+  line-height: 1.25rem;
+  font-size: 0.75rem;
   text-align: center;
   color: var(--td-text-color-placeholder);
   width: 100%;
   background: var(--td-bg-color-container);
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    font-size: 0.6875rem;
+  }
 }
 
 .setting-drawer-container {
   .setting-container {
-    padding-bottom: 100px;
+    padding-bottom: 6.25rem;
+
+    @media (max-width: 768px) {
+      padding-bottom: 4rem;
+    }
   }
 
   .t-radio-group.t-size-m {
-    min-height: 32px;
+    min-height: 2rem;
     width: 100%;
     justify-content: space-between;
     align-items: center;
@@ -206,22 +243,27 @@ const getModeIcon = (mode) => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
 
     .t-radio-button {
       display: inline-flex;
-      max-height: 78px;
-      padding: 8px;
+      max-height: 4.875rem;
+      padding: 0.5rem;
       border-radius: var(--td-radius-default);
-      border: 2px solid var(--td-component-border);
+      border: 0.125rem solid var(--td-component-border);
 
       > .t-radio-button__label {
         display: inline-flex;
       }
+
+      @media (max-width: 768px) {
+        max-height: 3.5rem;
+        padding: 0.375rem;
+      }
     }
 
     .t-is-checked {
-      border: 2px solid var(--td-brand-color) !important;
+      border: 0.125rem solid var(--td-brand-color) !important;
     }
 
     .t-form__controls-content {
@@ -236,20 +278,31 @@ const getModeIcon = (mode) => {
 
 .setting-route-theme {
   .t-form__label {
-    min-width: 310px !important;
+    min-width: 19.375rem !important;
     color: var(--td-text-color-secondary);
+
+    @media (max-width: 768px) {
+      min-width: 100% !important;
+    }
   }
 }
 
 .setting-color-theme {
   .setting-layout-drawer {
     .t-radio-button {
-      height: 32px;
+      height: 2rem;
     }
 
     &:last-child {
       margin-right: 0;
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .tdesign-setting,
+  .tdesign-setting-close {
+    display: none; // 在非常小的屏幕上隐藏设置按钮
   }
 }
 </style>

@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import TDesign from 'tdesign-vue-next'
 import { createApp } from 'vue'
 
-import store from './stores'
 import App from './App.vue'
-import router from './router'
 import i18n from './infrastructure/locales'
 import './permission.ts'
+import router from './router'
+import store from './stores'
 
 const app = createApp(App)
 

@@ -4,9 +4,6 @@
     <div class="result-success-title">{{ t('pages.result.success.title') }}</div>
     <div class="result-success-describe">{{ t('pages.result.success.subtitle') }}</div>
     <div>
-      <t-button theme="default" @click="() => $router.push('/detail/advanced')">
-        {{ t('pages.result.success.progress') }}
-      </t-button>
       <t-button @click="() => $router.push('/dashboard/base')">
         {{ t('pages.result.success.back') }}
       </t-button>

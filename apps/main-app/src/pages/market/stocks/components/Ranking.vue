@@ -13,7 +13,7 @@
             <t-button variant="text" class="button">
               {{ tab }}
               <template #suffix>
-                <t-icon name="chevron-down" style="font-size: var(--td-font-size-headline-medium)"
+                <ChevronDownIcon style="font-size: var(--td-font-size-headline-medium)"
               /></template>
             </t-button>
           </t-space>
@@ -69,6 +69,7 @@ import { MessagePlugin, TableProps } from 'tdesign-vue-next'
 import { getDailyGainer, getDailyLoser } from '@/services/client'
 import { t } from '@/infrastructure/locales'
 import router from '@/router'
+import { ChevronDownIcon } from 'tdesign-icons-vue-next'
 
 const tab = ref(t('pages.stock.dropdown.up'))
 const img = ref(null)

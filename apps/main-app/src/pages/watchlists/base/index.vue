@@ -5,15 +5,15 @@
       <div class="operation-bar">
         <div class="left-operations">
           <t-button theme="primary" @click="showAddStockModal">
-            <template #icon><t-icon name="add" /></template>
+            <template #icon><AddIcon /></template>
             {{ t('pages.watchList.base.addInBatches') }}
           </t-button>
           <t-button theme="danger" :disabled="!hasSelected" @click="batchDeleteConfirm">
-            <template #icon><t-icon name="delete" /></template>
+            <template #icon><DeleteIcon /></template>
             {{ t('pages.watchList.base.batchDelete') }}
           </t-button>
           <t-button @click="refreshData">
-            <template #icon><t-icon name="refresh" /></template>
+            <template #icon><RefreshIcon /></template>
             {{ t('pages.watchList.base.refresh') }}
           </t-button>
         </div>
@@ -35,7 +35,7 @@
       <!-- 股票列表表格 -->
       <t-table
         :data="paginatedStocks"
-        :columns="(columns as any)"
+        :columns="(COLUMNS as any)"
         :loading="loading"
         row-key="id"
         :selected-row-keys="selectedRowKeys"
@@ -108,13 +108,13 @@
             v-on:enter="searchStocks"
           >
             <template #suffix-icon>
-              <t-icon name="search" @click="searchStocks" />
+              <SearchIcon @click="searchStocks" />
             </template>
           </t-input>
 
           <t-table
             :data="searchResults"
-            :columns="(searchColumns as any)"
+            :columns="(SEARCH_COLUMNS as any)"
             :pagination="{
               total: searchResults.length,
               defaultCurrent: 1,
@@ -146,10 +146,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { MessagePlugin, DialogPlugin } from 'tdesign-vue-next'
+import { AddIcon, DeleteIcon, RefreshIcon, SearchIcon } from 'tdesign-icons-vue-next'
 
 import { getWatchList, getSearchList } from '@/services/client'
 import { useWatchListStore } from '@/stores'
 import { t } from '@/infrastructure/locales'
+
+import { COLUMNS,SEARCH_COLUMNS } from './contast'
 
 // 初始化 store
 const watchListStore = useWatchListStore()
@@ -184,91 +187,6 @@ const paginatedStocks = computed(() => {
 })
 
 const hasSelected = computed(() => selectedRowKeys.value.length > 0)
-
-// 表格列定义
-const columns = [
-  {
-    colKey: 'row-select',
-    type: 'multiple',
-    width: 50,
-  },
-  {
-    colKey: 'code',
-    title: t('pages.watchList.base.column.code'),
-    width: 100,
-    cell: 'code',
-  },
-  {
-    colKey: 'name',
-    title: t('pages.watchList.base.column.name'),
-    width: 100,
-    cell: 'name',
-  },
-  {
-    colKey: 'price',
-    title: t('pages.watchList.base.column.price'),
-    width: 100,
-    cell: 'price',
-    sorter: true,
-  },
-  {
-    colKey: 'changePercent',
-    title: t('pages.watchList.base.column.changePercent'),
-    width: 100,
-    cell: 'changePercent',
-    sorter: true,
-  },
-  {
-    colKey: 'volume',
-    title: t('pages.watchList.base.column.volume'),
-    width: 100,
-  },
-  {
-    colKey: 'turnover',
-    title: t('pages.watchList.base.column.turnover'),
-    width: 100,
-    ellipsis: true,
-  },
-  {
-    colKey: 'marketCap',
-    title: t('pages.watchList.base.column.marketCap'),
-    width: 100,
-    ellipsis: true,
-  },
-  {
-    colKey: 'operation',
-    title: t('pages.watchList.base.column.operation'),
-    fixed: 'right',
-    width: 150,
-    cell: 'operation',
-  },
-]
-
-// 搜索结果表格列定义
-const searchColumns = [
-  {
-    colKey: 'row-select',
-    type: 'multiple',
-    width: 50,
-  },
-  {
-    colKey: 'code',
-    title: t('pages.watchList.base.searchColumns.code'),
-  },
-  {
-    colKey: 'name',
-    title: t('pages.watchList.base.searchColumns.name'),
-  },
-  {
-    colKey: 'price',
-    title: t('pages.watchList.base.searchColumns.price'),
-  },
-  {
-    colKey: 'changePercent',
-    title: t('pages.watchList.base.searchColumns.changePercent'),
-    cell: 'changePercent',
-  },
-]
 
 // 生命周期钩子
 onMounted(async () => {

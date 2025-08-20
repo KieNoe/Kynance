@@ -1,3 +1,5 @@
+import { EarthIcon } from 'tdesign-icons-vue-next'
+
 import Layout from '@/layouts/index.vue'
 
 export default [
@@ -11,7 +13,7 @@ export default [
         zh_CN: '市场行情',
         en_US: 'Market',
       },
-      icon: 'earth',
+      icon: EarthIcon,
       orderNo: 0,
     },
     children: [

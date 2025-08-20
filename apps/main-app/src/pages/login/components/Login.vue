@@ -25,7 +25,7 @@
         :placeholder="`${t('pages.login.input.account')}：admin`"
       >
         <template #prefix-icon>
-          <t-icon name="user" />
+          <UserIcon />
         </template>
       </t-input>
     </t-form-item>
@@ -39,10 +39,10 @@
         :placeholder="`${t('pages.login.input.password')}：admin`"
       >
         <template #prefix-icon>
-          <t-icon name="lock-on" />
+          <LockOnIcon />
         </template>
         <template #suffix-icon>
-          <t-icon :name="showPsw ? 'browse' : 'browse-off'" @click="showPsw = !showPsw" />
+          <component :is="showPsw ? BrowseIcon : BrowseOffIcon" @click="showPsw = !showPsw" />
         </template>
       </t-input>
     </t-form-item>
@@ -72,6 +72,7 @@
 <script setup lang="ts">
 import { MessagePlugin } from 'tdesign-vue-next'
 import { ref } from 'vue'
+import { BrowseIcon, BrowseOffIcon, LockOnIcon, UserIcon } from 'tdesign-icons-vue-next'
 
 import { t } from '@/infrastructure/locales'
 import { useUserStore } from '@/stores'
@@ -125,7 +126,6 @@ const onSubmit = async (ctx) => {
       MessagePlugin.success('登录成功')
       router.push('/dashboard/base')
     } catch (e) {
-      console.log(e)
       MessagePlugin.error(e.message)
     }
   }

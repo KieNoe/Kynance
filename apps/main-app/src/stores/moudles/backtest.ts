@@ -128,20 +128,12 @@ export const useBacktestStore = defineStore('backtest', () => {
     }
   }
   function saveToLocalStorage() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(strategy))
-    } catch (err) {
-      console.error('保存自选股到本地存储失败:', err)
-    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(strategy))
   }
   function loadFromLocalStorage() {
-    try {
-      const storedData = localStorage.getItem(STORAGE_KEY)
-      if (storedData) {
-        return JSON.parse(storedData)
-      }
-    } catch (err) {
-      console.error('从本地存储加载自选股失败:', err)
+    const storedData = localStorage.getItem(STORAGE_KEY)
+    if (storedData) {
+      return JSON.parse(storedData)
     }
     return [
       {
