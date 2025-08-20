@@ -23,4 +23,11 @@ export default {
       showFooter: 'Show Footer',
     },
   },
+  notice: {
+    title: 'Notice Center',
+    clear: 'Clear',
+    setRead: 'Set Read',
+    viewAll: 'View All',
+    empty: 'No Notice',
+  },
 }
