@@ -18,7 +18,7 @@
     <t-form-item name="email">
       <t-input v-model="formData.email" type="text" size="large" placeholder="请输入您的邮箱">
         <template #prefix-icon>
-          <t-icon name="mail" />
+          <MailIcon />
         </template>
       </t-input>
     </t-form-item>
@@ -32,10 +32,10 @@
         placeholder="请输入登录密码"
       >
         <template #prefix-icon>
-          <t-icon name="lock-on" />
+          <LockOnIcon />
         </template>
         <template #suffix-icon>
-          <t-icon :name="showPsw ? 'browse' : 'browse-off'" @click="showPsw = !showPsw" />
+          <component :is="showPsw ? BrowseIcon : BrowseOffIcon" @click="showPsw = !showPsw" />
         </template>
       </t-input>
     </t-form-item>
@@ -131,6 +131,7 @@
 <script setup lang="ts">
 import { MessagePlugin } from 'tdesign-vue-next'
 import { ref } from 'vue'
+import { BrowseIcon, BrowseOffIcon, LockOnIcon, MailIcon } from 'tdesign-icons-vue-next'
 
 import { useCounter } from '@/infrastructure/hook'
 

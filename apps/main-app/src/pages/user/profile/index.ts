@@ -1,3 +1,10 @@
+import {
+  LogoCodepenIcon,
+  LogoFigmaIcon,
+  LogoGithubIcon,
+  LogoGitlabIcon,
+} from 'tdesign-icons-vue-next'
+
 import { t } from '@/infrastructure/locales'
 import { getStocks } from '@/services/client'
 import { useUserStore } from '@/stores'
@@ -96,22 +103,22 @@ export const refreshUserInfoList = (userStore, t) => {
 export const WEBSITE_RECOMMEND = [
   {
     title: 'Github',
-    logo: 'logo-github',
+    logo: LogoGithubIcon,
     description: t('pages.user.website.github'),
   },
   {
     title: 'Codepen',
-    logo: 'logo-codepen',
+    logo: LogoCodepenIcon,
     description: t('pages.user.website.codepen'),
   },
   {
     title: 'Gitlab',
-    logo: 'logo-gitlab',
+    logo: LogoGitlabIcon,
     description: t('pages.user.website.gitlab'),
   },
   {
     title: 'Figma',
-    logo: 'logo-figma',
+    logo: LogoFigmaIcon,
     description: t('pages.user.website.figma'),
   },
 ]

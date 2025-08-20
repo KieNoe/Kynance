@@ -6,7 +6,7 @@
         <h1 class="page-title">{{ t('pages.analysis.fundamental.analysis') }}</h1>
       </div>
       <div class="header-right">
-        <t-button theme="default" variant="outline" @click="refreshData">
+        <t-button theme="default" variant="outline" @click="refreshData" :disabled="loading">
           <template #icon>
             <refresh-icon />
           </template>
@@ -146,7 +146,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { RefreshIcon } from 'tdesign-icons-vue-next'

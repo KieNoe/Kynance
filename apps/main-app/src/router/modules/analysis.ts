@@ -1,3 +1,5 @@
+import { Setting1Icon } from 'tdesign-icons-vue-next'
+
 import Layout from '@/layouts/index.vue'
 
 export default [
@@ -11,7 +13,7 @@ export default [
         zh_CN: '分析',
         en_US: 'Analysis',
       },
-      icon: 'setting-1',
+      icon: Setting1Icon,
       orderNo: 0,
     },
     children: [

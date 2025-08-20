@@ -14,12 +14,12 @@
         <notice />
         <t-tooltip placement="bottom" :content="t('layout.header.code')" class="header-code-icon">
           <t-button theme="default" shape="square" variant="text" @click="navToGitHub">
-            <t-icon name="logo-github" size="1.3em" />
+            <LogoGithubIcon size="1.3em" />
           </t-button>
         </t-tooltip>
         <t-tooltip placement="bottom" :content="t('layout.header.help')" class="header-code-icon">
           <t-button theme="default" shape="square" variant="text" @click="navToHelper">
-            <t-icon name="help-circle" size="1.3em" />
+            <HelpCircleIcon size="1.3em" />
           </t-button>
         </t-tooltip>
         <t-tooltip
@@ -29,7 +29,7 @@
         >
           <t-dropdown trigger="click">
             <t-button theme="default" shape="square" variant="text">
-              <t-icon name="translate" size="1.3em" />
+              <TranslateIcon size="1.3em" />
             </t-button>
             <t-dropdown-menu>
               <t-dropdown-item
@@ -46,12 +46,12 @@
           <template #dropdown>
             <t-dropdown-menu>
               <t-dropdown-item class="operations-dropdown-container-item" @click="handleNav">
-                <t-icon name="user-circle" size="1.2em" class="header-avatar-icon" />{{
+                <UserCircleIcon size="1.2em" class="header-avatar-icon" />{{
                   t('layout.header.user')
                 }}
               </t-dropdown-item>
               <t-dropdown-item class="operations-dropdown-container-item" @click="handleLogout">
-                <t-icon name="poweroff" size="1.2em" class="header-signout-icon" />{{
+                <PoweroffIcon size="1.2em" class="header-signout-icon" />{{
                   t('layout.header.signOut')
                 }}
               </t-dropdown-item>
@@ -59,12 +59,12 @@
           </template>
           <t-button class="header-user-btn" theme="default" variant="text">
             <template #icon>
-              <t-icon class="header-user-avatar" name="user-circle" size="1.3em" />
+              <UserCircleIcon class="header-user-avatar" size="1.3em" />
             </template>
             <div class="header-user-account" style="font-size: 1.2em">
               {{ userStore.user.name }}
             </div>
-            <template #suffix><t-icon name="chevron-down" size="1.2em" /></template>
+            <template #suffix><ChevronDownIcon size="1.2em" /></template>
           </t-button>
         </t-dropdown>
         <t-tooltip
@@ -78,7 +78,7 @@
             variant="text"
             @click="settingStore.toggleSettingPanel"
           >
-            <t-icon name="setting" size="1.3em" />
+            <SettingIcon size="1.3em" />
           </t-button>
         </t-tooltip>
       </template>
@@ -87,6 +87,15 @@
 </template>
 <script lang="ts" setup>
 import { MessagePlugin } from 'tdesign-vue-next'
+import {
+  ChevronDownIcon,
+  HelpCircleIcon,
+  LogoGithubIcon,
+  PoweroffIcon,
+  SettingIcon,
+  TranslateIcon,
+  UserCircleIcon,
+} from 'tdesign-icons-vue-next'
 
 import { langList, t } from '@/infrastructure/locales'
 import { useLocale } from '@/infrastructure/locales/useLocale'

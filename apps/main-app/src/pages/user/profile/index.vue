@@ -13,7 +13,7 @@
       <t-card class="user-info-list" :title="t('pages.user.personalInfo.title')" :bordered="false">
         <template #actions>
           <t-button theme="default" shape="square" variant="text" @click="handleEditInfo">
-            <t-icon name="ellipsis" />
+            <EllipsisIcon />
           </t-button>
           <t-dialog
             :visible="dialogVisible"
@@ -143,7 +143,7 @@
       <t-card :title="t('pages.user.websiteRecommend')" class="user-team" :bordered="false">
         <template #actions>
           <t-button theme="default" shape="square" variant="text" @click="handleEditRecommend">
-            <t-icon name="ellipsis" />
+            <EllipsisIcon />
           </t-button>
           <t-dialog
             :visible="dialogVisibleRecommend"
@@ -159,7 +159,7 @@
         </template>
         <t-list :split="false">
           <t-list-item v-for="(item, index) in WEBSITE_RECOMMEND" :key="index">
-            <t-icon :name="item.logo" @click="handleNav(item)" style="cursor: pointer" />
+            <component :is="item.logo" @click="handleNav(item)" style="cursor: pointer" />
             <t-list-item-meta :title="item.title" :description="item.description" />
           </t-list-item>
         </t-list>
@@ -170,6 +170,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
+import { EllipsisIcon } from 'tdesign-icons-vue-next'
 
 import { useUserStore } from '@/stores'
 import { getDiffDays, getDatePeriod } from '@/infrastructure/utils'

@@ -1,3 +1,5 @@
+import { UserCircleIcon } from 'tdesign-icons-vue-next'
+
 import Layout from '@/layouts/index.vue'
 
 export default [
@@ -6,7 +8,7 @@ export default [
     name: 'user',
     component: Layout,
     redirect: '/user/profile',
-    meta: { title: { zh_CN: '个人中心', en_US: 'User Center' }, icon: 'user-circle' },
+    meta: { title: { zh_CN: '个人中心', en_US: 'User Center' }, icon: UserCircleIcon },
     children: [
       {
         path: 'profile',
@@ -20,7 +22,7 @@ export default [
     path: '/loginRedirect',
     name: 'loginRedirect',
     redirect: '/login',
-    meta: { title: { zh_CN: '登录页', en_US: 'Login' }, icon: 'user-circle' },
+    meta: { title: { zh_CN: '登录页', en_US: 'Login' }, icon: UserCircleIcon },
     component: () => import('@/layouts/blank.vue'),
     children: [
       {

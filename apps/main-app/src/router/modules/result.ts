@@ -1,9 +1,9 @@
-import Layout from '@/layouts/index.vue'
+import { CheckCircleIcon } from 'tdesign-icons-vue-next'
 
 export default [
   {
     path: '/result',
-    component: Layout,
+    component: () => import('@/layouts/blank.vue'),
     redirect: '/result/success',
     name: 'result',
     meta: {
@@ -11,7 +11,7 @@ export default [
         zh_CN: '结果',
         en_US: 'Result',
       },
-      icon: 'check-circle',
+      icon: CheckCircleIcon,
       orderNo: 0,
     },
     children: [

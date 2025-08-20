@@ -1,3 +1,5 @@
+import { HelpCircleIcon } from 'tdesign-icons-vue-next'
+
 import Layout from '@/layouts/index.vue'
 
 export default [
@@ -11,7 +13,7 @@ export default [
         zh_CN: '帮助',
         en_US: 'Help',
       },
-      icon: 'help-circle',
+      icon: HelpCircleIcon,
       orderNo: 0,
     },
     children: [

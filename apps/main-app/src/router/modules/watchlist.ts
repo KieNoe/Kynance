@@ -1,3 +1,5 @@
+import { StarIcon } from 'tdesign-icons-vue-next'
+
 import Layout from '@/layouts/index.vue'
 
 export default [
@@ -11,7 +13,7 @@ export default [
         zh_CN: '自选股管理',
         en_US: 'Watchlists',
       },
-      icon: 'star',
+      icon: StarIcon,
       orderNo: 0,
     },
     children: [

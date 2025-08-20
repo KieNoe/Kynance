@@ -216,22 +216,7 @@ const renderChart = (data) => {
 }
 
 async function saveBacktest(data) {
-  const savedRecord = await backtestStorage.saveBacktestRecord(data)
-  console.log('保存的回测记录ID:', savedRecord.id)
-}
-
-async function queryBacktestRecords() {
-  // 获取所有回测记录
-  const allRecords = await backtestStorage.getAllBacktestRecords()
-  console.log('所有回测记录:', allRecords)
-
-  // 按策略查询
-  const maRecords = await backtestStorage.getBacktestRecordsByStrategy('ma_cross')
-  console.log('均线交叉策略回测记录:', maRecords)
-
-  // 按股票代码查询
-  const stockRecords = await backtestStorage.getBacktestRecordsBySymbol('000001')
-  console.log('上证指数回测记录:', stockRecords)
+  await backtestStorage.saveBacktestRecord(data)
 }
 
 onMounted(async () => {
@@ -241,7 +226,6 @@ onMounted(async () => {
   }
   try {
     await backtestStorage.init()
-    await queryBacktestRecords()
   } catch (error) {
     console.error('回测存储操作失败:', error)
   }

@@ -23,14 +23,13 @@
         :loading="loading"
         :pagination="pagination"
         @page-change="onPageChange"
-        stripe
         row-key="id"
       >
         <template #date="{ row }">
           {{ formatDate(row.date) }}
         </template>
         <template #strategy="{ row }">
-          <t-tag variant="light" theme="primary">{{ row.backtestConfig.strategy }}</t-tag>
+          <t-tag variant="light">{{ row.backtestConfig.strategy }}</t-tag>
         </template>
         <template #symbol="{ row }">
           {{ row.backtestConfig.symbol }}

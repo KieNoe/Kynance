@@ -1,3 +1,5 @@
+import { NotificationIcon } from 'tdesign-icons-vue-next'
+
 import Layout from '@/layouts/index.vue'
 
 export default [
@@ -11,7 +13,7 @@ export default [
         zh_CN: '通知',
         en_US: 'Notification',
       },
-      icon: 'notification',
+      icon: NotificationIcon,
       orderNo: 0,
     },
     children: [

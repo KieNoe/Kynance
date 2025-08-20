@@ -7,7 +7,7 @@ export default {
   day: '天',
   personalInfo: {
     title: '个人信息',
-    description: '时间与智慧，终将开花结果',
+    description: '每一刻，都是新的开始',
     editTitle: '编辑个人信息',
     desc: {
       name: '昵称',

@@ -8,6 +8,7 @@
           variant="outline"
           @click="handlers[btn.handler]"
           :disabled="btn.handler === 'onDownloadPDF' ? disabled : false"
+          :loading="isLoading"
         >
           <template #icon><t-icon :name="btn.icon" /></template>
         </t-button>
@@ -61,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import html2pdf from 'html2pdf.js'
 

@@ -1,3 +1,5 @@
+import { ChartLineIcon } from 'tdesign-icons-vue-next'
+
 import Layout from '@/layouts/index.vue'
 
 export default [
@@ -11,7 +13,7 @@ export default [
         zh_CN: '回测',
         en_US: 'Backtest',
       },
-      icon: 'chart-line',
+      icon: ChartLineIcon,
       orderNo: 0,
     },
     children: [

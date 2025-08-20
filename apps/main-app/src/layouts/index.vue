@@ -27,13 +27,14 @@ import setting from './setting.vue'
   .inner-layout-content {
     flex: 1;
   }
+
   &::-webkit-scrollbar {
-    width: 8px;
+    width: 0.5rem;
     background: transparent;
   }
 
   &::-webkit-scrollbar-thumb {
-    border-radius: 6px;
+    border-radius: 0.375rem;
     border: 2px solid transparent;
     background-clip: content-box;
     background-color: var(--td-scrollbar-color);
