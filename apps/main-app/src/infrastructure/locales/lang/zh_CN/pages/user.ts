@@ -5,10 +5,10 @@ export default {
   markDay1: '今天是你使用 Kynance 以来的第 ',
   markDay2: ' 天',
   day: '天',
+  editTitle: '编辑个人信息',
   personalInfo: {
     title: '个人信息',
     description: '每一刻，都是新的开始',
-    editTitle: '编辑个人信息',
     desc: {
       name: '昵称',
       telephone: '手机号',
@@ -39,10 +39,11 @@ export default {
     },
     normal: '用户',
     admin: '管理员',
-  },
-  message: {
-    success: '修改成功',
-    fail: '修改失败',
+
+    message: {
+      success: '修改成功',
+      fail: '修改失败',
+    },
   },
   refreshed: '刷新成功',
   recentProfit: '近期盈亏',

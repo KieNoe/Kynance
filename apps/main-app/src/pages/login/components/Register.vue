@@ -134,6 +134,7 @@ import { ref } from 'vue'
 import { BrowseIcon, BrowseOffIcon, LockOnIcon, MailIcon } from 'tdesign-icons-vue-next'
 
 import { useCounter } from '@/infrastructure/hook'
+import { useUserStore } from '@/stores'
 
 const INITIAL_DATA = {
   phone: '',
@@ -142,6 +143,8 @@ const INITIAL_DATA = {
   verifyCode: '',
   checked: false,
 }
+
+const userStore = useUserStore()
 
 const form = ref()
 const formData = ref({ ...INITIAL_DATA })
@@ -157,16 +160,31 @@ const showPsw = ref(false)
 
 const [countDown, handleCounter] = useCounter()
 
-const emit = defineEmits(['registerSuccess'])
-
-const onSubmit = (ctx) => {
+const onSubmit = async (ctx) => {
   if (ctx.validateResult === true) {
     if (!formData.value.checked) {
       MessagePlugin.error('请同意Kynance服务协议和Kynance 隐私声明')
       return
     }
+    await userStore.login({
+      token: '123456',
+      permission: 1,
+      name: 'admin',
+      id: '927115',
+      avatar: '',
+      password: 'admin',
+      email: 'Account@qq.com',
+      createdData: '2025-01-01',
+      description: 'git push origin life --force',
+      usingTime: 10,
+      activeTime: 10,
+      totalMoney: 10,
+      heldStocks: ['A', 'B', 'C'],
+      telephone: 13923734567,
+      yield: 0.0047,
+      ...formData.value,
+    })
     MessagePlugin.success('注册成功')
-    emit('registerSuccess')
   }
 }
 </script>
