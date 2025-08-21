@@ -1,0 +1,129 @@
+.dashboard-container {
+  padding: 1rem;
+
+  .firstRow {
+    display: flex;
+    justify-content: space-between;
+
+    .right {
+      .feature-card {
+        height: 100%;
+        cursor: pointer;
+        transition: transform 0.3s;
+
+        &:hover {
+          transform: translateY(-0.25rem);
+        }
+
+        &-0 {
+          border-left: 0.25rem solid var(--td-brand-color);
+          margin-bottom: 1.25rem;
+        }
+
+        &-1 {
+          border-left: 0.25rem solid var(--td-success-color);
+          margin-bottom: 1.25rem;
+        }
+
+        &-2 {
+          border-left: 0.25rem solid var(--td-warning-color);
+        }
+      }
+    }
+
+    .welcome-card {
+      margin-bottom: 1rem;
+      padding-top: 1.6875rem;
+      width: 34.1875rem;
+      height: 20.6rem;
+
+      .welcome-header {
+        display: flex;
+        align-items: center;
+
+        .avatar {
+          margin-right: 1.25rem;
+        }
+
+        .welcome-info {
+          display: flex;
+          flex-direction: column;
+
+          .welcome-title {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+          }
+
+          .welcome-subtitle {
+            margin: 0.25rem 0 0;
+            color: var(--td-text-color-secondary);
+          }
+        }
+      }
+    }
+  }
+
+  .feature-cards {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+
+    .left {
+      .notification {
+        margin: 0 0 1.25rem 0;
+        box-shadow: none;
+        width: 27rem;
+
+        &:hover {
+          transform: translateY(-0.1875rem);
+          transition: all 0.3s;
+        }
+      }
+    }
+
+    .market-overview-card {
+      width: 33.125rem;
+
+      .chart-container {
+        margin-left: 1.25rem;
+        height: 18.75rem;
+        width: 100%;
+      }
+    }
+  }
+
+  .stock-item {
+    display: flex;
+    justify-content: space-between;
+
+    .stock-name {
+      font-weight: 500;
+      margin-right: 0.5rem;
+    }
+
+    .stock-code {
+      color: var(--td-text-color-secondary);
+      margin-right: auto;
+    }
+
+    .price-up {
+      color: #e74c3c;
+    }
+
+    .price-down {
+      color: #2ecc71;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .welcome-header {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .avatar {
+        margin-bottom: 0.75rem;
+      }
+    }
+  }
+}
