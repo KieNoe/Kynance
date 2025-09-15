@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, reactive, ref, shallowRef } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, shallowRef } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { changeCharts, getInitialOptions, getOptions } from '@kynance/chart-core'
 
@@ -166,9 +166,19 @@ const handleDropdownClick = async (key, data) => {
 }
 
 onMounted(() => {
-  nextTick(async () => {
-    watchListStore.setCurrentStockCode('07000.HK')
-    if (mainChart.value) {
+  const tryInitialize = async (attempt = 0) => {
+    const maxAttempts = 10 // 最大尝试次数
+    const retryDelay = 300 // 重试间隔（ms）
+
+    // 尝试通过ID获取DOM元素
+    const chartElements = OPTIONS.CHARTS.map((chartId) => document.getElementById(chartId))
+    const allElementsFound = chartElements.every((el) => el !== null)
+
+    if (allElementsFound) {
+      chartElements.forEach((el, index) => {
+        charts[index].ref.value = el
+      })
+
       try {
         await stockDataStore.initStockData(getDayData)
         await initCharts(
@@ -179,8 +189,13 @@ onMounted(() => {
       } catch (err) {
         handleError(err)
       }
+    } else if (attempt < maxAttempts) {
+      setTimeout(() => tryInitialize(attempt + 1), retryDelay)
     }
-  })
+  }
+
+  // Start the initialization process
+  tryInitialize()
 })
 </script>
 

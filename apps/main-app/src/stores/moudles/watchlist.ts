@@ -44,7 +44,9 @@ export const useWatchListStore = defineStore('watchList', () => {
     try {
       const storedData = localStorage.getItem(STORAGE_KEY)
       if (storedData) {
-        return JSON.parse(storedData)
+        const parsed = JSON.parse(storedData)
+        // 简单验证是否是数组
+        return Array.isArray(parsed) ? parsed : []
       }
     } catch (err) {
       console.error('从本地存储加载自选股失败:', err)
@@ -113,7 +115,7 @@ export const useWatchListStore = defineStore('watchList', () => {
     }
   }
 
-  async function fetchWatchlist(Get) {
+  async function fetchWatchlist() {
     loading.value = true
     error.value = null
 
@@ -124,8 +126,8 @@ export const useWatchListStore = defineStore('watchList', () => {
       if (localStocks.length > 0) {
         stocks.value = localStocks
       } else {
-        // 如果本地没有数据，则从服务器获取
-        const mockData: any = [
+        // 使用默认数据
+        stocks.value = [
           {
             id: 'stock_1754112865248_261',
             code: '00700.HK',
@@ -168,18 +170,11 @@ export const useWatchListStore = defineStore('watchList', () => {
             pb: 9.46,
             isSelected: false,
           },
-        ]
+          // 其他默认股票...
+        ].map((stock) => ({ ...stock, isSelected: true }))
 
-        stocks.value = mockData.map((stock) => ({
-          ...stock,
-          isSelected: true,
-        }))
-
-        // 保存初始数据到本地
         saveToLocalStorage()
       }
-
-      stocks.value = await Get(stocks.value)
 
       // 默认选中第一个
       if (stocks.value.length > 0 && !currentStock.value) {

@@ -148,11 +148,10 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { MessagePlugin, DialogPlugin } from 'tdesign-vue-next'
 import { AddIcon, DeleteIcon, RefreshIcon, SearchIcon } from 'tdesign-icons-vue-next'
 
-import { getWatchList, getSearchList } from '@/services/client'
 import { useWatchListStore } from '@/stores'
 import { t } from '@/infrastructure/locales'
 
-import { COLUMNS,SEARCH_COLUMNS } from './contast'
+import { COLUMNS,SEARCH_COLUMNS, WATCH_LIST} from './contast'
 
 // 初始化 store
 const watchListStore = useWatchListStore()
@@ -188,21 +187,11 @@ const paginatedStocks = computed(() => {
 
 const hasSelected = computed(() => selectedRowKeys.value.length > 0)
 
-// 生命周期钩子
-onMounted(async () => {
-  await fetchData()
-})
-
-// 监听搜索文本变化，重置页码
-watch(searchText, () => {
-  currentPage.value = 1
-})
-
 // 方法
 async function fetchData() {
   loading.value = true
   try {
-    await watchListStore.fetchWatchlist(getWatchList)
+    await watchListStore.fetchWatchlist()
   } catch (error) {
     MessagePlugin.error(t('pages.watchList.base.fetchError'))
     console.error(error)
@@ -302,7 +291,7 @@ function showAddStockModal() {
 async function searchStocks() {
   const keyword = stockSearchText.value
 
-  const mockSearchResults = await getWatchList(await getSearchList())
+  const mockSearchResults = WATCH_LIST
 
   if(Array.isArray(mockSearchResults)){
 
@@ -338,6 +327,17 @@ function handleAddStocks() {
   addModalVisible.value = false
   return true
 }
+
+
+// 监听搜索文本变化，重置页码
+watch(searchText, () => {
+  currentPage.value = 1
+})
+
+// 生命周期钩子
+onMounted(async () => {
+  await fetchData()
+})
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <t-header>
-    <t-head-menu value="item1" height="120px">
+    <t-head-menu value="item1" height="7.5rem">
       <template #logo>
         <img
           width="136"
@@ -123,6 +123,7 @@ const navToHome = () => {
 }
 const handleLogout = async () => {
   await userStore.logout()
+  router.push('/login')
   MessagePlugin.success('退出成功')
 }
 const handleNav = () => {

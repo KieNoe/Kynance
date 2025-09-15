@@ -1,0 +1,66 @@
+name: Auto Deploy # 工作流名称
+
+on:
+  push:
+    branches:
+      - master # 仅当推送至 master 分支时触发部署
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # 使用 GitHub 提供的最新 Ubuntu 环境
+
+    steps:
+      # 1. 检出代码仓库
+      - name: Checkout repository
+        uses: actions/checkout@v4 # 使用官方 Action 检出代码
+
+      # 2. 安装 Node.js 环境
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.2' # 指定 Node.js 版本,可以自选
+
+      # 3. 安装项目依赖
+      - name: Install dependencies
+        run: npm install # 安装项目所需的 npm 包
+
+      # 4. 构建并压缩 dist 内容
+      - name: Build and Zip
+        run: |
+          sudo apt-get update && sudo apt-get install -y zip  # 安装 zip 工具
+          npm run build:main  # 执行 Vue 项目构建
+          cd ./apps/main-app/dist  # 进入 dist 目录
+          zip -r ../dist-content.zip ./*  # 压缩 dist 内容（不包含 dist 文件夹）
+
+      # 5. 上传 dist-content.zip（可选，用于调试）
+      - name: Upload dist-content.zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-content # 构建产物名称
+          path: dist-content.zip # 构建产物路径
+
+      # 6. 通过 SCP 将 dist-content.zip 传输到服务器
+      - name: Transfer dist-content.zip via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }} # 服务器 IP（从 GitHub Secrets 获取）
+          username: ${{ secrets.SSH_USERNAME }} # SSH 用户名（从 GitHub Secrets 获取）
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # SSH 私钥（从 GitHub Secrets 获取）
+          source: 'dist-content.zip' # 本地文件路径
+          target: ${{ secrets.DEPLOY_DIR }} # 服务器目标目录（从 GitHub Secrets 获取）
+
+      # 7. SSH 登录服务器并执行部署脚本
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            shopt -s extglob  # 启用 Bash 的扩展 glob 模式（支持 !(pattern) 语法）
+            DEPLOY_DIR=${{ secrets.DEPLOY_DIR }}  # 从 GitHub Secrets 获取部署目录路径
+            cd $DEPLOY_DIR  # 进入部署目录
+            rm -rf !(dist-content.zip)  # 删除所有文件，但保留 dist-content.zip
+            unzip -o dist-content.zip  # 解压 dist-content.zip（-o 保留符号链接）
+            rm -f dist-content.zip  # 删除 zip 文件（可选）
+            nginx -s reload  # 重载 Nginx 服务（确保 Nginx 配置正确）

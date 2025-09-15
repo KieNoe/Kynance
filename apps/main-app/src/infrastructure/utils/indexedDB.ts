@@ -72,19 +72,16 @@ export function openDB(
     // 数据库打开成功回调
     request.onsuccess = (event) => {
       const db = (event.target as IDBOpenDBRequest).result
-      console.log('数据库打开成功')
       resolve(db)
     }
 
     // 数据库打开失败的回调
-    request.onerror = (event) => {
-      console.error('数据库打开失败', event)
+    request.onerror = () => {
       reject(new Error('数据库打开失败'))
     }
 
     // 数据库有更新时候的回调
     request.onupgradeneeded = (event) => {
-      console.log('数据库升级中...')
       const db = (event.target as IDBOpenDBRequest).result
 
       // 如果提供了存储对象配置，则创建存储对象
@@ -141,22 +138,17 @@ export function addData<T>(db: IDBDatabase, storeName: string, data: T): Promise
       const request = store.add(data)
 
       request.onsuccess = () => {
-        console.log('数据写入成功')
         resolve(data)
       }
 
-      request.onerror = (event) => {
-        console.error('数据写入失败', event)
+      request.onerror = () => {
         reject(new Error('数据写入失败'))
       }
 
       // 事务完成监听
-      transaction.oncomplete = () => {
-        console.log('事务完成')
-      }
+      transaction.oncomplete = () => {}
 
-      transaction.onerror = (event) => {
-        console.error('事务错误', event)
+      transaction.onerror = () => {
         reject(new Error('事务错误'))
       }
     } catch (error) {
@@ -199,8 +191,7 @@ export function addBatchData<T>(db: IDBDatabase, storeName: string, dataList: T[
           }
         }
 
-        request.onerror = (event) => {
-          console.error('批量添加数据项失败', event)
+        request.onerror = () => {
           errors.push(new Error('批量添加数据项失败'))
           completed++
           if (completed === dataList.length) {
@@ -209,8 +200,7 @@ export function addBatchData<T>(db: IDBDatabase, storeName: string, dataList: T[
         }
       })
 
-      transaction.onerror = (event) => {
-        console.error('批量添加事务错误', event)
+      transaction.onerror = () => {
         reject(new Error('批量添加事务错误'))
       }
     } catch (error) {
@@ -241,8 +231,7 @@ export function getDataByKey<T>(
         resolve(request.result as T)
       }
 
-      request.onerror = (event) => {
-        console.error('通过主键查询失败', event)
+      request.onerror = () => {
         reject(new Error('通过主键查询失败'))
       }
     } catch (error) {
@@ -268,8 +257,7 @@ export function getAllData<T>(db: IDBDatabase, storeName: string): Promise<T[]> 
         resolve(request.result as T[])
       }
 
-      request.onerror = (event) => {
-        console.error('获取所有数据失败', event)
+      request.onerror = () => {
         reject(new Error('获取所有数据失败'))
       }
     } catch (error) {
@@ -298,13 +286,11 @@ export function cursorGetData<T>(db: IDBDatabase, storeName: string): Promise<T[
           list.push(cursor.value as T)
           cursor.continue()
         } else {
-          console.log('游标读取完成')
           resolve(list)
         }
       }
 
-      request.onerror = (event) => {
-        console.error('游标读取失败', event)
+      request.onerror = () => {
         reject(new Error('游标读取失败'))
       }
     } catch (error) {
@@ -338,8 +324,7 @@ export function getDataByIndex<T>(
         resolve(request.result as T)
       }
 
-      request.onerror = (event) => {
-        console.error('通过索引查询失败', event)
+      request.onerror = () => {
         reject(new Error('通过索引查询失败'))
       }
     } catch (error) {
@@ -373,8 +358,7 @@ export function getAllDataByIndex<T>(
         resolve(request.result as T[])
       }
 
-      request.onerror = (event) => {
-        console.error('通过索引获取所有数据失败', event)
+      request.onerror = () => {
         reject(new Error('通过索引获取所有数据失败'))
       }
     } catch (error) {
@@ -411,13 +395,11 @@ export function cursorGetDataByIndex<T>(
           list.push(cursor.value as T)
           cursor.continue()
         } else {
-          console.log('索引游标读取完成')
           resolve(list)
         }
       }
 
-      request.onerror = (event) => {
-        console.error('索引游标读取失败', event)
+      request.onerror = () => {
         reject(new Error('索引游标读取失败'))
       }
     } catch (error) {
@@ -471,17 +453,14 @@ export function cursorGetDataByIndexAndPage<T>(
           if (counter < pageSize) {
             cursor.continue()
           } else {
-            console.log('分页查询完成')
             resolve(list)
           }
         } else {
-          console.log('分页查询完成')
           resolve(list)
         }
       }
 
-      request.onerror = (event) => {
-        console.error('分页查询失败', event)
+      request.onerror = () => {
         reject(new Error('分页查询失败'))
       }
     } catch (error) {
@@ -505,12 +484,10 @@ export function updateData<T>(db: IDBDatabase, storeName: string, data: T): Prom
       const request = store.put(data)
 
       request.onsuccess = () => {
-        console.log('数据更新成功')
         resolve(data)
       }
 
-      request.onerror = (event) => {
-        console.error('数据更新失败', event)
+      request.onerror = () => {
         reject(new Error('数据更新失败'))
       }
     } catch (error) {
@@ -538,12 +515,10 @@ export function deleteData(
       const request = store.delete(key)
 
       request.onsuccess = () => {
-        console.log('数据删除成功')
         resolve()
       }
 
-      request.onerror = (event) => {
-        console.error('数据删除失败', event)
+      request.onerror = () => {
         reject(new Error('数据删除失败'))
       }
     } catch (error) {
@@ -568,7 +543,8 @@ export function deleteDataByIndex(
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
-      let deleteCount = 0
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      let deleteCount = 1
       const transaction = db.transaction([storeName], 'readwrite')
       const store = transaction.objectStore(storeName)
       const index = store.index(indexName)
@@ -581,23 +557,17 @@ export function deleteDataByIndex(
           const deleteRequest = cursor.delete()
           deleteCount++
 
-          deleteRequest.onsuccess = () => {
-            console.log('游标删除记录成功')
-          }
+          deleteRequest.onsuccess = () => {}
 
-          deleteRequest.onerror = (event) => {
-            console.error('游标删除记录失败', event)
-          }
+          deleteRequest.onerror = () => {}
 
           cursor.continue()
         } else {
-          console.log(`共删除 ${deleteCount} 条记录`)
           resolve()
         }
       }
 
-      request.onerror = (event) => {
-        console.error('索引游标删除失败', event)
+      request.onerror = () => {
         reject(new Error('索引游标删除失败'))
       }
     } catch (error) {
@@ -620,12 +590,10 @@ export function clearStore(db: IDBDatabase, storeName: string): Promise<void> {
       const request = store.clear()
 
       request.onsuccess = () => {
-        console.log('存储对象已清空')
         resolve()
       }
 
-      request.onerror = (event) => {
-        console.error('清空存储对象失败', event)
+      request.onerror = () => {
         reject(new Error('清空存储对象失败'))
       }
     } catch (error) {
@@ -651,8 +619,7 @@ export function countRecords(db: IDBDatabase, storeName: string): Promise<number
         resolve(request.result)
       }
 
-      request.onerror = (event) => {
-        console.error('获取记录数量失败', event)
+      request.onerror = () => {
         reject(new Error('获取记录数量失败'))
       }
     } catch (error) {
@@ -668,7 +635,6 @@ export function countRecords(db: IDBDatabase, storeName: string): Promise<number
 export function closeDB(db: IDBDatabase): void {
   if (db) {
     db.close()
-    console.log('数据库已关闭')
   }
 }
 
@@ -689,12 +655,10 @@ export function deleteDatabase(dbName: string): Promise<void> {
     const request = indexedDB.deleteDatabase(dbName)
 
     request.onsuccess = () => {
-      console.log(`数据库 ${dbName} 已删除`)
       resolve()
     }
 
-    request.onerror = (event) => {
-      console.error(`删除数据库 ${dbName} 失败`, event)
+    request.onerror = () => {
       reject(new Error(`删除数据库 ${dbName} 失败`))
     }
   })

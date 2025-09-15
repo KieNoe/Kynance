@@ -3,7 +3,7 @@ import path from 'node:path'
 
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import { visualizer } from 'rollup-plugin-visualizer'
+// import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig, loadEnv } from 'vite'
 import { viteMockServe } from 'vite-plugin-mock'
 import svgLoader from 'vite-svg-loader'
@@ -33,14 +33,14 @@ export default defineConfig({
   },
   build: {
     sourcemap: process.env.VITE_ENV === 'development', // 开启生产环境的 sourcemap
-    rollupOptions: {
-      plugins: [
-        visualizer({
-          filename: 'stats.html', // 默认在项目根目录下生成stats.html文件，可自定义
-          open: true, //生成后自动打开浏览器查看
-        }),
-      ],
-    },
+    // rollupOptions: {
+    //   plugins: [
+    //     visualizer({
+    //       filename: 'stats.html', // 默认在项目根目录下生成stats.html文件，可自定义
+    //       open: true, //生成后自动打开浏览器查看
+    //     }),
+    //   ],
+    // },
   },
   server: {
     port: 3005,

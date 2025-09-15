@@ -5,7 +5,7 @@ import { MessagePlugin } from 'tdesign-vue-next'
 
 import { useUserStore } from '@/stores'
 
-const isDevelopment = import.meta.env.VITE_ENV === 'development'
+const isDevelopment = import.meta.env.MODE === 'development'
 
 const userStore = useUserStore()
 
@@ -42,7 +42,7 @@ export const alovaInstance = createAlova({
     }
   },
   responded: {
-    onSuccess: async (response, method) => {
+    onSuccess: async (response) => {
       if (response.status >= 400) {
         MessagePlugin.error(String(response.status), 1500)
       }

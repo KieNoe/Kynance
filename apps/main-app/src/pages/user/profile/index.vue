@@ -128,8 +128,8 @@
               @change="onDateChange"
             />
           </template>
-          <div class="charts-wrapper" v-for="chart in ['lineChart']" :key="chart">
-            <div :id="chart" :ref="chart" style="width: 51.7vw; height: 328px"></div>
+          <div class="charts-wrapper">
+            <div id="lineChart" ref="lineChart" style="width: 51.7vw; height: 328px"></div>
           </div>
         </t-card>
       </t-card>

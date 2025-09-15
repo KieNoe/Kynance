@@ -27,6 +27,8 @@ const active = computed(() => getActive())
 }
 .side-nav {
   position: fixed;
+  top: var(--td-comp-size-xxxl);
+  left: 0;
   height: 100%;
   width: 232px;
 }

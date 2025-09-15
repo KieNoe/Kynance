@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+
+  "compilerOptions": {
+    "moduleResolution": "nodenext",
+    "target": "es2018",
+    "module": "nodenext",
+    "composite": true,
+    "noEmit": false
+  },
+  "include": ["src/services/client.ts"]
+}

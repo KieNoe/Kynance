@@ -40,7 +40,7 @@
           class="faq-item"
         >
           <div class="faq-answer">
-            <div v-html="item.answer"></div>
+            <div>{{ item.answer }}</div>
 
             <div class="feedback-section">
               <p class="feedback-question">{{ t('pages.help.question') }}</p>
@@ -74,15 +74,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue'
 import { SearchIcon, ThumbUpIcon, ThumbDownIcon } from 'tdesign-icons-vue-next'
 import { MessagePlugin } from 'tdesign-vue-next'
 
 import { t } from '@/infrastructure/locales'
 
-import { CATEGORIES, FAQ_DATA } from './contast'
+import { CATEGORIES, FAQ_DATA } from './constants'
 
-// 响应式状态
 const activeTab = ref('all')
 const searchKeyword = ref('')
 const expandedIds = ref([])
@@ -137,16 +136,23 @@ const handlePageSizeChange = (size) => {
 const handleFeedback = (id, isHelpful) => {
   // 实际应用中，这里应该发送请求到后端记录反馈
   MessagePlugin.success(
-    t('pages.help.thank.feedback') + isHelpful
-      ? t('pages.help.thank.good')
-      : t('pages.help.thank.bad'),
+    t('pages.help.thank.feedback') +
+      (isHelpful ? t('pages.help.thank.good') : t('pages.help.thank.bad')),
   )
 }
+
+const stopWatch = watch(activeTab, () => {
+  currentPage.value = 1 // 切换分类时，重置到第一页
+})
 
 // 生命周期钩子
 onMounted(() => {
   // 初始化时可以加载数据，这里使用的是静态数据
   totalItems.value = FAQ_DATA.length
+})
+
+onBeforeUnmount(() => {
+  stopWatch()
 })
 </script>
 

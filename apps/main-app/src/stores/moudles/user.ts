@@ -14,7 +14,7 @@ export const useUserStore = defineStore('user', () => {
           name: 'kienoe',
           id: '927115',
           avatar: '',
-          token: '1',
+          token: '',
           password: '123456',
           permission: 0,
           email: 'Account@qq.com',
@@ -46,7 +46,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const logout: () => void = () => {
-    user.token = '1'
+    user.token = ''
     user.permission = 0
     user.name = 'kienoe'
     user.id = '927115'
@@ -65,10 +65,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const login: (userInfo: UserInfo) => void = (userInfo) => {
-    user = {
-      ...user,
-      ...userInfo,
-    }
+    user = Object.assign(user, userInfo)
     saveToLocalStorage() // 登录时保存状态
   }
 
