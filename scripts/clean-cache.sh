@@ -18,8 +18,8 @@ rm -rf node_modules/.vite
 find . -type d -name 'dist' -exec rm -rf {} +
 find . -type d -name '.vite' -exec rm -rf {} +
 
-echo "🪣 清理 Turborepo 缓存（如果有用）..."
-rm -rf .turbo
+# echo "🪣 清理 Turborepo 缓存（如果有用）..."
+# rm -rf .turbo
 
 echo "🧹 apps/ 和 packages/ 中逐个清理 node_modules..."
 for dir in apps/* packages/*; do
