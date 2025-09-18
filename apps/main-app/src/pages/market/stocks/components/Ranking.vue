@@ -58,11 +58,11 @@
 </template>
 
 <script lang="tsx" setup>
-import colaImg from '@/assets/assets-cola.png'
-import ideaImg from '@/assets/assets-idea.png'
-import xiaoyanImg from '@/assets/assets-xiaoyan.png'
-import moneyImg from '@/assets/assets-money.png'
-import redImg from '@/assets/assets-red.png'
+import colaImg from '@/assets/assets-cola.webp'
+import ideaImg from '@/assets/assets-idea.webp'
+import xiaoyanImg from '@/assets/assets-xiaoyan.webp'
+import moneyImg from '@/assets/assets-money.webp'
+import redImg from '@/assets/assets-red.webp'
 import { ref, onMounted, shallowRef } from 'vue'
 import { MessagePlugin, TableProps } from 'tdesign-vue-next'
 

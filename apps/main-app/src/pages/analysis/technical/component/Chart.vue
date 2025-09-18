@@ -59,7 +59,7 @@
           <div>
             <p>很抱歉，先生，虽然让您遇到了数据单一的问题</p>
             <p>但KieNoe保证，会提供除帮助以外的一切支持</p>
-            <img src="@/assets/assets-maodie.jpg" />
+            <img src="@/assets/assets-maodie.webp" />
           </div>
         </t-space>
       </t-dialog>

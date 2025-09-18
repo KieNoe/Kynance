@@ -66,7 +66,7 @@
 import { MessagePlugin } from 'tdesign-vue-next'
 import { computed, ref } from 'vue'
 
-import Egg from '@/assets/assets-coloredEgg.png'
+import Egg from '@/assets/assets-coloredEgg.webp'
 import { t } from '@/infrastructure/locales'
 
 const props = defineProps({

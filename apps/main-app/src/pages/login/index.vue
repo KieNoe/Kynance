@@ -33,7 +33,7 @@
       </transition>
     </div>
   </div>
-  <img src="@/assets/assets-login-sideImage.png" alt="" class="side-image" />
+  <img src="@/assets/assets-login-sideImage.webp" alt="" class="side-image" />
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'

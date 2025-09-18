@@ -10,32 +10,24 @@ export const zh = defineConfig({
       text: '在 GitHub 上编辑此页面',
     },
     nav: [
-      { text: '主页', link: '/zh/' },
-      { text: '例子', link: '/zh/markdown-examples' },
+      { text: '主页', link: '/' },
+      { text: '功能', link: '/feature' },
+      { text: '技术展示', link: '/technical' },
+      { text: '行为规范', link: '/actions' },
+      { text: '联系与支持', link: '/contact' },
       {
         text: `v${pkg.version}`,
         items: [
           {
             text: 'Changelog',
-            link: '',
+            link: '/CHANGELOG.md',
           },
         ],
       },
     ],
-    sidebar: {
-      '/zh/': [
-        {
-          text: '例子',
-          items: [
-            { text: 'Markdown 例子', link: '/zh/markdown-examples' },
-            { text: '运行时 API 例子', link: '/zh/api-examples' },
-          ],
-        },
-      ],
-    },
     socialLinks: [{ icon: 'github', link: 'https://github.com/KieNoe/Kynance' }],
     footer: {
-      message: '基于 MIT 许可证发布。',
+      message: `基于 MIT 许可证发布 苏ICP备2025171457号-2`,
       copyright: '版权 © 2025-present KieNoe',
     },
   },

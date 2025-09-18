@@ -3,7 +3,7 @@ import pkg from '../../../package.json';
 
 export const en = defineConfig({
   lang: 'en',
-  description: 'A professional stock data visualization analysis platform',
+  description: 'A professional-grade stock visualization and analysis platform',
   themeConfig: {
     editLink: {
       pattern: '',
@@ -11,31 +11,23 @@ export const en = defineConfig({
     },
     nav: [
       { text: 'Home', link: '/en/' },
-      { text: 'Examples', link: '/en/markdown-examples' },
+      { text: 'Features', link: '/en/feature' },
+      { text: 'Technical Showcase', link: '/en/technical' },
+      { text: 'Code of Conduct', link: '/en/actions' },
+      { text: 'Contact & Support', link: '/en/contact' },
       {
         text: `v${pkg.version}`,
         items: [
           {
             text: 'Changelog',
-            link: '',
+            link: '/en/CHANGELOG.md',
           },
         ],
       },
     ],
-    sidebar: {
-      '/': [
-        {
-          text: 'Examples',
-          items: [
-            { text: 'Markdown Examples', link: '/en/markdown-examples' },
-            { text: 'Runtime API Examples', link: '/en/api-examples' },
-          ],
-        },
-      ],
-    },
     socialLinks: [{ icon: 'github', link: 'https://github.com/KieNoe/Kynance' }],
     footer: {
-      message: 'Released under the MIT License',
+      message: `Released under the MIT License 苏ICP备2025171457号-2`,
       copyright: 'Copyright © 2025-present KieNoe',
     },
   },

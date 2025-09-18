@@ -48,7 +48,7 @@ export const getActive = (maxLevel = 3): string => {
 }
 
 const router = createRouter({
-  history: createWebHistory(env === 'production' ? '/' : import.meta.env.VITE_BASE_URL),
+  history: createWebHistory(env === 'production' ? '/app/' : '/'),
   routes: allRoutes,
   scrollBehavior() {
     return {

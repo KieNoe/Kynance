@@ -28,12 +28,12 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { useSettingStore } from '@/stores'
 import { useStockDataStore } from '@/stores'
-import KLinePngLight from '@/assets/assets-kline-light.png'
-import RsiPngLight from '@/assets/assets-RSI-light.png'
-import StockPngLight from '@/assets/assets-stock-light.png'
-import StockPngDark from '@/assets/assets-stock-dark.png'
-import KLinePngDark from '@/assets/assets-KLine-dark.png'
-import RsiPngDark from '@/assets/assets-RSI-dark.png'
+import KLinePngLight from '@/assets/assets-kline-light.webp'
+import RsiPngLight from '@/assets/assets-RSI-light.webp'
+import StockPngLight from '@/assets/assets-stock-light.webp'
+import StockPngDark from '@/assets/assets-stock-dark.webp'
+import KLinePngDark from '@/assets/assets-KLine-dark.webp'
+import RsiPngDark from '@/assets/assets-RSI-dark.webp'
 
 const stockDataStore = useStockDataStore()
 const settingStore = useSettingStore()

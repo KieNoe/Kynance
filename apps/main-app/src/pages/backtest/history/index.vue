@@ -18,12 +18,14 @@
 
       <t-table
         :data="displayRecords"
+        :scroll="{ type: 'virtual' }"
         :columns="columns as any"
         :hover="true"
         :loading="loading"
         :pagination="pagination"
         @page-change="onPageChange"
         row-key="id"
+        :lazy-load="true"
       >
         <template #date="{ row }">
           {{ formatDate(row.date) }}

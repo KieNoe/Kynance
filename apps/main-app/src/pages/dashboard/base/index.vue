@@ -68,27 +68,24 @@
       </div>
 
       <!-- 市场概览图表 -->
-      <t-card :title="t('pages.dashboard.market')" :bordered="false" class="market-overview-card">
-        <div ref="chartContainer" class="chart-container"></div>
-      </t-card>
+      <Chart />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, computed, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router'
-import * as echarts from 'echarts'
 
 import { useUserStore } from '@/stores'
 import { t } from '@/infrastructure/locales'
 
-import { FEATURES, OPTIONS, STATISTICS, NOTIFICATIONS } from './contast'
+import { FEATURES, STATISTICS, NOTIFICATIONS } from './constant'
+
+const Chart = defineAsyncComponent(() => import('./components/ChartContainer.vue'))
 
 const router = useRouter()
 const userStore = useUserStore()
-const chartContainer = ref<HTMLElement | null>(null)
-let chart = null
 
 // 数据部分
 const userAvatar = ref('https://tdesign.gtimg.com/site/avatar.jpg')
@@ -108,23 +105,6 @@ const currentDate = computed(() => {
 const navigateTo = (route) => {
   router.push(route)
 }
-
-const initChart = () => {
-  if (chartContainer.value) {
-    chart = echarts.init(chartContainer.value)
-    chart.setOption(OPTIONS)
-  }
-}
-
-const handleResize = () => {
-  chart?.resize()
-}
-
-// 生命周期
-onMounted(() => {
-  initChart()
-  window.addEventListener('resize', handleResize)
-})
 </script>
 
 <style scoped lang="less">
