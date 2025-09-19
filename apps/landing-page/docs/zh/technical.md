@@ -6,150 +6,460 @@
 
 - **框架**: Vue 3 + TypeScript
 - **状态管理**: Pinia
-- **UI组件库**: 定制化组件系统
+- **UI组件库**: TDesign
 - **构建工具**: Vite
 - **包管理**: pnpm + Monorepo
+- **规范**: commitlint + husky + lint-staged + eslint + prettier + git-cz
 
 ## 核心技术亮点
 
 ### 高性能图表系统
 
-![技术分析图表](../public/technical-analysis.png)
+我们实现了高效的图表渲染系统，通过分块加载和增量渲染技术，可以流畅处理百万级数据点：
 
-- **多样化图表类型**：支持K线图、折线图、柱状图、饼图等多种图表类型
-- **断层数据处理**：智能处理交易时段中断（如午休时段）的数据展示
-- **自定义指标组合**：用户可自由配置K线与技术指标（MACD/RSI/MA等）的组合展示
-- **高级交互功能**：
-  - 图表拖动与缩放
-  - 区域选择分析
-  - 多图表联动
-  - 十字光标同步
-
-### 实时数据处理
-
-- **WebSocket实时连接**：建立高效的实时数据通道
-- **增量数据更新**：只传输变化数据，减少网络负载
-- **数据缓冲与平滑处理**：确保数据更新不影响UI流畅度
-- **自动重连机制**：网络波动时智能恢复连接
+```ts
+// 分块加载数据核心实现
+function loadDataInChunks(chart, totalData, chunkSize) {
+  let renderedCount = 0;
+  function addChunk() {
+    const chunk = totalData.slice(renderedCount, renderedCount + chunkSize);
+    chart.appendData({ seriesIndex: 0, data: chunk });
+    renderedCount += chunkSize;
+    if (renderedCount < totalData.length) setTimeout(addChunk, 100);
+  }
+  addChunk();
+}
+```
 
 ### 大数据渲染优化
 
-![市场概览](../public/market-overview.png)
+为处理大量数据列表渲染，我们实现了动态高度虚拟滚动技术，只渲染可视区域内的元素，同时支持动态测量和调整项目高度：
 
-- **虚拟滚动技术**：高效渲染百万级历史数据
-- **数据分片加载**：按需加载数据，优化内存使用
-- **WebWorker多线程处理**：将复杂计算迁移至独立线程
-- **GPU加速渲染**：利用硬件加速提升图表绘制性能
+```ts
+// 动态虚拟滚动核心实现
+class DynamicVirtualScroll {
+  constructor(container, items, estimateHeight, renderItem) {
+    this.container = container;
+    this.items = items;
+    this.estimateHeight = estimateHeight;
+    this.renderItem = renderItem;
+    this.itemHeights = [];
+    this.totalHeight = 0;
+    this.init();
+  }
+
+  // 核心滚动处理逻辑
+  handleScroll() {
+    const scrollTop = this.container.scrollTop;
+    const clientHeight = this.container.clientHeight;
+
+    // 计算可见范围索引
+    let startIndex = this.findStartIndex(scrollTop);
+    let endIndex = this.findEndIndex(startIndex, scrollTop, clientHeight);
+
+    // 添加缓冲区并渲染可见项
+    startIndex = Math.max(0, startIndex - 5);
+    endIndex = Math.min(this.items.length, endIndex + 5);
+    this.renderVisibleItems(startIndex, endIndex);
+  }
+
+  // 其他辅助方法...
+}
+```
 
 ### 策略回测系统
 
-![回测系统](../public/backtest-system.png)
+我们开发了安全可靠的策略回测系统，通过Web Worker隔离执行用户策略代码，确保系统安全性和稳定性：
 
-- **策略编辑器**：
+```js
+// 策略验证核心流程
+async function validateStrategyCode(code) {
+  const result = { isValid: true, errors: [], warnings: [] };
 
-  - 代码高亮与智能提示
-  - 全屏编辑模式
-  - 预设策略模板
-  - 一键部署测试
+  // 1. 基本语法验证
+  const runStrategy = validateSyntax(code, result);
+  if (!result.isValid) return result;
 
-- **安全沙箱执行**：
+  // 2. 函数签名验证
+  validateFunctionSignature(runStrategy, result);
+  if (!result.isValid) return result;
 
-  - Web Worker隔离环境
-  - 代码静态分析检测
-  - 执行时间限制
-  - 危险API拦截
+  // 3. 使用模拟数据进行测试执行
+  await testExecution(runStrategy, result);
+  if (!result.isValid) return result;
 
-- **回测结果可视化**：
-  - 多维度性能指标
-  - 交易记录详情
-  - 盈亏曲线分析
-  - 风险评估报告
+  // 4. 安全检查 - 禁止使用危险API
+  performSecurityChecks(code, result);
 
-### 数据分析与导出
+  // 5. 代码质量检查
+  checkCodeQuality(code, result);
 
-- **多维度对比分析**：支持不同指标、时间段的组合对比
-- **自定义筛选器**：灵活构建数据视图
-- **详情悬停提示**：鼠标悬停显示丰富的上下文信息
-- **报告导出功能**：
-  - PDF报告生成
-  - CSV数据导出
-  - 自定义报告模板
+  return result;
+}
+
+// 安全执行策略代码
+function executeWithTimeout(func, timeoutMs) {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error(`执行超时`)), timeoutMs);
+    try {
+      Promise.resolve(func())
+        .then(resolve)
+        .catch(reject)
+        .finally(() => clearTimeout(timeout));
+    } catch (e) {
+      clearTimeout(timeout);
+      reject(e);
+    }
+  });
+}
+```
+
+---
+
+# 股票技术分析系统
+
+## 系统概述
+
+这是一个基于Vue 3和TypeScript构建的股票技术分析系统，使用TDesign组件库和html2pdf.js实现报告导出功能。系统通过分析股票市场数据生成技术分析报告，并提供可视化评估指标。
+
+## 核心功能
+
+### 1. 数据计算与分析
+
+- **最新数据计算**：获取并计算最新的股票数据
+- **买卖盘比例计算**：实时计算买卖盘比例并可视化展示
+- **多维度分析**：
+  - 价格趋势分析
+  - 成交量分析
+  - 价格波动性分析
+  - 市场状态分析
+  - 买卖盘力量对比
+
+### 2. 报告生成
+
+- **自动分析**：基于历史数据自动生成技术分析报告
+- **综合评估**：生成包含6个维度的评估项目：
+  1. 价格趋势
+  2. 成交量
+  3. 价格波动
+  4. 市场状态
+  5. 买卖盘
+  6. 短期展望
+
+### 3. 报告导出
+
+- **PDF导出**：将分析报告导出为PDF格式
+- **自定义配置**：支持设置PDF导出参数（边距、质量、格式等）
+
+## 技术实现
+
+### 1. 核心依赖
+
+- Vue 3 Composition API
+- TypeScript
+- TDesign Vue组件库
+- html2pdf.js (PDF生成)
+- Vue国际化(i18n)
+
+### 2. 数据存储
+
+- 使用Pinia状态管理存储股票数据
+- 支持通过props传入外部数据
+
+### 3. 分析方法
+
+- **价格趋势判断**：基于近期涨跌天数比例
+- **成交量分析**：计算成交量变化率和与平均成交量比值
+- **波动性计算**：使用标准差计算价格波动率
+- **综合评分**：加权计算多项指标得出总体评级
+
+## 可视化组件
+
+### 1. 指标条
+
+- 动态宽度和颜色表示不同评级
+- 支持多种指标类型：
+  - 看多/看空系列
+  - 波动性系列
+
+### 2. 标签主题
+
+- 根据评估值自动匹配颜色主题：
+  - 成功(绿色)：强烈看多/看多
+  - 主要(蓝色)：中性偏多
+  - 警告(橙色)：中性
+  - 危险(红色)：中性偏空/看空/强烈看空
+
+## 使用场景
+
+1. 股票交易前的技术面分析
+2. 投资组合定期评估
+3. 交易策略回测验证
+4. 投资教育演示
+
+## 扩展性
+
+- 支持通过props传入自定义数据
+- 分析方法可单独调用
+- 评估指标和权重可配置
+- 多语言支持(i18n)
+
+## 代码结构
+
+```typescript
+<script setup lang="ts">
+// 1. 依赖导入
+// 2. 状态管理
+// 3. 计算属性
+// 4. 工具函数
+// 5. 分析方法
+// 6. 报告生成
+// 7. PDF导出
+// 8. 生命周期钩子
+</script>
+```
 
 ### 离线功能与缓存优化
 
-- **IndexedDB数据存储**：
+```ts
+/**
+ * 回测数据存储类
+ * 提供回测记录的存储、查询和管理功能
+ */
+export class BacktestStorage {
+  private dbHelper: IndexedDBHelper;
+  private readonly STORE_NAME = 'backtestRecords';
 
-  - 回测结果本地缓存
-  - 用户配置持久化
-  - 历史查询记录保存
+  /**
+   * 构造函数
+   * @param dbName 数据库名称，默认为 'kynanceBacktest'
+   */
+  constructor(dbName: string = 'kynanceBacktest') {
+    // 定义存储对象配置
+    const storeConfigs = [
+      {
+        name: this.STORE_NAME,
+        keyPath: 'id',
+        autoIncrement: true,
+        indexes: [
+          { name: 'date', keyPath: 'date' },
+          { name: 'strategy', keyPath: 'backtestConfig.strategy' },
+          { name: 'symbol', keyPath: 'backtestConfig.symbol' },
+        ],
+      },
+    ];
 
-- **Service Worker离线支持**：
-  - 核心功能离线可用
-  - 数据预缓存策略
-  - 后台同步更新
+    // 创建 IndexedDB 工具类实例
+    this.dbHelper = new IndexedDBHelper(dbName, 1, storeConfigs);
+  }
+
+  /**
+   * 初始化数据库连接
+   * @returns Promise 操作结果
+   */
+  async init(): Promise<void> {
+    await this.dbHelper.open();
+    console.log('回测数据库初始化成功');
+  }
+
+  /**
+   * 保存回测记录
+   * @param record 回测记录
+   * @returns Promise 保存的记录（包含ID）
+   */
+  async saveBacktestRecord(record: BacktestRecord): Promise<BacktestRecord> {
+    // 如果没有指定日期，则使用当前时间
+    if (!record.date) {
+      record.date = new Date().toLocaleString('zh-CN');
+    }
+
+    try {
+      const savedRecord = await this.dbHelper.add<BacktestRecord>(this.STORE_NAME, record);
+      console.log('回测记录保存成功', savedRecord);
+      return savedRecord;
+    } catch (error) {
+      console.error('保存回测记录失败', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 根据策略名称获取回测记录
+   * @param strategy 策略名称
+   * @returns Promise 回测记录列表
+   */
+  async getBacktestRecordsByStrategy(strategy: string): Promise<BacktestRecord[]> {
+    try {
+      return await this.dbHelper.getAllByIndex<BacktestRecord>(this.STORE_NAME, 'strategy', strategy);
+    } catch (error) {
+      console.error(`获取策略为${strategy}的回测记录失败`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * 关闭数据库连接
+   */
+  close(): void {
+    this.dbHelper.close();
+    console.log('回测数据库连接已关闭');
+  }
+}
+
+// 导出单例实例，方便在应用中使用
+export const backtestStorage = new BacktestStorage();
+```
 
 ### 用户体验优化
 
 ![用户体验](../public/user-experience.png)
 
-- **响应式设计**：
-
-  - rem单位统一布局
-  - 适配多种屏幕尺寸
-  - 组件自适应调整
-
-- **主题系统**：
-
-  - 日/夜间模式切换
-  - 主题色个性化
-  - 布局结构自定义
-
-- **国际化支持**：
-  - 中英文界面切换
-  - 自动语言检测
-  - 动态加载语言包
-
-### 开发与测试
-
-- **Mock数据系统**：
-
-  - 模拟真实数据接口
-  - 可配置的响应延迟
-  - 随机数据生成器
-
-- **自动化测试**：
-  - 单元测试覆盖核心逻辑
-  - E2E测试保障用户流程
-  - 性能测试监控关键指标
-
-## 技术架构图
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      用户界面层                             │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────────┐    │
-│  │ 图表组件 │  │ 策略编辑 │  │ 数据分析 │  │ 用户中心/设置 │    │
-│  └─────────┘  └─────────┘  └─────────┘  └─────────────┘    │
-├─────────────────────────────────────────────────────────────┤
-│                      业务逻辑层                             │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────────┐    │
-│  │ 图表引擎 │  │ 策略引擎 │  │ 数据处理 │  │ 用户状态管理 │    │
-│  └─────────┘  └─────────┘  └─────────┘  └─────────────┘    │
-├─────────────────────────────────────────────────────────────┤
-│                      数据服务层                             │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────────┐    │
-│  │ API接口 │  │WebSocket│  │本地存储 │  │  离线缓存   │    │
-│  └─────────┘  └─────────┘  └─────────┘  └─────────────┘    │
-└─────────────────────────────────────────────────────────────┘
+```ts
+const changeBrandTheme = (themeColor: string) => {
+  // 以主题色加显示模式作为键
+  const colorKey = `${themeColor}[${mode.value}]`;
+  let colorMap = colorList[colorKey];
+  // 如果不存在色阶，就需要计算
+  if (colorMap === undefined) {
+    const [{ colors: newPalette, primary: brandColorIndex }] = Color.getColorGradations({
+      colors: [themeColor],
+      step: 10,
+      remainInput: false, // 是否保留输入 不保留会矫正不合适的主题色
+    });
+    colorMap = generateColorMap(themeColor, newPalette, mode.value, brandColorIndex);
+    colorList[colorKey] = colorMap;
+  }
+  // TODO 需要解决不停切换时有反复插入 style 的问题
+  insertThemeStylesheet(themeColor, colorMap, mode.value);
+  document.documentElement.setAttribute('theme-color', themeColor);
+};
 ```
 
-## 性能指标
+### 开发与测试环境
 
-- **首屏加载时间**：< 2秒 (95%用户)
-- **图表渲染性能**：60fps流畅度 (百万级数据)
-- **实时数据延迟**：< 300ms
-- **策略回测速度**：5年历史数据 < 3秒
-- **内存占用优化**：峰值 < 500MB
+#### Mock数据系统
+
+我们构建了一套完整的模拟数据系统，用于开发和测试环境
+
+这套Mock系统具有以下特点：
+
+- **真实数据模拟**：基于真实市场数据特征生成模拟数据
+- **可配置的响应延迟**：模拟不同网络环境下的响应时间
+- **智能随机数据**：生成符合业务逻辑的随机数据
+- **多场景支持**：覆盖股票列表、K线数据、实时行情等多种场景
+- **开发环境自动激活**：在开发环境中自动启用，无需额外配置
+
+#### 自动化测试体系
+
+我们建立了完整的自动化测试体系，确保代码质量和系统稳定性：
+
+我们的测试体系包括：
+
+- **单元测试**：覆盖核心算法和业务逻辑
+- **组件测试**：验证UI组件的正确渲染和交互
+- **集成测试**：确保不同模块之间的协作正常
+- **E2E测试**：模拟真实用户操作流程
+- **性能测试**：监控关键性能指标和瓶颈
+- **CI/CD集成**：在代码提交和部署过程中自动执行测试
+
+## 系统架构设计
+
+### 整体架构图
+
+```mermaid
+graph TD
+    subgraph "前端应用层"
+        UI["用户界面组件"]
+        Chart["图表系统"]
+        Strategy["策略编辑器"]
+        Analysis["数据分析工具"]
+        Settings["用户设置中心"]
+    end
+
+    subgraph "业务逻辑层"
+        ChartEngine["图表渲染引擎"]
+        StrategyEngine["策略执行引擎"]
+        DataProcessor["数据处理模块"]
+        UserManager["用户状态管理"]
+    end
+
+    subgraph "数据服务层"
+        API["RESTful API"]
+        WS["WebSocket服务"]
+        Storage["本地存储"]
+        Cache["离线缓存"]
+    end
+
+    subgraph "基础设施层"
+        CDN["内容分发网络"]
+        Cloud["云服务"]
+        DB["数据库"]
+        MQ["消息队列"]
+    end
+
+    UI --> ChartEngine
+    UI --> StrategyEngine
+    UI --> DataProcessor
+    UI --> UserManager
+
+    Chart --> ChartEngine
+    Strategy --> StrategyEngine
+    Analysis --> DataProcessor
+    Settings --> UserManager
+
+    ChartEngine --> API
+    ChartEngine --> WS
+    StrategyEngine --> API
+    StrategyEngine --> Storage
+    DataProcessor --> API
+    DataProcessor --> Cache
+    UserManager --> API
+    UserManager --> Storage
+
+    API --> Cloud
+    WS --> MQ
+    Storage --> DB
+    Cache --> CDN
+```
+
+### 模块依赖关系
+
+```mermaid
+flowchart LR
+    App["主应用"]
+    Chart["图表核心"]
+    Strategy["策略引擎"]
+    Provider["数据提供者"]
+    Types["类型定义"]
+
+    App --> Chart
+    App --> Strategy
+    App --> Provider
+    Chart --> Types
+    Strategy --> Types
+    Provider --> Types
+    Chart --> Provider
+    Strategy --> Provider
+```
+
+## 性能优化与指标
+
+### 关键性能指标
+
+| 指标类别     | 指标名称          | 目标值            | 优化方法                         |
+| ------------ | ----------------- | ----------------- | -------------------------------- |
+| **加载性能** | 首屏加载时间      | < 2秒 (95%用户)   | 路由懒加载、资源预加载、代码分割 |
+|              | 首次内容绘制(FCP) | < 1.2秒           | 关键CSS内联、预连接关键域        |
+|              | 最大内容绘制(LCP) | < 2.5秒           | 图片优化、资源优先级             |
+| **渲染性能** | 图表渲染帧率      | 稳定60fps         | 虚拟列表、WebGL加速、离屏渲染    |
+|              | 大数据渲染时间    | 百万级数据 < 1秒  | 数据分块、增量渲染、WebWorker    |
+|              | 交互响应时间      | < 100ms           | 事件委托、节流防抖、计算缓存     |
+| **网络性能** | 实时数据延迟      | < 300ms           | WebSocket、数据压缩、增量更新    |
+|              | API响应时间       | < 500ms           | 接口合并、数据缓存、预请求       |
+| **计算性能** | 策略回测速度      | 5年历史数据 < 3秒 | 算法优化、WebAssembly、并行计算  |
+|              | 指标计算速度      | 复杂指标 < 200ms  | 计算缓存、惰性计算、增量计算     |
+| **资源占用** | 内存峰值          | < 500MB           | 内存池、对象复用、垃圾回收优化   |
+|              | CPU使用率         | 峰值 < 30%        | 计算分离、任务调度、空闲处理     |
 
 ## 安全保障
 

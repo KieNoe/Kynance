@@ -12,7 +12,6 @@ export const en = defineConfig({
     nav: [
       { text: 'Home', link: '/en/' },
       { text: 'Features', link: '/en/feature' },
-      { text: 'Technical Showcase', link: '/en/technical' },
       { text: 'Code of Conduct', link: '/en/actions' },
       { text: 'Contact & Support', link: '/en/contact' },
       {
@@ -22,6 +21,15 @@ export const en = defineConfig({
             text: 'Changelog',
             link: '/en/CHANGELOG.md',
           },
+        ],
+      },
+    ],
+    sidebar: [
+      {
+        text: 'Technical',
+        items: [
+          { text: 'Technical Showcase', link: '/en/technical' },
+          { text: 'Plans', link: '/en/plan' },
         ],
       },
     ],

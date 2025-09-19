@@ -12,7 +12,6 @@ export const zh = defineConfig({
     nav: [
       { text: '主页', link: '/' },
       { text: '功能', link: '/feature' },
-      { text: '技术展示', link: '/technical' },
       { text: '行为规范', link: '/actions' },
       { text: '联系与支持', link: '/contact' },
       {
@@ -22,6 +21,15 @@ export const zh = defineConfig({
             text: 'Changelog',
             link: '/CHANGELOG.md',
           },
+        ],
+      },
+    ],
+    sidebar: [
+      {
+        text: '技术相关',
+        items: [
+          { text: '技术展示页', link: '/technical' },
+          { text: '未来计划', link: '/plan' },
         ],
       },
     ],
