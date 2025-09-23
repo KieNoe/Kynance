@@ -3,11 +3,7 @@ import adapterFetch from 'alova/fetch'
 import VueHook from 'alova/vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 
-import { useUserStore } from '@/stores'
-
 const isDevelopment = import.meta.env.MODE === 'development'
-
-const userStore = useUserStore()
 
 export const alovaInstance = createAlova({
   baseURL: isDevelopment ? import.meta.env.VITE_BASE_URL : import.meta.env.VITE_BACKEND_URL,
@@ -33,20 +29,13 @@ export const alovaInstance = createAlova({
     method.config.headers = {
       'Content-Type': 'application/json',
     }
-    method.config.mode = 'cors'
-    if (method.meta?.requireToken) {
-      method.config.headers = {
-        ...method.config.headers, // 保留原有的请求头
-        Authorization: `Bearer ${userStore.user.token}`, // 添加 Authorization header
-      }
-    }
   },
   responded: {
     onSuccess: async (response) => {
-      if (response.status >= 400) {
-        MessagePlugin.error(String(response.status), 1500)
+      if ((response as any).status >= 400) {
+        MessagePlugin.error(String((response as any).status), 1500)
       }
-      const json = await response.json()
+      const json = await (response as any).json()
       if (json.code !== 200) {
         MessagePlugin.error(json.message, 1500)
       }

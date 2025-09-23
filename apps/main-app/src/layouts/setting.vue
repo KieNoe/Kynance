@@ -108,7 +108,7 @@ const getModeIcon = (mode) => {
 .tdesign-setting {
   z-index: 100;
   position: fixed;
-  bottom: 12.5rem; // 使用rem单位
+  bottom: 12.5rem;
   right: 0;
   height: 2.5rem;
   width: 2.5rem;

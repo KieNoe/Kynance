@@ -6,187 +6,142 @@ import {
   calculateMACD,
   calculateRSI,
 } from '../data-transformer/index';
-export const getChartThemeOption = ({ borderColor, containerColor, textColor }) => {
-  return {
-    backgroundColor: containerColor, // 容器背景色
+import { Sampler } from './dynamicSampling';
+
+/**
+ * 主题配置相关常量
+ */
+const DEFAULT_COLORS = ['#0052d9', '#78bdd5', '#ef84ce', '#57c2b8', '#ef9f79', '#4fc241', '#73a4e1', '#f59e78'];
+
+/**
+ * 获取图表主题配置
+ * @param options 主题配置选项
+ * @returns 图表主题配置对象
+ */
+export const getChartThemeOption = ({ borderColor, containerColor, textColor }) => ({
+  backgroundColor: containerColor,
+  textStyle: {
+    color: textColor,
+  },
+  grid: {
+    borderColor: borderColor,
+  },
+  xAxis: {
+    axisLine: {
+      lineStyle: {
+        color: borderColor,
+      },
+    },
+    axisLabel: {
+      color: textColor,
+    },
+  },
+  yAxis: {
+    axisLine: {
+      lineStyle: {
+        color: borderColor,
+      },
+    },
+    axisLabel: {
+      color: textColor,
+    },
+  },
+  tooltip: {
     textStyle: {
-      color: textColor, // 全局文本颜色
+      color: textColor,
     },
-    grid: {
-      borderColor: borderColor, // 图表网格边框颜色
-    },
-    xAxis: {
-      axisLine: {
-        lineStyle: {
-          color: borderColor, // X 轴线颜色
-        },
-      },
-      axisLabel: {
-        color: textColor, // X 轴标签颜色
-      },
-    },
-    yAxis: {
-      axisLine: {
-        lineStyle: {
-          color: borderColor, // Y 轴线颜色
-        },
-      },
-      axisLabel: {
-        color: textColor, // Y 轴标签颜色
-      },
-    },
-    tooltip: {
-      textStyle: {
-        color: textColor, // 提示框文本颜色
-      },
-      backgroundColor: containerColor, // 提示框背景色
-      borderColor: borderColor, // 提示框边框颜色
-    },
-  };
-};
+    backgroundColor: containerColor,
+    borderColor: borderColor,
+  },
+});
+
+/**
+ * 获取图表颜色配置
+ * @param colorList 颜色列表
+ * @returns 图表颜色配置对象
+ */
 export const getChartColorOption = (colorList) => {
-  if (!colorList || colorList.length === 0) {
-    // 默认颜色配置
-    return {
-      color: ['#0052d9', '#78bdd5', '#ef84ce', '#57c2b8', '#ef9f79', '#4fc241', '#73a4e1', '#f59e78'],
-      series: [
-        {
-          lineStyle: {
-            color: '#5470C6',
-          },
-          areaStyle: {
-            color: {
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [
-                {
-                  offset: 0,
-                  color: 'rgba(84, 112, 198, 0.5)',
-                },
-                {
-                  offset: 1,
-                  color: 'rgba(84, 112, 198, 0.1)',
-                },
-              ],
+  const colors = colorList?.length ? colorList : DEFAULT_COLORS;
+
+  return {
+    color: colors,
+    series: [
+      {
+        lineStyle: {
+          color: colors[0],
+        },
+        itemStyle: {
+          color: colors[0],
+        },
+        areaStyle: colorList?.length
+          ? undefined
+          : {
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: 'rgba(84, 112, 198, 0.5)' },
+                  { offset: 1, color: 'rgba(84, 112, 198, 0.1)' },
+                ],
+              },
             },
-          },
-        },
-        {
-          lineStyle: {
-            color: '#78bdd5',
-          },
-        },
-      ],
-    };
-  }
-  return {
-    color: colorList,
-    series: [
-      {
-        lineStyle: {
-          color: colorList[0],
-        },
-        itemStyle: {
-          color: colorList[0],
-        },
       },
       {
         lineStyle: {
-          color: colorList[1],
+          color: colors[1],
         },
         itemStyle: {
-          color: colorList[1],
+          color: colors[1],
         },
       },
     ],
   };
 };
+
+/**
+ * 获取趋势图颜色配置
+ * @param colorList 颜色列表
+ * @returns 趋势图颜色配置对象
+ */
 export const getTrendingChartColorOption = (colorList) => {
-  if (!colorList || colorList.length === 0) {
-    // 默认颜色配置
-    return {
-      color: ['#0052d9', '#78bdd5', '#ef84ce', '#57c2b8', '#ef9f79', '#4fc241', '#73a4e1', '#f59e78'],
-      series: [
-        {
-          lineStyle: {
-            color: '#5470C6',
-          },
-        },
-        {
-          lineStyle: {
-            color: '#78bdd5',
-          },
-        },
-      ],
-    };
-  }
+  const colors = colorList?.length ? colorList : DEFAULT_COLORS;
 
   return {
-    color: colorList,
-    series: [
-      {
-        lineStyle: {
-          color: colorList[0],
-        },
+    color: colors,
+    series: Array.from({ length: 4 }, (_, i) => ({
+      lineStyle: {
+        color: colors[i],
       },
-      {
-        lineStyle: {
-          color: colorList[1],
-        },
-      },
-      {
-        lineStyle: {
-          color: colorList[2],
-        },
-      },
-      {
-        lineStyle: {
-          color: colorList[3],
-        },
-      },
-    ],
+    })),
   };
 };
+
+/**
+ * 获取震荡图颜色配置
+ * @param colorList 颜色列表
+ * @returns 震荡图颜色配置对象
+ */
 export const getShockChartColorOption = (colorList) => {
-  if (!colorList || colorList.length === 0) {
-    // 默认颜色配置
-    return {
-      color: ['#0052d9', '#78bdd5', '#ef84ce', '#57c2b8', '#ef9f79', '#4fc241', '#73a4e1', '#f59e78'],
-      series: [
-        {
-          lineStyle: {
-            color: '#5470C6',
-          },
-        },
-        {
-          lineStyle: {
-            color: '#78bdd5',
-          },
-        },
-      ],
-    };
-  }
+  const colors = colorList?.length ? colorList : DEFAULT_COLORS;
 
   return {
-    color: colorList,
-    series: [
-      {
-        lineStyle: {
-          color: colorList[0],
-        },
+    color: colors,
+    series: Array.from({ length: 2 }, (_, i) => ({
+      lineStyle: {
+        color: colors[i],
       },
-      {
-        lineStyle: {
-          color: colorList[1],
-        },
-      },
-    ],
+    })),
   };
 };
 
+/**
+ * 格式化数字为万/亿单位
+ * @param num 要格式化的数字
+ * @returns 格式化后的字符串
+ */
 function formatNumberToWan(num) {
   // 处理非数字或无效输入
   if (typeof num !== 'number' || isNaN(num)) {
@@ -217,6 +172,69 @@ function formatNumberToWan(num) {
   return `${isNegative ? '-' : ''}${absoluteNum.toLocaleString('en-US')}`;
 }
 
+/**
+ * 创建通用的图表配置
+ * @param data 数据
+ * @param interval 间隔
+ * @returns 基础图表配置
+ */
+const createBaseChartConfig = (data, interval = 4) => ({
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '15%',
+    top: '10%',
+    containLabel: true,
+  },
+  xAxis: {
+    data: data.map((item) => item.date),
+    type: 'category',
+    axisLabel: {
+      interval: Math.floor(data.length / interval),
+    },
+  },
+  dataZoom: [
+    {
+      type: 'inside',
+      xAxisIndex: 0,
+      start: 0,
+      end: 100,
+    },
+    {
+      type: 'slider',
+      xAxisIndex: 0,
+      start: 0,
+      end: 100,
+    },
+  ],
+});
+
+/**
+ * 创建辅助线配置
+ * @param dataLength 数据长度
+ * @param value 辅助线值
+ * @param color 辅助线颜色
+ * @returns 辅助线配置
+ */
+const createAuxiliaryLine = (dataLength, value, color = '#f6685d') => ({
+  name: '辅助线',
+  type: 'line',
+  data: Array(dataLength).fill(value),
+  lineStyle: {
+    color,
+    type: 'dashed',
+    width: 1,
+  },
+  symbol: 'none',
+  silent: true,
+});
+
+/**
+ * 获取股票图表配置
+ * @param stockData 股票数据
+ * @param currency 货币单位
+ * @returns 股票图表配置
+ */
 export const getStockChartOptions = (stockData, currency = '') => {
   return {
     xAxis: {
@@ -276,17 +294,25 @@ export const getStockChartOptions = (stockData, currency = '') => {
     },
   };
 };
+
+/**
+ * 获取趋势图表配置
+ * @param data 数据
+ * @param name 指标名称
+ * @returns 趋势图表配置
+ */
 export const getTrendingChartOptions = (data, name) => {
-  let stockData;
+  const chartData = data.data;
+  const baseConfig = createBaseChartConfig(chartData);
+
   switch (name) {
-    case 'MACD':
-      stockData = calculateMACD(data.data);
+    case 'MACD': {
+      const stockData = calculateMACD(chartData);
       return {
+        ...baseConfig,
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-          },
+          axisPointer: { type: 'cross' },
           formatter: function (params) {
             let result = `<div style="font-weight:bold">${params[0].axisValue}</div>`;
             params.forEach((item) => {
@@ -295,20 +321,18 @@ export const getTrendingChartOptions = (data, name) => {
               const seriesName = item.seriesName;
 
               if (seriesName === 'MACD') {
-                // MACD值特殊处理，显示正负号
                 value = Number(value).toFixed(2);
                 value = value >= 0 ? '+' + value : value;
               } else {
-                // DIF和DEA直接显示两位小数
                 value = Number(value).toFixed(2);
               }
 
               result += `
-          <div style="display:flex;align-items:center;">
-            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
-            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
-          </div>
-        `;
+                <div style="display:flex;align-items:center;">
+                  <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+                  ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+                </div>
+              `;
             });
             return result;
           },
@@ -317,50 +341,18 @@ export const getTrendingChartOptions = (data, name) => {
           data: ['DIF', 'DEA', 'MACD'],
           bottom: 10,
         },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '15%',
-          top: '10%',
-          containLabel: true,
-        },
-        xAxis: {
-          data: data.data.map((item) => item.date),
-          type: 'category',
-          axisLabel: {
-            interval: Math.floor(data.data.length / 4),
-          },
-        },
         yAxis: [
           {
             name: 'DIF/DEA',
             type: 'value',
             scale: true,
-            splitLine: {
-              show: true,
-            },
+            splitLine: { show: true },
           },
           {
             name: 'MACD',
             type: 'value',
             scale: true,
-            splitLine: {
-              show: false,
-            },
-          },
-        ],
-        dataZoom: [
-          {
-            type: 'inside',
-            xAxisIndex: 0,
-            start: 0,
-            end: 100,
-          },
-          {
-            type: 'slider',
-            xAxisIndex: 0,
-            start: 0,
-            end: 100,
+            splitLine: { show: false },
           },
         ],
         series: [
@@ -369,10 +361,7 @@ export const getTrendingChartOptions = (data, name) => {
             type: 'line',
             data: stockData.DIF.map((v) => v.toFixed(2)),
             smooth: true,
-            lineStyle: {
-              width: 2,
-              color: '#0052d9',
-            },
+            lineStyle: { width: 2, color: '#0052d9' },
             symbol: 'none',
           },
           {
@@ -380,10 +369,7 @@ export const getTrendingChartOptions = (data, name) => {
             type: 'line',
             data: stockData.DEA.map((v) => v.toFixed(2)),
             smooth: true,
-            lineStyle: {
-              width: 2,
-              color: '#78bdd5',
-            },
+            lineStyle: { width: 2, color: '#78bdd5' },
             symbol: 'none',
           },
           {
@@ -392,58 +378,47 @@ export const getTrendingChartOptions = (data, name) => {
             yAxisIndex: 1,
             data: stockData.MACD.map((v) => v.toFixed(2)),
             itemStyle: {
-              color: function (params) {
-                // MACD柱状图颜色，正值为红色，负值为绿色
-                return params.value >= 0 ? '#f6685d' : '#56c08d';
-              },
+              color: (params) => (params.value >= 0 ? '#f6685d' : '#56c08d'),
             },
             barWidth: '60%',
           },
-          {
-            name: '辅助线',
-            type: 'line',
-            data: Array(data.data.length).fill(70),
-            lineStyle: {
-              color: '#f6685d',
-              type: 'dashed',
-              width: 1,
-            },
-            symbol: 'none',
-            silent: true,
-          },
+          createAuxiliaryLine(chartData.length, 70),
         ],
       };
-    case 'MA(5)':
-      stockData = calculateMA(data.data, 5);
+    }
+
+    case 'MA(5)': {
+      const ma5Data = calculateMA(chartData, 5);
+      const ma10Data = calculateMA(chartData, 10);
+
       return {
+        ...baseConfig,
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-          },
+          axisPointer: { type: 'cross' },
           formatter: function (params) {
             let result = `<div style="font-weight:bold;margin-bottom:5px;">${params[0].axisValue}</div>`;
 
             // K线数据处理
             const candle = params[0].data;
             result += `
-      <div style="display:flex;align-items:center;margin:3px 0;">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
-        开盘: <span style="margin-left:5px;font-weight:bold">${candle[0]}</span>
-      </div>
-      <div style="display:flex;align-items:center;margin:3px 0;">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
-        收盘: <span style="margin-left:5px;font-weight:bold">${candle[1]}</span>
-      </div>
-      <div style="display:flex;align-items:center;margin:3px 0;">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
-        最低: <span style="margin-left:5px;font-weight:bold">${candle[2]}</span>
-      </div>
-      <div style="display:flex;align-items:center;margin:3px 0;">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
-        最高: <span style="margin-left:5px;font-weight:bold">${candle[3]}</span>
-      </div>
-    `;
+              <div style="display:flex;align-items:center;margin:3px 0;">
+                <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
+                开盘: <span style="margin-left:5px;font-weight:bold">${candle[0]}</span>
+              </div>
+              <div style="display:flex;align-items:center;margin:3px 0;">
+                <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
+                收盘: <span style="margin-left:5px;font-weight:bold">${candle[1]}</span>
+              </div>
+              <div style="display:flex;align-items:center;margin:3px 0;">
+                <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
+                最低: <span style="margin-left:5px;font-weight:bold">${candle[2]}</span>
+              </div>
+              <div style="display:flex;align-items:center;margin:3px 0;">
+                <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0].color};margin-right:5px;"></span>
+                最高: <span style="margin-left:5px;font-weight:bold">${candle[3]}</span>
+              </div>
+            `;
 
             // 处理均线数据
             for (let i = 1; i < params.length; i++) {
@@ -456,40 +431,27 @@ export const getTrendingChartOptions = (data, name) => {
                 value = typeof value === 'number' ? value.toFixed(2) : '—';
 
                 result += `
-          <div style="display:flex;align-items:center;margin:3px 0;">
-            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
-            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
-          </div>
-        `;
+                  <div style="display:flex;align-items:center;margin:3px 0;">
+                    <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+                    ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+                  </div>
+                `;
               }
             }
 
             return result;
           },
         },
-
         legend: {
           data: ['K线', 'MA5'],
           bottom: 10,
-        },
-        dataZoom: [
-          {
-            type: 'inside',
-            xAxisIndex: 0,
-            start: 0,
-            end: 100,
-          },
-        ],
-        xAxis: {
-          type: 'category',
-          data: data.data.map((item) => item.date), // 假设原始数据有date字段
         },
         yAxis: { type: 'value', scale: true },
         series: [
           {
             name: 'K线',
             type: 'candlestick',
-            data: data.data.map((item) => [item.open, item.close, item.low, item.high]), // 假设是K线图
+            data: chartData.map((item) => [item.open, item.close, item.low, item.high]),
             itemStyle: {
               color: '#ef5350',
               color0: '#26a69a',
@@ -502,48 +464,34 @@ export const getTrendingChartOptions = (data, name) => {
           {
             name: 'MA5',
             type: 'line',
-            data: calculateMA(data.data, 5), // 计算5日均线
+            data: ma5Data,
             smooth: true,
             symbol: 'none',
-            lineStyle: {
-              width: 2,
-            },
+            lineStyle: { width: 2 },
           },
           {
             name: 'MA10',
             type: 'line',
-            data: calculateMA(data.data, 10), // 计算10日均线
+            data: ma10Data,
             smooth: true,
             symbol: 'none',
-            lineStyle: {
-              width: 2,
-            },
+            lineStyle: { width: 2 },
           },
-          {
-            name: '辅助线',
-            type: 'line',
-            data: Array(data.data.length).fill(500),
-            lineStyle: {
-              color: '#f6685d',
-              type: 'dashed',
-              width: 1,
-            },
-            symbol: 'none',
-            silent: true,
-          },
+          createAuxiliaryLine(chartData.length, 500),
         ],
       };
-    case 'MA(20)':
-      stockData = calculateMA(data.data, 20);
-      console.log(stockData);
+    }
+
+    case 'MA(20)': {
+      const ma20Data = calculateMA(chartData, 20);
+      const ma10Data = calculateMA(chartData, 10);
+
       return {
+        ...baseConfig,
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-          },
+          axisPointer: { type: 'cross' },
           formatter: function (params) {
-            // 检查params是否存在且是数组
             if (!params || !Array.isArray(params) || params.length === 0) {
               return '';
             }
@@ -553,23 +501,23 @@ export const getTrendingChartOptions = (data, name) => {
             // K线数据处理
             const candle = params[0]?.data || [];
             result += `
-      <div style="display:flex;align-items:center;margin:3px 0;">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
-        开盘: <span style="margin-left:5px;font-weight:bold">${candle[0] ?? '—'}</span>
-      </div>
-      <div style="display:flex;align-items:center;margin:3px 0;">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
-        收盘: <span style="margin-left:5px;font-weight:bold">${candle[1] ?? '—'}</span>
-      </div>
-      <div style="display:flex;align-items:center;margin:3px 0;">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
-        最低: <span style="margin-left:5px;font-weight:bold">${candle[2] ?? '—'}</span>
-      </div>
-      <div style="display:flex;align-items:center;margin:3px 0;">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
-        最高: <span style="margin-left:5px;font-weight:bold">${candle[3] ?? '—'}</span>
-      </div>
-    `;
+              <div style="display:flex;align-items:center;margin:3px 0;">
+                <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
+                开盘: <span style="margin-left:5px;font-weight:bold">${candle[0] ?? '—'}</span>
+              </div>
+              <div style="display:flex;align-items:center;margin:3px 0;">
+                <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
+                收盘: <span style="margin-left:5px;font-weight:bold">${candle[1] ?? '—'}</span>
+              </div>
+              <div style="display:flex;align-items:center;margin:3px 0;">
+                <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
+                最低: <span style="margin-left:5px;font-weight:bold">${candle[2] ?? '—'}</span>
+              </div>
+              <div style="display:flex;align-items:center;margin:3px 0;">
+                <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${params[0]?.color || '#000'};margin-right:5px;"></span>
+                最高: <span style="margin-left:5px;font-weight:bold">${candle[3] ?? '—'}</span>
+              </div>
+            `;
 
             // 处理均线数据
             for (let i = 1; i < params.length; i++) {
@@ -579,40 +527,27 @@ export const getTrendingChartOptions = (data, name) => {
                 const value = typeof params[i].data === 'number' ? params[i].data.toFixed(2) : '—';
 
                 result += `
-          <div style="display:flex;align-items:center;margin:3px 0;">
-            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
-            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
-          </div>
-        `;
+                  <div style="display:flex;align-items:center;margin:3px 0;">
+                    <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+                    ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+                  </div>
+                `;
               }
             }
 
             return result;
           },
         },
-
         legend: {
           data: ['K线', 'MA20'],
           bottom: 10,
-        },
-        dataZoom: [
-          {
-            type: 'inside',
-            xAxisIndex: 0,
-            start: 0,
-            end: 100,
-          },
-        ],
-        xAxis: {
-          type: 'category',
-          data: data.data.map((item) => item.date),
         },
         yAxis: { type: 'value' },
         series: [
           {
             name: 'K线',
             type: 'candlestick',
-            data: data.data.map((item) => [item.open, item.close, item.low, item.high]),
+            data: chartData.map((item) => [item.open, item.close, item.low, item.high]),
             itemStyle: {
               color: '#ef5350',
               color0: '#26a69a',
@@ -625,67 +560,51 @@ export const getTrendingChartOptions = (data, name) => {
           {
             name: 'MA20',
             type: 'line',
-            data: calculateMA(data.data, 20), // 计算20日均线
+            data: ma20Data,
             smooth: true,
             symbol: 'none',
-            lineStyle: {
-              width: 2,
-            },
+            lineStyle: { width: 2 },
           },
           {
             name: 'MA10',
             type: 'line',
-            data: calculateMA(data.data, 10),
+            data: ma10Data,
             smooth: true,
             symbol: 'none',
-            lineStyle: {
-              width: 2,
-            },
+            lineStyle: { width: 2 },
           },
-          {
-            name: '辅助线',
-            type: 'line',
-            data: Array(data.data.length).fill(70),
-            lineStyle: {
-              color: '#f6685d',
-              type: 'dashed',
-              width: 1,
-            },
-            symbol: 'none',
-            silent: true,
-          },
+          createAuxiliaryLine(chartData.length, 70),
         ],
       };
-    case '布林带':
-      stockData = calculateBollingerBands(data.data);
+    }
+
+    case '布林带': {
+      const stockData = calculateBollingerBands(chartData);
+
       return {
+        ...baseConfig,
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-          },
+          axisPointer: { type: 'cross' },
           formatter: function (params) {
-            // 获取当前日期的数据
             const date = params[0].axisValue;
             let tooltipContent = `<div style="font-weight:bold;margin-bottom:5px;">${date}</div>`;
 
-            // 遍历每个系列的数据
             params.forEach((item) => {
               const color = item.color;
               const seriesName = item.seriesName;
               let value = item.value;
 
-              // 格式化数值，保留2位小数
               if (typeof value === 'number') {
                 value = value.toFixed(2);
               }
 
               tooltipContent += `
-          <div style="display:flex;align-items:center;margin:3px 0;">
-            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
-            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
-          </div>
-        `;
+                <div style="display:flex;align-items:center;margin:3px 0;">
+                  <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+                  ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+                </div>
+              `;
             });
 
             return tooltipContent;
@@ -695,34 +614,19 @@ export const getTrendingChartOptions = (data, name) => {
           data: ['收盘价', '中轨(MA)', '上轨', '下轨'],
           bottom: 10,
         },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '15%',
-          containLabel: true,
-        },
-        xAxis: {
-          type: 'category',
-          data: data.data.map((item) => item.date), // 假设数据中有date字段
-          boundaryGap: false,
-        },
         yAxis: {
           type: 'value',
           scale: true,
           axisLabel: {
-            formatter: function (value) {
-              return value.toFixed(2); // 保留2位小数
-            },
+            formatter: (value) => value.toFixed(2),
           },
         },
         series: [
           {
             name: '收盘价',
             type: 'line',
-            data: data.data.map((item) => item.close),
-            lineStyle: {
-              width: 2,
-            },
+            data: chartData.map((item) => item.close),
+            lineStyle: { width: 2 },
             symbol: 'none',
           },
           {
@@ -763,19 +667,32 @@ export const getTrendingChartOptions = (data, name) => {
           },
         ],
       };
+    }
+
+    default:
+      return baseConfig;
   }
 };
+
+/**
+ * 获取震荡图表配置
+ * @param data 数据
+ * @param name 指标名称
+ * @returns 震荡图表配置
+ */
 export const getShockChartOptions = (data, name) => {
-  let stockData;
+  const chartData = data.data;
+  const baseConfig = createBaseChartConfig(chartData);
+
   switch (name) {
-    case 'RSI':
-      stockData = calculateRSI(data.data);
+    case 'RSI': {
+      const stockData = calculateRSI(chartData);
+
       return {
+        ...baseConfig,
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-          },
+          axisPointer: { type: 'cross' },
           formatter: function (params) {
             let result = `<div style="font-weight:bold">${params[0].axisValue}</div>`;
             params.forEach((item) => {
@@ -787,11 +704,11 @@ export const getShockChartOptions = (data, name) => {
               value = Number(value).toFixed(2);
 
               result += `
-      <div style="display:flex;align-items:center;">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
-        ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
-      </div>
-    `;
+                <div style="display:flex;align-items:center;">
+                  <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+                  ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+                </div>
+              `;
             });
             return result;
           },
@@ -800,45 +717,15 @@ export const getShockChartOptions = (data, name) => {
           data: ['RSI'],
           bottom: 10,
         },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '15%',
-          top: '10%',
-          containLabel: true,
-        },
-        xAxis: {
-          data: data.data.map((item) => item.date),
-          type: 'category',
-          axisLabel: {
-            interval: Math.floor(data.data.length / 4),
-          },
-        },
         yAxis: {
           name: 'RSI',
           type: 'value',
           scale: true,
-          splitLine: {
-            show: true,
-          },
+          splitLine: { show: true },
           axisLabel: {
             formatter: '{value}',
           },
         },
-        dataZoom: [
-          {
-            type: 'inside',
-            xAxisIndex: 0,
-            start: 0,
-            end: 100,
-          },
-          {
-            type: 'slider',
-            xAxisIndex: 0,
-            start: 0,
-            end: 100,
-          },
-        ],
         series: [
           {
             name: 'RSI',
@@ -851,40 +738,20 @@ export const getShockChartOptions = (data, name) => {
             },
             symbol: 'none',
           },
-          {
-            name: '辅助线',
-            type: 'line',
-            data: Array(data.data.length).fill(70),
-            lineStyle: {
-              color: '#f6685d',
-              type: 'dashed',
-              width: 1,
-            },
-            symbol: 'none',
-            silent: true,
-          },
-          {
-            name: '辅助线',
-            type: 'line',
-            data: Array(data.data.length).fill(30),
-            lineStyle: {
-              color: '#56c08d',
-              type: 'dashed',
-              width: 1,
-            },
-            symbol: 'none',
-            silent: true,
-          },
+          createAuxiliaryLine(chartData.length, 70, '#f6685d'),
+          createAuxiliaryLine(chartData.length, 30, '#56c08d'),
         ],
       };
-    case 'KDJ':
-      stockData = calculateKDJ(data.data);
+    }
+
+    case 'KDJ': {
+      const stockData = calculateKDJ(chartData);
+
       return {
+        ...baseConfig,
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-          },
+          axisPointer: { type: 'cross' },
           formatter: function (params) {
             let result = `<div style="font-weight:bold">${params[0].axisValue}</div>`;
             params.forEach((item) => {
@@ -896,11 +763,11 @@ export const getShockChartOptions = (data, name) => {
               value = Number(value).toFixed(2);
 
               result += `
-          <div style="display:flex;align-items:center;">
-            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
-            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
-          </div>
-        `;
+                <div style="display:flex;align-items:center;">
+                  <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+                  ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+                </div>
+              `;
             });
             return result;
           },
@@ -909,45 +776,15 @@ export const getShockChartOptions = (data, name) => {
           data: ['K', 'D', 'J'],
           bottom: 10,
         },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '15%',
-          top: '10%',
-          containLabel: true,
-        },
-        xAxis: {
-          data: data.data.map((item) => item.date),
-          type: 'category',
-          axisLabel: {
-            interval: Math.floor(data.data.length / 4),
-          },
-        },
         yAxis: {
           name: 'KDJ',
           type: 'value',
           scale: true,
-          splitLine: {
-            show: true,
-          },
+          splitLine: { show: true },
           axisLabel: {
             formatter: '{value}',
           },
         },
-        dataZoom: [
-          {
-            type: 'inside',
-            xAxisIndex: 0,
-            start: 0,
-            end: 100,
-          },
-          {
-            type: 'slider',
-            xAxisIndex: 0,
-            start: 0,
-            end: 100,
-          },
-        ],
         series: [
           {
             name: 'K',
@@ -984,14 +821,16 @@ export const getShockChartOptions = (data, name) => {
           },
         ],
       };
-    case 'CCI':
-      stockData = calculateCCI(data.data);
+    }
+
+    case 'CCI': {
+      const stockData = calculateCCI(chartData);
+
       return {
+        ...baseConfig,
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-          },
+          axisPointer: { type: 'cross' },
           formatter: function (params) {
             let result = `<div style="font-weight:bold">${params[0].axisValue}</div>`;
             params.forEach((item) => {
@@ -1003,11 +842,11 @@ export const getShockChartOptions = (data, name) => {
               value = Number(value).toFixed(2);
 
               result += `
-          <div style="display:flex;align-items:center;">
-            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
-            ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
-          </div>
-        `;
+                <div style="display:flex;align-items:center;">
+                  <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px;"></span>
+                  ${seriesName}: <span style="margin-left:5px;font-weight:bold">${value}</span>
+                </div>
+              `;
             });
             return result;
           },
@@ -1016,41 +855,15 @@ export const getShockChartOptions = (data, name) => {
           data: ['CCI'],
           bottom: 10,
         },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '15%',
-          top: '10%',
-          containLabel: true,
-        },
-        xAxis: {
-          data: data.data.map((item) => item.date),
-          type: 'category',
-          axisLabel: {
-            interval: Math.floor(data.data.length / 4),
-          },
-        },
         yAxis: {
           name: 'CCI',
           type: 'value',
           scale: true,
-          splitLine: {
-            show: true,
-          },
+          splitLine: { show: true },
           axisLabel: {
             formatter: '{value}',
           },
         },
-        dataZoom: [
-          {
-            type: 'inside',
-            xAxisIndex: 0,
-          },
-          {
-            type: 'slider',
-            xAxisIndex: 0,
-          },
-        ],
         series: [
           {
             name: 'CCI',
@@ -1063,42 +876,55 @@ export const getShockChartOptions = (data, name) => {
             },
             symbol: 'none',
           },
-          {
-            name: '辅助线',
-            type: 'line',
-            data: Array(data.data.length).fill(70),
-            lineStyle: {
-              color: '#f6685d',
-              type: 'dashed',
-              width: 1,
-            },
-            symbol: 'none',
-            silent: true,
-          },
-          {
-            name: '辅助线',
-            type: 'line',
-            data: Array(data.data.length).fill(30),
-            lineStyle: {
-              color: '#56c08d',
-              type: 'dashed',
-              width: 1,
-            },
-            symbol: 'none',
-            silent: true,
-          },
+          createAuxiliaryLine(chartData.length, 70, '#f6685d'),
+          createAuxiliaryLine(chartData.length, 30, '#56c08d'),
         ],
       };
+    }
+
+    default:
+      return baseConfig;
   }
 };
+
+/**
+ * 获取初始图表配置
+ * @param stockData 股票数据
+ * @returns 初始图表配置数组
+ */
 export const getInitialOptions = (stockData) => {
+  if (stockData.data.length > 100000) {
+    const sampledData = Sampler.sampleByRatio(stockData, 0.4);
+    return [
+      getStockChartOptions(sampledData, 'HKD'),
+      getTrendingChartOptions(sampledData, 'MA(5)'),
+      getShockChartOptions(sampledData, 'RSI'),
+    ];
+  }
+
   return [
     getStockChartOptions(stockData, 'HKD'),
     getTrendingChartOptions(stockData, 'MA(5)'),
     getShockChartOptions(stockData, 'RSI'),
   ];
 };
+
+/**
+ * 获取自定义图表配置
+ * @param stockData 股票数据
+ * @param options 自定义选项
+ * @returns 自定义图表配置数组
+ */
 export const getOptions = (stockData, options) => {
+  if (stockData.data.length > 100000) {
+    const sampledData = Sampler.sampleByRatio(stockData, 0.4);
+    return [
+      getStockChartOptions(sampledData, 'HKD'),
+      getTrendingChartOptions(sampledData, options[0]),
+      getShockChartOptions(sampledData, options[1]),
+    ];
+  }
+
   return [
     getStockChartOptions(stockData, 'HKD'),
     getTrendingChartOptions(stockData, options[0]),

@@ -15,55 +15,69 @@
 
 ### 高性能图表系统
 
-我们实现了高效的图表渲染系统，通过分块加载和增量渲染技术，可以流畅处理百万级数据点：
+我们实现了高效的图表渲染系统，通过动态采样技术，可以流畅处理百万级数据点：
 
 ```ts
-// 分块加载数据核心实现
-function loadDataInChunks(chart, totalData, chunkSize) {
-  let renderedCount = 0;
-  function addChunk() {
-    const chunk = totalData.slice(renderedCount, renderedCount + chunkSize);
-    chart.appendData({ seriesIndex: 0, data: chunk });
-    renderedCount += chunkSize;
-    if (renderedCount < totalData.length) setTimeout(addChunk, 100);
-  }
-  addChunk();
-}
-```
+/**
+ * 动态采样工具
+ * 支持：固定数量采样、按比例采样、权重采样
+ */
+export class Sampler<T> {
+  private reservoir: T[] = [];
+  private seen: number = 0;
 
-### 大数据渲染优化
+  constructor(private sampleSize: number) {}
 
-为处理大量数据列表渲染，我们实现了动态高度虚拟滚动技术，只渲染可视区域内的元素，同时支持动态测量和调整项目高度：
-
-```ts
-// 动态虚拟滚动核心实现
-class DynamicVirtualScroll {
-  constructor(container, items, estimateHeight, renderItem) {
-    this.container = container;
-    this.items = items;
-    this.estimateHeight = estimateHeight;
-    this.renderItem = renderItem;
-    this.itemHeights = [];
-    this.totalHeight = 0;
-    this.init();
+  /**
+   * 动态插入数据（适用于流式数据）
+   * 使用 Reservoir Sampling 算法
+   */
+  add(item: T): void {
+    this.seen++;
+    if (this.reservoir.length < this.sampleSize) {
+      this.reservoir.push(item);
+    } else {
+      const rand = Math.floor(Math.random() * this.seen);
+      if (rand < this.sampleSize) {
+        this.reservoir[rand] = item;
+      }
+    }
   }
 
-  // 核心滚动处理逻辑
-  handleScroll() {
-    const scrollTop = this.container.scrollTop;
-    const clientHeight = this.container.clientHeight;
-
-    // 计算可见范围索引
-    let startIndex = this.findStartIndex(scrollTop);
-    let endIndex = this.findEndIndex(startIndex, scrollTop, clientHeight);
-
-    // 添加缓冲区并渲染可见项
-    startIndex = Math.max(0, startIndex - 5);
-    endIndex = Math.min(this.items.length, endIndex + 5);
-    this.renderVisibleItems(startIndex, endIndex);
+  /**
+   * 获取当前样本
+   */
+  getSamples(): T[] {
+    return [...this.reservoir];
   }
 
-  // 其他辅助方法...
+  /**
+   * 按比例采样（适合一次性数据集）
+   */
+  static sampleByRatio<U>(data: U[], ratio: number): U[] {
+    return data.filter(() => Math.random() < ratio);
+  }
+
+  /**
+   * 按权重采样（一次性数据集）
+   * weights 和 data 长度相同
+   */
+  static sampleByWeight<U>(data: U[], weights: number[], sampleSize: number): U[] {
+    const total = weights.reduce((a, b) => a + b, 0);
+    const result: U[] = [];
+
+    for (let i = 0; i < sampleSize; i++) {
+      let r = Math.random() * total;
+      for (let j = 0; j < data.length; j++) {
+        r -= weights[j];
+        if (r <= 0) {
+          result.push(data[j]);
+          break;
+        }
+      }
+    }
+    return result;
+  }
 }
 ```
 
@@ -235,21 +249,10 @@ export class BacktestStorage {
    * @param dbName 数据库名称，默认为 'kynanceBacktest'
    */
   constructor(dbName: string = 'kynanceBacktest') {
-    // 定义存储对象配置
     const storeConfigs = [
-      {
-        name: this.STORE_NAME,
-        keyPath: 'id',
-        autoIncrement: true,
-        indexes: [
-          { name: 'date', keyPath: 'date' },
-          { name: 'strategy', keyPath: 'backtestConfig.strategy' },
-          { name: 'symbol', keyPath: 'backtestConfig.symbol' },
-        ],
-      },
+      ...
     ];
 
-    // 创建 IndexedDB 工具类实例
     this.dbHelper = new IndexedDBHelper(dbName, 1, storeConfigs);
   }
 
@@ -259,7 +262,6 @@ export class BacktestStorage {
    */
   async init(): Promise<void> {
     await this.dbHelper.open();
-    console.log('回测数据库初始化成功');
   }
 
   /**
@@ -268,19 +270,12 @@ export class BacktestStorage {
    * @returns Promise 保存的记录（包含ID）
    */
   async saveBacktestRecord(record: BacktestRecord): Promise<BacktestRecord> {
-    // 如果没有指定日期，则使用当前时间
     if (!record.date) {
       record.date = new Date().toLocaleString('zh-CN');
     }
 
-    try {
       const savedRecord = await this.dbHelper.add<BacktestRecord>(this.STORE_NAME, record);
-      console.log('回测记录保存成功', savedRecord);
       return savedRecord;
-    } catch (error) {
-      console.error('保存回测记录失败', error);
-      throw error;
-    }
   }
 
   /**
@@ -289,12 +284,7 @@ export class BacktestStorage {
    * @returns Promise 回测记录列表
    */
   async getBacktestRecordsByStrategy(strategy: string): Promise<BacktestRecord[]> {
-    try {
       return await this.dbHelper.getAllByIndex<BacktestRecord>(this.STORE_NAME, 'strategy', strategy);
-    } catch (error) {
-      console.error(`获取策略为${strategy}的回测记录失败`, error);
-      throw error;
-    }
   }
 
   /**
@@ -302,7 +292,6 @@ export class BacktestStorage {
    */
   close(): void {
     this.dbHelper.close();
-    console.log('回测数据库连接已关闭');
   }
 }
 
@@ -316,20 +305,17 @@ export const backtestStorage = new BacktestStorage();
 
 ```ts
 const changeBrandTheme = (themeColor: string) => {
-  // 以主题色加显示模式作为键
   const colorKey = `${themeColor}[${mode.value}]`;
   let colorMap = colorList[colorKey];
-  // 如果不存在色阶，就需要计算
   if (colorMap === undefined) {
     const [{ colors: newPalette, primary: brandColorIndex }] = Color.getColorGradations({
       colors: [themeColor],
       step: 10,
-      remainInput: false, // 是否保留输入 不保留会矫正不合适的主题色
+      remainInput: false,
     });
     colorMap = generateColorMap(themeColor, newPalette, mode.value, brandColorIndex);
     colorList[colorKey] = colorMap;
   }
-  // TODO 需要解决不停切换时有反复插入 style 的问题
   insertThemeStylesheet(themeColor, colorMap, mode.value);
   document.documentElement.setAttribute('theme-color', themeColor);
 };

@@ -104,10 +104,8 @@ export const useBacktestStore = defineStore('backtest', () => {
     const existingIndex = strategy.findIndex((s) => s.name === newStrategy.name)
 
     if (existingIndex !== -1) {
-      // 如果存在同名策略，则覆盖它
       strategy[existingIndex] = newStrategy
     } else {
-      // 如果不存在同名策略，则添加新策略
       strategy.push(newStrategy)
     }
     if (!newStrategy.id) {

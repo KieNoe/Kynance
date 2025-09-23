@@ -8,5 +8,10 @@
     "composite": true,
     "noEmit": false
   },
-  "include": ["src/services/client.ts"]
+  "include": [
+    "src/services/client.ts",
+    "src/services/model/searchList.ts",
+    "src/infrastructure/utils/request.ts",
+    "src/services/model/date.ts"
+  ]
 }

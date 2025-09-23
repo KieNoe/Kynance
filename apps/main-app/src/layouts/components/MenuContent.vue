@@ -40,16 +40,13 @@ const handleMenuItemClick = (route) => {
 
 const getFullPath = (route) => {
   try {
-    // 处理重定向路由
     if (route.redirect) {
       return typeof route.redirect === 'string'
         ? route.redirect
         : router.resolve(route.redirect).href
     }
 
-    // 优先使用完整路径
     if (route.path && !route.path.startsWith('/')) {
-      // 如果是相对路径，尝试拼接
       const parentRoute = navRoutes.find(r =>
         r.children?.some(child => child === route)
       )
@@ -58,7 +55,6 @@ const getFullPath = (route) => {
         : `/${route.path}`
     }
 
-    // 标准解析
     return router.resolve(route).href || route.path
   } catch (err) {
     MessagePlugin.error('路由解析失败:', route,err)

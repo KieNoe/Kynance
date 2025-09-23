@@ -347,7 +347,7 @@
 
 ## 横切 & 工程治理
 
-- SemVer + Changesets for packages（你已列）：强制变更日志与自动化发布。
+- SemVer + Changesets for packages：强制变更日志与自动化发布。
 
 - Monorepo 依赖约束（core → services → presentation），依赖倒置 + 接口契约。
 

@@ -66,39 +66,31 @@ export function openDB(
       return
     }
 
-    // 打开数据库，若没有则会创建
     const request = indexedDB.open(dbName, version)
 
-    // 数据库打开成功回调
     request.onsuccess = (event) => {
       const db = (event.target as IDBOpenDBRequest).result
       resolve(db)
     }
 
-    // 数据库打开失败的回调
     request.onerror = () => {
       reject(new Error('数据库打开失败'))
     }
 
-    // 数据库有更新时候的回调
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result
 
-      // 如果提供了存储对象配置，则创建存储对象
       if (storeConfigs && storeConfigs.length > 0) {
         storeConfigs.forEach((config) => {
-          // 如果存储对象已存在，则删除
           if (db.objectStoreNames.contains(config.name)) {
             db.deleteObjectStore(config.name)
           }
 
-          // 创建存储对象
           const objectStore = db.createObjectStore(config.name, {
             keyPath: config.keyPath,
             autoIncrement: config.autoIncrement || false,
           })
 
-          // 创建索引
           if (config.indexes && config.indexes.length > 0) {
             config.indexes.forEach((indexConfig) => {
               objectStore.createIndex(indexConfig.name, indexConfig.keyPath, {
@@ -108,7 +100,6 @@ export function openDB(
           }
         })
       } else {
-        // 默认创建 signalChat 存储对象（兼容旧版本）
         if (!db.objectStoreNames.contains('signalChat')) {
           const objectStore = db.createObjectStore('signalChat', {
             keyPath: 'sequenceId',
@@ -145,7 +136,6 @@ export function addData<T>(db: IDBDatabase, storeName: string, data: T): Promise
         reject(new Error('数据写入失败'))
       }
 
-      // 事务完成监听
       transaction.oncomplete = () => {}
 
       transaction.onerror = () => {
@@ -678,7 +668,6 @@ export function checkDatabaseExists(dbName: string): Promise<boolean> {
       return
     }
 
-    // 尝试打开数据库，不指定版本号，如果存在则会打开成功
     const request = indexedDB.open(dbName)
     let exists = true
 
@@ -689,7 +678,6 @@ export function checkDatabaseExists(dbName: string): Promise<boolean> {
     }
 
     request.onupgradeneeded = () => {
-      // 如果触发升级事件，说明数据库不存在
       exists = false
     }
 
