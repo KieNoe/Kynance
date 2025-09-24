@@ -75,13 +75,15 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, reactive, ref, shallowRef } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
-import { changeCharts, getInitialOptions, getOptions } from '@kynance/chart-core'
 
 import { initCharts } from '@/infrastructure/hook'
 import { debounce } from '@/infrastructure/utils'
 import { getDayData } from '@/services/client'
 import { useStockDataStore, useWatchListStore } from '@/stores'
 import { t } from '@/infrastructure/locales'
+import { container } from '@/infrastructure/container/container'
+import { TYPES } from '@kynance/types'
+import type { IChartService } from '@kynance/types'
 
 import { OPTIONS } from '../index'
 
@@ -109,6 +111,7 @@ const sortedCharts = computed(() => {
   return stockDataStore.sortPlace.map((index) => OPTIONS.CHARTS[index - 1])
 })
 
+let chartService: IChartService
 const mainChart = ref(null)
 const trendingChart = ref(null)
 const shockChart = ref(null)
@@ -119,9 +122,9 @@ const updateCharts = async (isReRender = false) => {
     dropdownStatus.init()
     stockDataStore.initStockData(getDayData)
   }
-  changeCharts(
+  chartService.changeCharts(
     charts,
-    getOptions(stockDataStore.stockData.default, [
+    chartService.getOptions(stockDataStore.stockData.default, [
       dropdownStatus.trending.value,
       dropdownStatus.shock.value,
     ]),
@@ -166,6 +169,7 @@ const handleDropdownClick = async (key, data) => {
 }
 
 onMounted(() => {
+  chartService = container.get<IChartService>(TYPES.IChartService)
   const tryInitialize = async (attempt = 0) => {
     const maxAttempts = 10 // 最大尝试次数
     const retryDelay = 300 // 重试间隔（ms）
@@ -183,7 +187,7 @@ onMounted(() => {
         await stockDataStore.initStockData(getDayData)
         await initCharts(
           charts,
-          getInitialOptions(stockDataStore.stockData['default']),
+          chartService.getInitialOptions(stockDataStore.stockData['default']),
           onUnmounted,
         )
       } catch (err) {

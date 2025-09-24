@@ -1,5 +1,4 @@
-import { DSLFunction } from '@kynance/types';
-
+import { DSLFunction } from '../types';
 import { WASMLoader } from './wasm-loader';
 
 export class DSLCompiler {

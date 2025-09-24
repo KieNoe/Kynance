@@ -2,7 +2,7 @@
   "name": "@kynance/types",
   "version": "1.2.0",
   "exports": {
-    ".": "./index.d.ts"
+    ".": "./index.ts"
   },
   "private": true,
   "description": "项目通用类型",

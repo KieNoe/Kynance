@@ -11,6 +11,44 @@
 - **包管理**: pnpm + Monorepo
 - **规范**: commitlint + husky + lint-staged + eslint + prettier + git-cz
 
+## 架构描述
+
+为降低层间耦合、提升代码可测试性与可维护性，我们采用依赖倒置原则（DIP）来规范跨层通信。
+
+### 具体实现：
+
+- **抽象定义：** 高层模块与低层模块均依赖于抽象接口（Interface），而非具体实现。
+- **依赖注入：** 使用 InversifyJS 作为依赖注入（DI）容器，负责创建并注入具体的实现实例。
+- **控制反转：** 对象的依赖关系由容器在运行时动态组装，而非在模块内部静态创建。
+
+### 核心优势：
+
+- **解耦：** 层与层之间仅通过接口契约进行通信，无需关心具体实现，极大降低了耦合度。
+- **可测试性：** 可以轻松为接口注入Mock实现，使单元测试更加纯粹和简单。
+- **可维护性：** 替换或更新具体实现时，仅需调整容器绑定配置，无需修改大量业务代码。
+
+```ts
+//@\infrastructure\container\container.ts
+import 'reflect-metadata';
+import { Container } from 'inversify';
+
+import { EChartsService } from '@kynance/chart-core';
+import type { IChartService } from '@kynance/types';
+import { TYPES } from '@kynance/types';
+
+const container = new Container();
+
+container.bind<IChartService>(TYPES.IChartService).to(EChartsService).inSingletonScope();
+
+export { container };
+
+//@\infrastructure\hook\chart.ts
+import type { IChartService } from '@kynance/types';
+import { TYPES } from '@kynance/types';
+
+const chartService: IChartService = container.get<IChartService>(TYPES.IChartService);
+```
+
 ## 核心技术亮点
 
 ### 高性能图表系统

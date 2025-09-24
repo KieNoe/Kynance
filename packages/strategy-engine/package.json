@@ -5,8 +5,5 @@
   "private": true,
   "description": "策略 DSL 执行引擎",
   "author": "KieNoe",
-  "license": "MIT",
-  "devDependencies": {
-    "@kynance/types": "workspace:^"
-  }
+  "license": "MIT"
 }

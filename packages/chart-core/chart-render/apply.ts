@@ -1,8 +1,8 @@
 import trim from 'lodash/trim';
 import { Color } from 'tvision-color';
-import { ModeType, KColorToken } from '@kynance/types';
 
-import { getChartColorOption, getTrendingChartColorOption, getShockChartColorOption } from './option';
+import { KColorToken, ModeType } from '../types/index';
+import { getChartColorOption, getShockChartColorOption, getTrendingChartColorOption } from './option';
 
 const order = [getChartColorOption, getTrendingChartColorOption, getShockChartColorOption];
 

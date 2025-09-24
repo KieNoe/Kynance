@@ -1,21 +1,23 @@
-import {
-  changeChartsTheme,
-  getChartColorOption,
-  getChartListColor,
-  getChartThemeOption,
-} from '@kynance/chart-core'
 import * as echarts from 'echarts'
 import { computed, watch } from 'vue'
+import type { IChartService } from '@kynance/types'
+import { TYPES } from '@kynance/types'
 
 import { DARK_CHART_COLORS, LIGHT_CHART_COLORS } from '@/constants'
+import { container } from '@/infrastructure/container/container'
 import { useSettingStore } from '@/stores'
 
 const settingStore = useSettingStore()
+
+const chartService: IChartService = container.get<IChartService>(TYPES.IChartService)
+
 const chartThemeOption = computed(() => {
-  return getChartThemeOption(settingStore.mode === 'dark' ? DARK_CHART_COLORS : LIGHT_CHART_COLORS)
+  return chartService.getChartThemeOption(
+    settingStore.mode === 'dark' ? DARK_CHART_COLORS : LIGHT_CHART_COLORS,
+  )
 })
 const chartColorOption = computed(() => {
-  return getChartColorOption(getChartListColor())
+  return chartService.getChartColorOption(chartService.getChartListColor())
 })
 const useChart = (chart, onCleanUp): echarts.ECharts => {
   let selfChart: echarts.ECharts
@@ -51,19 +53,21 @@ export const initCharts = async (charts, options, onCleanUp) => {
 
       charts[i].ref = await useChart(chartDom, onCleanUp)
 
-      charts[i].ref.setOption({
-        ...chartThemeOption.value,
-        ...chartColorOption.value,
+      const chartOptions = {
+        ...(chartThemeOption.value as any),
+        ...(chartColorOption.value as any),
         ...options[i],
-      })
+      }
+
+      charts[i].ref.setOption(chartOptions)
     }
 
-    changeChartsTheme(charts)
+    chartService.changeChartsTheme(charts)
 
     const stopColorWatch = watch(
       () => settingStore.themeColor,
       () => {
-        changeChartsTheme(charts)
+        chartService.changeChartsTheme(charts)
       },
     )
 

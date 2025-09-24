@@ -1,5 +1,5 @@
 //wasm-loader.ts
-import { SandboxMessage } from '@kynance/types';
+import { SandboxMessage } from '../types';
 
 export class WASMLoader {
   private worker: Worker;
