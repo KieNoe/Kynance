@@ -1,0 +1,281 @@
+.sliding-chart-page {
+  min-height: 100vh;
+  background: #f5f7fa;
+  padding: 16px;
+
+  .page-header {
+    margin-bottom: 16px;
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .title-section {
+        .page-title {
+          margin: 0 0 8px 0;
+          font-size: 24px;
+          font-weight: 600;
+          color: #1f2937;
+        }
+
+        .page-subtitle {
+          margin: 0;
+          color: #6b7280;
+          font-size: 14px;
+        }
+      }
+
+      .status-section {
+        display: flex;
+        gap: 12px;
+      }
+    }
+  }
+
+  .main-content {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    .control-panel {
+      height: fit-content;
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+      }
+
+      .control-section {
+        margin-bottom: 24px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .section-title {
+          margin: 0 0 16px 0;
+          font-size: 14px;
+          font-weight: 600;
+          color: #374151;
+          border-bottom: 1px solid #e5e7eb;
+          padding-bottom: 8px;
+        }
+
+        .control-group {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .performance-metrics {
+          .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+
+            .metric-label {
+              font-size: 12px;
+              color: #6b7280;
+              min-width: 60px;
+            }
+
+            .metric-value {
+              font-size: 12px;
+              font-weight: 600;
+              color: #1f2937;
+            }
+          }
+        }
+      }
+    }
+
+    .chart-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .chart-toolbar {
+        .toolbar-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .toolbar-left,
+          .toolbar-right {
+            display: flex;
+            gap: 8px;
+          }
+          .toolbar-left{
+            .t-button {
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+
+      .main-chart {
+        flex: 1;
+        min-height: 400px;
+
+        .chart-wrapper {
+          height: 400px;
+          position: relative;
+
+          .chart-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #9ca3af;
+
+            .placeholder-icon {
+              font-size: 48px;
+              margin-bottom: 16px;
+            }
+
+            .placeholder-hint {
+              font-size: 12px;
+              margin-top: 8px;
+            }
+          }
+        }
+      }
+
+      .multi-chart-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 16px;
+
+        .sub-chart {
+          min-height: 200px;
+
+          .sub-chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+          }
+
+          .sub-chart-content {
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .sub-chart-placeholder {
+              color: #9ca3af;
+              font-size: 14px;
+            }
+          }
+        }
+
+        .add-chart-card {
+          min-height: 200px;
+          border: 2px dashed #d1d5db;
+          background: transparent;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .add-chart-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #6b7280;
+            transition: all 0.2s;
+
+            &:hover {
+              color: #3b82f6;
+              border-color: #3b82f6;
+            }
+
+            .add-icon {
+              font-size: 32px;
+              margin-bottom: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .status-bar {
+    .status-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+
+      .status-left,
+      .status-right {
+        display: flex;
+        gap: 24px;
+      }
+
+      .status-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: #6b7280;
+      }
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 1024px) {
+  .sliding-chart-page {
+    .main-content {
+      grid-template-columns: 1fr;
+
+      .control-panel {
+        order: 2;
+      }
+
+      .chart-container {
+        order: 1;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .sliding-chart-page {
+    padding: 8px;
+
+    .page-header .header-content {
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .main-content {
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .chart-container .multi-chart-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .status-bar .status-content {
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+
+      .status-left,
+      .status-right {
+        gap: 16px;
+      }
+    }
+  }
+}
