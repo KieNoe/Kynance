@@ -53,6 +53,17 @@ export default defineConfig(({ command, mode }) => {
         },
       }),
     ],
+    headers: {
+      'Content-Security-Policy': `
+        default-src 'self';
+        connect-src 'self' https://api.kynance.cn;
+        frame-ancestors 'none';
+        base-uri 'self';
+        form-action 'self';
+      `
+        .replace(/\s{2,}/g, ' ')
+        .trim(),
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),

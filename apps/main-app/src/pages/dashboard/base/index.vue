@@ -3,7 +3,7 @@
     <!-- 第一行：欢迎卡片和功能入口 -->
     <div class="firstRow">
       <!-- 欢迎卡片 -->
-      <t-card class="welcome-card" :bordered="false">
+      <t-card class="welcome-card" :bordered="false" role="main">
         <template #title>
           <div class="welcome-header">
             <t-avatar class="avatar" :image="userAvatar" size="2.8125rem" />
@@ -29,7 +29,7 @@
 
       <!-- 功能入口卡片 -->
       <div class="right">
-        <div v-for="(feature, index) in FEATURES" :key="index">
+        <div v-for="(feature, index) in FEATURES" :key="index" role="navigation">
           <t-card
             :bordered="false"
             :class="['feature-card', `feature-card-${index}`]"
@@ -68,17 +68,18 @@
       </div>
 
       <!-- 市场概览图表 -->
-      <Chart />
+      <Chart role="complementary" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineAsyncComponent } from 'vue'
+import { ref, computed, defineAsyncComponent, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { useUserStore } from '@/stores'
 import { t } from '@/infrastructure/locales'
+import { getCsrfToken } from '@/services/client'
 
 import { FEATURES, STATISTICS, NOTIFICATIONS } from './constant'
 
@@ -105,6 +106,13 @@ const currentDate = computed(() => {
 const navigateTo = (route) => {
   router.push(route)
 }
+
+onMounted(async () => {
+  const csrfToken = await getCsrfToken()
+  if (csrfToken) {
+    localStorage.setItem('csrfToken', csrfToken)
+  }
+})
 </script>
 
 <style scoped lang="less">

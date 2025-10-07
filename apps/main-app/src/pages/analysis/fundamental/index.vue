@@ -1,7 +1,7 @@
 <template>
   <div class="fundamental-analysis">
     <!-- 页面头部区域 -->
-    <div class="page-header">
+    <div class="page-header" role="banner">
       <div class="header-left">
         <h1 class="page-title">{{ t('pages.analysis.fundamental.analysis') }}</h1>
       </div>
@@ -69,7 +69,7 @@
     </t-card>
 
     <!-- 财务指标网格 -->
-    <div class="financial-indicators">
+    <div class="financial-indicators" role="complementary">
       <h3 class="section-title">{{ t('pages.analysis.fundamental.financialIndicators.title') }}</h3>
       <div class="indicators-grid">
         <t-card
@@ -105,7 +105,7 @@
     </div>
 
     <!-- 趋势图表区域 -->
-    <div class="charts-section">
+    <div class="charts-section" role="complementary">
       <div class="charts-grid">
         <t-card class="chart-card" :bordered="false">
           <template #header>
@@ -127,7 +127,7 @@
     </div>
 
     <!-- 风险提示面板 -->
-    <t-card class="risk-panel" :bordered="false" :loading="loading">
+    <t-card class="risk-panel" :bordered="false" :loading="loading" role="complementary">
       <template #header>
         <span class="section-title">{{ t('pages.analysis.fundamental.risk.assessment') }}</span>
       </template>

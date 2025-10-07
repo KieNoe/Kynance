@@ -3,7 +3,7 @@
     <div class="faq-header">
       <t-row justify="space-between" align="middle">
         <t-col>
-          <h1 class="faq-title">{{ t('pages.help.title') }}</h1>
+          <h1 class="faq-title" role="banner">{{ t('pages.help.title') }}</h1>
         </t-col>
         <t-col>
           <t-input
@@ -12,6 +12,7 @@
             clearable
             :on-clear="handleClear"
             class="search-input"
+            role="search"
           >
             <template #prefix-icon>
               <search-icon />
@@ -30,7 +31,7 @@
       </t-tabs>
     </div>
 
-    <div class="faq-content">
+    <div class="faq-content" role="main">
       <t-collapse v-model="expandedIds" expandMutex class="faq-collapse">
         <t-collapse-panel
           v-for="item in filteredFaqList"
@@ -38,6 +39,10 @@
           :value="item.id"
           :header="item.question"
           class="faq-item"
+          role="checkbox"
+          aria-checked="false"
+          tabindex="0"
+          @keydown.enter="onEnterKey(item.id)"
         >
           <div class="faq-answer">
             <div>{{ item.answer }}</div>
@@ -74,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, watch, onBeforeUnmount, nextTick } from 'vue'
 import { SearchIcon, ThumbUpIcon, ThumbDownIcon } from 'tdesign-icons-vue-next'
 import { MessagePlugin } from 'tdesign-vue-next'
 
@@ -115,6 +120,14 @@ const filteredFaqList = computed(() => {
   return result.slice(startIndex, startIndex + pageSize.value)
 })
 
+function onEnterKey(id) {
+  if (expandedIds.value.includes(id)) {
+    expandedIds.value.splice(expandedIds.value.indexOf(id), 1)
+  } else {
+    expandedIds.value.push(id)
+  }
+}
+
 const updataTotalItems = (length) => {
   totalItems.value = length
 }
@@ -146,9 +159,21 @@ const stopWatch = watch(activeTab, () => {
 })
 
 // 生命周期钩子
-onMounted(() => {
-  // 初始化时可以加载数据，这里使用的是静态数据
+onMounted(async () => {
   totalItems.value = FAQ_DATA.length
+  await nextTick()
+  const pagination = document.querySelectorAll('.t-pagination__number')
+  pagination.forEach((element, index) => {
+    element.setAttribute('role', 'checkbox')
+    element.setAttribute('aria-checked', 'false')
+    element.setAttribute('tabindex', '0')
+    element.setAttribute('data-id', `${index}`)
+    element.addEventListener('keydown', (e) => {
+      if (e instanceof KeyboardEvent && e.key == 'Enter' && e.target instanceof HTMLElement) {
+        currentPage.value = parseInt(e.target.getAttribute('data-id')) - 2
+      }
+    })
+  })
 })
 
 onBeforeUnmount(() => {

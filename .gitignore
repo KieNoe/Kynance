@@ -1,5 +1,6 @@
 .env
 node_modules
+.codebuddy
 .DS_Store
 
 # build files
@@ -25,3 +26,4 @@ test-report.html
 Dockerfile
 .eslintcache
 prettierrc
+deploy-production.sh

@@ -19,7 +19,15 @@ const Api = {
   company: '/api/companyInfo/00700',
   stocks: '/api/stocks',
 }
-
+export const getCsrfToken = async () => {
+  try {
+    const response = await alovaInstance.Get('/api/csrf-token')
+    return (response as any).data.csrfToken
+  } catch (error) {
+    console.error('获取 CSRF token 失败:', error)
+    throw error
+  }
+}
 export function getDailyLoser(region) {
   const url = Api.dailyLoser.replace(':region', region)
   return alovaInstance.Get(url)
