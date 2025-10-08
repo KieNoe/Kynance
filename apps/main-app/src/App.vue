@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useLocale } from '@/infrastructure/locales/useLocale'
+import FullBack from '@/pages/fullBack/base/index.vue'
 import { useSettingStore } from '@/stores'
 
 const store = useSettingStore()
@@ -14,6 +15,7 @@ const { getComponentsLocale, locale } = useLocale()
 
 const route = useRoute()
 const backToTop = ref()
+const isAppActive = ref(true)
 
 watch(
   () => route.path,
@@ -21,10 +23,32 @@ watch(
     backToTop.value.focus()
   },
 )
+
+const recoverApp = () => {
+  isAppActive.value = true
+}
+
+const globalErrorHandler = (err) => {
+  console.error('Fatal error', err)
+  // TODO:保存关键状态
+  isAppActive.value = false
+  const timeId = setTimeout(recoverApp, 3000)
+  clearTimeout(timeId)
+}
+
+onMounted(() => {
+  window.addEventListener('error', globalErrorHandler)
+  window.addEventListener('unhandledrejection', globalErrorHandler)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('error', globalErrorHandler)
+  window.removeEventListener('unhandledrejection', globalErrorHandler)
+})
 </script>
 
 <template>
-  <div>
+  <div v-if="isAppActive">
     <t-config-provider :global-config="getComponentsLocale">
       <router-view :key="locale" :class="[mode]" />
       <span ref="backToTop" tabindex="-1" />
@@ -34,6 +58,9 @@ watch(
         </li>
       </ul>
     </t-config-provider>
+  </div>
+  <div v-else>
+    <full-back />
   </div>
 </template>
 

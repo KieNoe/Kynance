@@ -43,12 +43,14 @@
                 }
               "
             >
-              <Setting
-                v-model:backtestConfig="backtestConfig"
-                v-model:strategyParams="strategyParams"
-                @update:backtestConfig="updateBacktestConfig"
-                @update:strategyParams="updateStrategyParam"
-              />
+              <ErrorBoundary>
+                <Setting
+                  v-model:backtestConfig="backtestConfig"
+                  v-model:strategyParams="strategyParams"
+                  @update:backtestConfig="updateBacktestConfig"
+                  @update:strategyParams="updateStrategyParam"
+                />
+              </ErrorBoundary>
             </t-dialog>
           </div>
         </div>
@@ -106,6 +108,7 @@ import { getStocks } from '@/services/client'
 import { throttle } from '@/infrastructure/utils'
 import { t } from '@/infrastructure/locales'
 import { backtestStorage } from '@/infrastructure/utils'
+import ErrorBoundary from '@/components/errorBoundary/ErrorBoundary.vue'
 
 import { getOption, tradeColumns } from '.'
 import Setting from './components/Setting.vue'
@@ -120,30 +123,25 @@ const backtestConfig = reactive({
   strategy: 'ma_cross',
   symbol: '000001',
   dateRange: ['2024-01-01', '2025-01-01'],
-  initialCapital: 100000, //初始资金
-  commission: 0.0003, //手续费率
+  initialCapital: 100000,
+  commission: 0.0003,
 })
 
-// 策略参数
 const strategyParams = reactive({
   holdingPeriod: 15,
   shareHoldingLimit: 15,
   profitHoldThreshold: 5,
   trailingStopPercent: 3,
   stopLossLimit: 5,
-  // 均线交叉策略参数:ma_cross
   shortPeriod: 5,
   longPeriod: 20,
-  // RSI策略参数:rsi_reversal
   rsiPeriod: 14,
   overbought: 70,
   oversold: 30,
-  //布林带策略参数:bollinger_bands
   bollingerBandsPeriod: 20,
   standardDeviationMultiple: 2,
 })
 
-// 回测状态
 const isRunning = ref(false)
 const backtestResult = ref(null)
 const chartContainer = ref(null)
@@ -154,12 +152,11 @@ const pagination = reactive({
   total: 0,
 })
 
-// 开始回测
 const runBacktest = throttle(
   async () => {
     isRunning.value = true
 
-    const stocksData = await getStocks(backtestConfig.dateRange, true)
+    const stocksData = await getStocks(backtestConfig.dateRange)
 
     const getBacktestResult = backtestStore.getBacktestResult.isCustomCode
       ? backtestStore.getBacktestResult.func

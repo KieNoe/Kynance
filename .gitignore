@@ -1,6 +1,6 @@
 .env
 node_modules
-.codebuddy
+.codebuddy/*
 .DS_Store
 
 # build files

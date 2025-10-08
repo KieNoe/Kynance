@@ -28,6 +28,17 @@ export default [
           },
         },
       },
+      {
+        path: 'recovery',
+        name: 'crashRecovery',
+        component: () => import('@/pages/fullBack/base/index.vue'),
+        meta: {
+          title: {
+            zh_CN: '崩溃恢复页面',
+            en_US: 'crash recovery page',
+          },
+        },
+      },
     ],
   },
 ]
