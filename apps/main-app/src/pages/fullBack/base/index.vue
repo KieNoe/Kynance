@@ -36,7 +36,7 @@ const id = setInterval(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(250, 250, 252, 0.95);
+  background: var(--td-bg-color-page);
   z-index: 9999;
 }
 .card {
@@ -46,7 +46,7 @@ const id = setInterval(() => {
   gap: 12px;
   padding: 24px 32px;
   border-radius: 12px;
-  box-shadow: 0 6px 24px rgba(16, 24, 40, 0.08);
-  background: white;
+  box-shadow: 0 6px 24px var(--td-component-border);
+  background: var(--td-bg-color-page);
 }
 </style>

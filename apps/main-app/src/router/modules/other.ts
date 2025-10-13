@@ -39,6 +39,17 @@ export default [
           },
         },
       },
+      {
+        path: 'ai-model',
+        name: 'aiModel',
+        component: () => import('@/pages/other/ai-display/index.vue'),
+        meta: {
+          title: {
+            zh_CN: 'AI模型演示',
+            en_US: 'AI model display',
+          },
+        },
+      },
     ],
   },
 ]
