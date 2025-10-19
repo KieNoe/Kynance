@@ -1,5 +1,5 @@
 {
-  "include": ["utils", "models", "data-collection"], // 包含的源文件目录
+  "include": ["model", "data-set", "training"], // 包含的源文件目录
   "exclude": ["**/__tests__", "**/*.test.ts"], // 排除的测试文件
   "compilerOptions": {
     "experimentalDecorators": true,

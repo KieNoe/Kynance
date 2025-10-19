@@ -21,6 +21,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@kynance/ai-models": "workspace:^",
     "@kynance/chart-core": "workspace:^",
     "@kynance/providers": "workspace:^",
     "@kynance/strategy-engine": "workspace:^",

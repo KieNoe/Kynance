@@ -30,7 +30,6 @@ const recoverApp = () => {
 
 const globalErrorHandler = (err) => {
   console.error('Fatal error', err)
-  // TODO:保存关键状态
   isAppActive.value = false
   const timeId = setTimeout(recoverApp, 3000)
   clearTimeout(timeId)

@@ -7,6 +7,7 @@
   "author": "KieNoe",
   "license": "MIT",
   "dependencies": {
+    "@kynance/types": "workspace:^",
     "@tensorflow/tfjs": "4.22.0"
   }
 }

@@ -102,6 +102,9 @@ importers:
 
   apps/main-app:
     dependencies:
+      '@kynance/ai-models':
+        specifier: workspace:^
+        version: link:../../packages/ai-models
       '@kynance/chart-core':
         specifier: workspace:^
         version: link:../../packages/chart-core
@@ -277,6 +280,9 @@ importers:
 
   packages/ai-models:
     dependencies:
+      '@kynance/types':
+        specifier: workspace:^
+        version: link:../types
       '@tensorflow/tfjs':
         specifier: 4.22.0
         version: 4.22.0(encoding@0.1.13)(seedrandom@3.0.5)
