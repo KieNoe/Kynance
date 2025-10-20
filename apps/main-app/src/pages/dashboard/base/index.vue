@@ -111,6 +111,7 @@ onMounted(async () => {
   const csrfToken = await getCsrfToken()
   if (csrfToken) {
     localStorage.setItem('csrfToken', csrfToken)
+    console.log('CSRF token is set:', csrfToken)
   }
 })
 </script>

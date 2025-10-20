@@ -21,11 +21,14 @@ const Api = {
 }
 export const getCsrfToken = async () => {
   try {
-    const response = await alovaInstance.Get('/api/csrf-token')
-    return (response as any).data.csrfToken
+    const response = await fetch('https://api.kynance.cn:3000/api/csrf-token', {
+      credentials: 'include', // 必须包含credentials才能接收cookie
+    })
+    const data = await response.json()
+    return data.csrfToken
   } catch (error) {
-    console.error('获取 CSRF token 失败:', error)
-    throw error
+    console.error('获取CSRF Token失败:', error)
+    return ''
   }
 }
 export function getDailyLoser(region) {

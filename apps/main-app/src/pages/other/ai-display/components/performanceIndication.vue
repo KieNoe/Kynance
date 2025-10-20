@@ -91,7 +91,6 @@ const pushData = async (data) => {
     const prediction = await props.predictAction(data[i])
     accuracy += prediction.predictedAction === data[i + 1] ? 1 : 0
     chartData.push(accuracy / ++total)
-    console.log(accuracy, total)
     updateChart()
   }
 }
