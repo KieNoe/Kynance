@@ -326,16 +326,13 @@ function updateChart() {
       data: sampled.map((p) => new Date(p.time).toLocaleTimeString()),
     },
     yAxis: { type: 'value' },
-    series: [
-      {
-        type: 'line',
-        data: sampled.map((p) => p.value),
-        showSymbol: false,
-        smooth: true,
-      },
-    ],
     dataZoom: [],
   }
+
+  chart.appendData({
+    seriesIndex: 0,
+    data: sampled.map((p) => p.value),
+  })
 
   if (autoScale.value) {
     option.dataZoom = [
@@ -425,7 +422,14 @@ const initializeChart = () => {
     chart.setOption({
       xAxis: { type: 'category' },
       yAxis: { type: 'value' },
-      series: [{ type: 'line', data: [] }],
+      series: [
+        {
+          type: 'line',
+          data: [],
+          progressive: 1000, // 每批渲染的数据量
+          progressiveThreshold: 1000, // 启用渐进渲染的阈值（数据量超过此值时才启用）
+        },
+      ],
     })
   }
 
