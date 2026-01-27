@@ -219,7 +219,11 @@ import * as echarts from 'echarts'
 import * as XLSX from 'xlsx'
 import { MessagePlugin } from 'tdesign-vue-next'
 
+import { useWebSocketStore } from '@/stores'
+
 import mutiCharts from './components/mutiCharts.vue'
+
+const webSocketStore = useWebSocketStore()
 
 // 响应式数据定义
 const connectionStatus = ref<'connected' | 'disconnected'>('disconnected')

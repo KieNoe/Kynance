@@ -12,5 +12,6 @@ export * from './moudles/setting'
 export * from './moudles/stockData'
 export * from './moudles/user'
 export * from './moudles/watchlist'
+export * from './moudles/websocket'
 
 export default store
